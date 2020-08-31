@@ -153,6 +153,7 @@ If you recompiling some other time you don't have to repeat previous steps, but 
 
 
 ## Create config file for daemo
+
 ```cd ~; sudo ufw allow 19417/tcp; sudo ufw allow 18495/tcp; sudo ufw allow 22/tcp; sudo mkdir ~/.KONJ; cat << "CONFIG" >> ~/.KONJ/Konjungate.conf
 listen=1
 server=1
