@@ -69,6 +69,9 @@ CREX24:
 https://crex24.com/exchange/KONJ-BTC<br/>
 https://crex24.com/exchange/KONJ-ETH
 
+## Developer
+Thanks to https://github.com/SaltineChips/ for his great work!! :)
+
 
 
 ## Blockchain Technology
