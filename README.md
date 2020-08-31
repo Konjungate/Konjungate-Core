@@ -5,15 +5,17 @@ Ticker: KONJ<br/>
 Type: Hybrid, POS / POW / Masternodes<br/>
 Algorithm: bmw512<br/>
 Total Coin Supply: 21 billion<br/>
+BlockSize (depending on block saturation): 1.525612 MB min - 15.256128 MB max
 
 Rewards per Block:
 250 KONJ / BLOCK (shared as follow)
 
 POW 62.5 KONJ decreasing 10% every 6 month
-POS 48.75 KONJ after 6 month increasing to 68.75 KONJ after this: decreasing 15% every 6 month 
-MN. 113,75 KONJ after 6 month increasing to 153.75 KONJ after this: increasing 17% every 6
+POS 48.75 KONJ decreasing 15% every 6 month 
+MN. 113,75 KONJ increasing 17% every 6 month
 
 Masternode Collateral: 2750000 KONJ
+
 
 Charity fee (taken from POW): 25 KONJ to support contemporary ART.<br/>
 Please visit https://www.machfeld-foundation.net to see our supported Projects.
