@@ -1,0 +1,2 @@
+# Konjungate-Core
+Konjungate Wallet
