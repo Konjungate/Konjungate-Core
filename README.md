@@ -8,11 +8,11 @@ Total Coin Supply: 21 billion<br/>
 BlockSize (depending on block saturation): 1.525612 MB min - 15.256128 MB max
 
 Rewards per Block:
-250 KONJ / BLOCK (shared as follow)
+250 KONJ / BLOCK (shared as follow)<br/>
 
-POW 62.5 KONJ decreasing 10% every 6 month
-POS 48.75 KONJ decreasing 15% every 6 month 
-MN. 113,75 KONJ increasing 17% every 6 month
+POW 62.5 KONJ decreasing 10% every 6 month<br/>
+POS 48.75 KONJ decreasing 15% every 6 month <br/>
+MN. 113,75 KONJ increasing 17% every 6 month<br/><br/>
 
 Masternode Collateral: 2750000 KONJ
 
