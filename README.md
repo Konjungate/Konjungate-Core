@@ -172,6 +172,12 @@ rpcallowip=127.0.0.1
 addnode=37.187.180.53
 addnode=139.99.239.62
 addnode=192.99.212.20
+addnode=139.99.239.62
+addnode=188.166.109.87
+addnode=51.195.42.49
+addnode=193.70.84.182
+addnode=51.38.113.17
+addnode=110.232.115.241
 CONFIG
 chmod 700 ~/.KONJ/Konjungate.conf; chmod 700 ~/.KONJ; ls -la ~/.KONJ
 ```
