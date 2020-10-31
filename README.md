@@ -51,6 +51,47 @@ https://bitcointalk.org/index.php?topic=5148524.msg51263942#msg51263942<br/>
 
 ---------------->>>-----<<<<<<---------------------
 
+## EXCHANGES
+
+Crex 24:
+https://crex24.com/exchange/KONJ-BTC
+https://crex24.com/exchange/KONJ-ETH
+
+Southxchange:
+
+BTC: https://main.southxchange.com/Market/Book/KONJ/BTC
+DOGE: https://main.southxchange.com/Market/Book/KONJ/DOGE
+ETH: https://main.southxchange.com/Market/Book/KONJ/ETH
+LTC: https://main.southxchange.com/Market/Book/KONJ/LTC
+
+Altmarkets:
+https://altmarkets.io/trading/konjbtc
+
+unnamed.exchange:
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_BTC
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_ETH
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_LTC
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_DOGE
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_XMR
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_WAVES
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_USDT
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_UTIP
+
+
+DelionDex:
+https://dex.delion.online/market/DELION.KONJ_DELION.BTC
+https://dex.delion.online/market/DELION.KONJ_DELION.DLN
+https://dex.delion.online/market/DELION.KONJ_DELION.DOGE
+https://dex.delion.online/market/DELION.KONJ_BTS
+
+Autradex:
+https://wallet.autradex.systems/markets/epbtc?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/BTC)
+https://wallet.autradex.systems/markets/epdoge?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/DOGE)
+https://wallet.autradex.systems/markets/epltc?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/LTC)
+﻿
+
+---------------->>>-----<<<<<<---------------------
+
 ## (So called) Social Media Links:
 
 Telegram: https://t.me/joinchat/CZxxC03HTpvdGDWlXg0tgQ 
@@ -60,14 +101,6 @@ Facebook: https://www.facebook.com/konjungate/
 Twitter: https://twitter.com/konjungate
 
 YouTube: https://www.youtube.com/channel/UCnm-eA9EGNwSHu3KKzkm8Zg
-
----------------->>>-----<<<<<<---------------------
-
-## EXCHANGES
-
-CREX24:
-https://crex24.com/exchange/KONJ-BTC<br/>
-https://crex24.com/exchange/KONJ-ETH
 
 ## Developer
 Thanks to https://github.com/SaltineChips/ for his great work!! :)
