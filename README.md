@@ -53,41 +53,40 @@ https://bitcointalk.org/index.php?topic=5148524.msg51263942#msg51263942<br/>
 
 ## EXCHANGES
 
-Crex 24:
-https://crex24.com/exchange/KONJ-BTC
-https://crex24.com/exchange/KONJ-ETH
+Crex 24:<br/>
+https://crex24.com/exchange/KONJ-BTC<br/>
+https://crex24.com/exchange/KONJ-ETH<br/><br/>
 
-Southxchange:
+Southxchange:<br/>
+BTC: https://main.southxchange.com/Market/Book/KONJ/BTC<br/>
+DOGE: https://main.southxchange.com/Market/Book/KONJ/DOGE<br/>
+ETH: https://main.southxchange.com/Market/Book/KONJ/ETH<br/>
+LTC: https://main.southxchange.com/Market/Book/KONJ/LTC<br/><br/>
 
-BTC: https://main.southxchange.com/Market/Book/KONJ/BTC
-DOGE: https://main.southxchange.com/Market/Book/KONJ/DOGE
-ETH: https://main.southxchange.com/Market/Book/KONJ/ETH
-LTC: https://main.southxchange.com/Market/Book/KONJ/LTC
+Altmarkets:<br/>
+https://altmarkets.io/trading/konjbtc<br/><br/>
 
-Altmarkets:
-https://altmarkets.io/trading/konjbtc
-
-unnamed.exchange:
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_BTC
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_ETH
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_LTC
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_DOGE
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_XMR
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_WAVES
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_USDT
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_UTIP
+unnamed.exchange:<br/>
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_BTC<br/>
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_ETH<br/>
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_LTC<br/>
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_DOGE<br/>
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_XMR<br/>
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_WAVES<br/>
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_USDT<br/>
+https://www.unnamed.exchange/Exchange/Basic?market=KONJ_UTIP<br/><br/>
 
 
-DelionDex:
-https://dex.delion.online/market/DELION.KONJ_DELION.BTC
-https://dex.delion.online/market/DELION.KONJ_DELION.DLN
-https://dex.delion.online/market/DELION.KONJ_DELION.DOGE
-https://dex.delion.online/market/DELION.KONJ_BTS
+DelionDex:<br/>
+https://dex.delion.online/market/DELION.KONJ_DELION.BTC<br/>
+https://dex.delion.online/market/DELION.KONJ_DELION.DLN<br/>
+https://dex.delion.online/market/DELION.KONJ_DELION.DOGE<br/>
+https://dex.delion.online/market/DELION.KONJ_BTS<br/><br/>
 
-Autradex:
-https://wallet.autradex.systems/markets/epbtc?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/BTC)
-https://wallet.autradex.systems/markets/epdoge?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/DOGE)
-https://wallet.autradex.systems/markets/epltc?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/LTC)
+Autradex:<br/>
+https://wallet.autradex.systems/markets/epbtc?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/BTC)<br/>
+https://wallet.autradex.systems/markets/epdoge?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/DOGE)<br/>
+https://wallet.autradex.systems/markets/epltc?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/LTC)<br/><br/>
 ﻿
 
 ---------------->>>-----<<<<<<---------------------
