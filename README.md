@@ -46,8 +46,21 @@ https://ahamay.net/
 Block Explorer:
 http://explore.konjungate.net/<br/>
 
-Bitcoin Talk announcment:
-https://bitcointalk.org/index.php?topic=5148524.msg51263942#msg51263942<br/>
+Social Media:
+Discord: https://discord.gg/K7hAfXg 
+
+Telegram: https://t.me/joinchat/CZxxC03HTpvdGDWlXg0tgQ 
+
+Facebook: https://www.facebook.com/konjungate/ 
+
+Twitter: https://twitter.com/konjungate
+
+YouTube: https://www.youtube.com/channel/UCnm-eA9EGNwSHu3KKzkm8Zg
+
+Instagram: https://www.instagram.com/konjungate/
+
+Reddit: https://www.reddit.com/user/KONJUNGATE/
+
 
 ---------------->>>-----<<<<<<---------------------
 
