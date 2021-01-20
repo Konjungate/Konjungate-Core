@@ -46,7 +46,7 @@ https://ahamay.net/
 Block Explorer:
 http://explore.konjungate.net/<br/><br/>
 
-Social Media:<br/>
+## Social Media:<br/>
 Discord: https://discord.gg/K7hAfXg 
 
 Telegram: https://t.me/joinchat/CZxxC03HTpvdGDWlXg0tgQ 
