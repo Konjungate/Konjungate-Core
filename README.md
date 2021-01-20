@@ -44,9 +44,9 @@ https://pool.konjungate.net/<br/>
 https://ahamay.net/
 
 Block Explorer:
-http://explore.konjungate.net/<br/>
+http://explore.konjungate.net/<br/><br/>
 
-Social Media:
+Social Media:<br/>
 Discord: https://discord.gg/K7hAfXg 
 
 Telegram: https://t.me/joinchat/CZxxC03HTpvdGDWlXg0tgQ 
