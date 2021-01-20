@@ -104,16 +104,6 @@ https://wallet.autradex.systems/markets/epltc?markets=all&column=name&order=asc&
 
 ---------------->>>-----<<<<<<---------------------
 
-## (So called) Social Media Links:
-
-Telegram: https://t.me/joinchat/CZxxC03HTpvdGDWlXg0tgQ 
-
-Facebook: https://www.facebook.com/konjungate/ 
-
-Twitter: https://twitter.com/konjungate
-
-YouTube: https://www.youtube.com/channel/UCnm-eA9EGNwSHu3KKzkm8Zg
-
 ## Developer
 Thanks to https://github.com/SaltineChips/ for his great work!! :)
 
