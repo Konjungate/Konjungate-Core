@@ -5,7 +5,8 @@ Ticker: KONJ<br/>
 Type: Hybrid, POS / POW / Masternodes<br/>
 Algorithm: bmw512<br/>
 Total Coin Supply: 21 billion<br/>
-BlockSize (depending on block saturation): 1.525612 MB min - 15.256128 MB max
+BlockSize (depending on block saturation): 1.525612 MB min - 15.256128 MB max<br/>
+BlockTime: ~ 30 sec.
 
 Rewards per Block:
 250 KONJ / BLOCK (shared as follow)<br/>
