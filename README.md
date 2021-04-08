@@ -73,6 +73,10 @@ Crex 24:<br/>
 https://crex24.com/exchange/KONJ-BTC<br/>
 https://crex24.com/exchange/KONJ-ETH<br/><br/>
 
+DEX-TRADE:<br/>
+KONJ/BTC: https://dex-trade.com/spot/trading/KONJBTC<br/>
+KONJ/ETH:  https://dex-trade.com/spot/trading/KONJETH<br/><br/>
+
 Southxchange:<br/>
 BTC: https://main.southxchange.com/Market/Book/KONJ/BTC<br/>
 DOGE: https://main.southxchange.com/Market/Book/KONJ/DOGE<br/>
