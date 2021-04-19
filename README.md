@@ -11,7 +11,7 @@ BlockTime: ~ 30 sec.
 Rewards per Block:
 250 KONJ / BLOCK (shared as follow)<br/><br/>
 
-Dynamic reward starts on block height 526000.<br/><br/>
+Dynamic reward structure.<br/><br/>
 
 POW 62.5 KONJ decreasing 10% every 6 month<br/>
 POS 48.75 KONJ decreasing 15% every 6 month <br/>
