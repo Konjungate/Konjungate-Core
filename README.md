@@ -170,7 +170,7 @@ Note: guide should be compatible with other Ubuntu versions from 14.04+
 
 ## GitHub pull (Source Download)
 
-```cd ~; git clone https://github.com/SaltineChips/Konjungate Konjungate```
+```git clone https://github.com/Konjungate/Konjungate-Core Konjungate```
 
 
 ## Build Konjungate daemon
