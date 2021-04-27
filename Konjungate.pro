@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = Konjungate-qt
-VERSION = 1.0.4.0
+VERSION = 1.0.4.2
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
@@ -79,7 +79,8 @@ win32:QMAKE_LFLAGS *= -Wl,--dynamicbase -Wl,--nxcompat
 win32:QMAKE_LFLAGS *= -Wl,--large-address-aware -static
 # i686-w64-mingw32
 win32:QMAKE_LFLAGS *= -static-libgcc -static-libstdc++
-
+# turns off un-used parameter warnings, because they actually are used
+win32:QMAKE_CXXFLAGS_WARN_OFF -= -Wunused-parameter
 # PFX Certificate signing
 wince*: {
 win32:SIGNATURE_FILE = C:/Users/PepperedCrumpets/Documents/CERTIFICATE_KONJ
