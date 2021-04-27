@@ -467,7 +467,7 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
             nMasterNodeAdjustment = 153.75 * COIN;// 17% Step up payment adjustment base
         }
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
-            float nDownSubsidy = nSubsidy * (10 / 100);// 10% step down value
+            double nDownSubsidy = (nSubsidy * 10) / 100;// 10% step down value
             int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
             while(i2 <= i){// Loop for as many times as possible
@@ -518,7 +518,7 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
         int64_t i2 = 0;// Base value for loop logic
         while(i2 <= i){// Loop for as many times as possible
            if(i2 <= 3){// Only drop subsidy up to 9 times, regardless of loop count
-              float nDownSubsidy = nSubsidy * (15 / 100); // 15% step down value
+              double nDownSubsidy = (nSubsidy * 15) / 100; // 15% step down value
               nSubsidy -= nDownSubsidy;// 10% Step down payment adjustment
            } /*else if(i2 <= 19){
                int64_t nMNdownSubsidy = nMasterNodeAdjustment / 17;// 17% step up value
@@ -566,7 +566,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
         int64_t i2 = 0;// Base value for loop logic
         while(i2 <= i){// Loop for as many times as possible
            if(i2 <= 19){// Only go up subsidy up to 19 times, regardless of loop count
-              float nUpSubsidy = nSubAdjust * (17 / 100);// 17% step up value
+              double nUpSubsidy = (nSubAdjust * 17) / 100;// 17% step up value
               nSubsidy += nUpSubsidy + nSubAdjust;// 17% Step up payment adjustment
            } else {
             break;// Limit looping to max loop rounds
