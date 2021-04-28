@@ -272,8 +272,8 @@ Value getworkex(const Array& params, bool fHelp)
     if (vNodes.empty())
         throw JSONRPCError(-9, "Konjungate is not connected!");
 
-    if (IsInitialBlockDownload())
-        throw JSONRPCError(-10, "Konjungate is downloading blocks...");
+    /*if (IsInitialBlockDownload()) // Prevents mining before complete sync
+        throw JSONRPCError(-10, "Konjungate is downloading blocks...");*/
 
     if (pindexBest->nHeight >= Params().EndPoWBlock()){
         if(pindexBest->GetBlockTime() >= nPoWToggle){
@@ -411,8 +411,8 @@ Value getwork(const Array& params, bool fHelp)
     if (vNodes.empty())
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Konjungate is not connected!");
 
-    if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Konjungate is downloading blocks...");
+    /*if (IsInitialBlockDownload()) // Prevents miners from mining before sync
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Konjungate is downloading blocks...");*/
 
     if (pindexBest->nHeight >= Params().EndPoWBlock()){
         if(pindexBest->GetBlockTime() >= nPoWToggle){
@@ -568,8 +568,8 @@ Value getblocktemplate(const Array& params, bool fHelp)
     if (vNodes.empty())
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Konjungate is not connected!");
 
-    if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Konjungate is downloading blocks...");
+    /*if (IsInitialBlockDownload()) // Prevents miners from mining before sync
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Konjungate is downloading blocks..."); */
 
     if (pindexBest->nHeight >= Params().EndPoWBlock()){
         if(pindexBest->GetBlockTime() >= nPoWToggle){
