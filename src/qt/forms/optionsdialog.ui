@@ -14,7 +14,8 @@
    <string>Options</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">background-color: rgb(32, 32, 32);
+color: rgb(255, 255, 255);</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -22,11 +23,16 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabMain">
       <attribute name="title">
@@ -35,6 +41,11 @@
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0" colspan="2">
         <widget class="QLabel" name="transactionFeeInfoLabel">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Optional transaction fee per kB that helps make sure your transactions are processed quickly. Most transactions are 1 kB. Fee 0.01 recommended.</string>
          </property>
@@ -50,6 +61,11 @@
         <layout class="QHBoxLayout" name="horizontalLayoutFee">
          <item>
           <widget class="QLabel" name="transactionFeeLabel">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>Pay transaction &amp;fee</string>
            </property>
@@ -62,7 +78,13 @@
           </widget>
          </item>
          <item>
-          <widget class="KonjungateAmountField" name="transactionFee"/>
+          <widget class="KonjungateAmountField" name="transactionFee">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+          </widget>
          </item>
          <item>
           <spacer name="horizontalSpacerFee">
@@ -81,6 +103,11 @@
        </item>
        <item row="2" column="0" colspan="2">
         <widget class="QLabel" name="reserveBalanceInfoLabel">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Reserved amount does not participate in staking and is therefore spendable at any time.</string>
          </property>
@@ -96,6 +123,11 @@
         <layout class="QHBoxLayout" name="horizontalLayoutReserveBalance">
          <item>
           <widget class="QLabel" name="reserveBalanceLabel">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>Reserve</string>
            </property>
@@ -108,7 +140,13 @@
           </widget>
          </item>
          <item>
-          <widget class="KonjungateAmountField" name="reserveBalance"/>
+          <widget class="KonjungateAmountField" name="reserveBalance">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+          </widget>
          </item>
          <item>
           <spacer name="horizontalSpacerReserveBalance">
@@ -127,6 +165,11 @@
        </item>
        <item row="4" column="0">
         <widget class="QCheckBox" name="bitcoinAtStartup">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Automatically start Konjungate after logging in to the system.</string>
          </property>
@@ -157,6 +200,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_Network">
        <item>
         <widget class="QCheckBox" name="mapPortUpnp">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Automatically open the Konjungate client port on the router. This only works when your router supports UPnP and it is enabled.</string>
          </property>
@@ -187,6 +235,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_Window">
        <item>
         <widget class="QCheckBox" name="minimizeToTray">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Show only a tray icon after minimizing the window.</string>
          </property>
@@ -197,6 +250,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="minimizeOnClose">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</string>
          </property>
@@ -229,6 +287,11 @@
         <layout class="QHBoxLayout" name="horizontalLayout_1_Display">
          <item>
           <widget class="QLabel" name="langLabel">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>User Interface &amp;language:</string>
            </property>
@@ -242,6 +305,11 @@
          </item>
          <item>
           <widget class="QValueComboBox" name="lang">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="toolTip">
             <string>The user interface language can be set here. This setting will take effect after restarting Konjungate.</string>
            </property>
@@ -253,6 +321,11 @@
         <layout class="QHBoxLayout" name="horizontalLayout_2_Display">
          <item>
           <widget class="QLabel" name="unitLabel">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="text">
             <string>&amp;Unit to show amounts in:</string>
            </property>
@@ -266,6 +339,11 @@
          </item>
          <item>
           <widget class="QValueComboBox" name="unit">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
            <property name="toolTip">
             <string>Choose the default subdivision unit to show in the interface and when sending coins.</string>
            </property>
@@ -275,6 +353,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="coinControlFeatures">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Whether to show coin control features or not.</string>
          </property>
@@ -285,6 +368,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="useDarkTheme">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Use Dark Visual theme (requires restart)</string>
          </property>
@@ -356,6 +444,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="okButton">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>&amp;OK</string>
        </property>
@@ -363,6 +456,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="cancelButton">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>&amp;Cancel</string>
        </property>
@@ -373,6 +471,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="applyButton">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>&amp;Apply</string>
        </property>

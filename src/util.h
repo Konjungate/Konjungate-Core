@@ -149,6 +149,9 @@ extern int64_t nLiveForkToggle;
 extern int64_t nMasterNodeChecksDelayBaseTime;
 //MasterNode peer IP advanced relay system toggle
 extern bool fMnAdvRelay;
+//Logic for lock/unlock GUI icon
+//does not affect daemon operation
+extern bool settingsStatus;
 //will sync until this block height. default -1 which represents disabled
 extern int maxBlockHeight;
 
@@ -288,7 +291,7 @@ bool ParseInt32(const std::string& str, int32_t *out);
  * Format a paragraph of text to a fixed width, adding spaces for
  * indentation to any added line.
  */
-std::string FormatParagraph(const std::string in, size_t width=79, size_t indent=0);
+std::string FormatParagraph(const std::string &in, size_t width=79, size_t indent=0);
 
 
 

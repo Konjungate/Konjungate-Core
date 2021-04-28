@@ -6,7 +6,7 @@
 #include "main.h"
 #include "wallet.h"
 #include "base58.h"
-#include <QWidget>
+#include <QDialog>
 
 #include <QDir>
 #include <QFile>
@@ -41,7 +41,7 @@ class BlockBrowser;
 }
 class WalletModel;
 
-class BlockBrowser : public QWidget
+class BlockBrowser : public QDialog
 {
     Q_OBJECT
 

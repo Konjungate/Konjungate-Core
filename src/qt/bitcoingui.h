@@ -11,6 +11,7 @@ class ClientModel;
 class WalletModel;
 class TransactionView;
 class OverviewPage;
+class FractalUI;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
@@ -20,15 +21,23 @@ class MasternodeManager;
 class MessagePage;
 class MessageModel;
 class BlockBrowser;
+class SettingsPage;
+class KonjungateGUI;
 
 QT_BEGIN_NAMESPACE
 class QLabel;
 class QModelIndex;
-class QProgressBar;
-class QProgressDialog;
+//class QProgressBar;
+//class QProgressDialog;
 class QStackedWidget;
 class QScrollArea;
 QT_END_NAMESPACE
+
+extern KonjungateGUI* guiref;
+extern bool settingsLock;
+extern bool settingsChangePass;
+extern bool settingsRelock;
+extern bool settingsUncrypted;
 
 /**
   Konjungate GUI main class. This class represents the main window of the Konjungate UI. It communicates with both the client and
@@ -57,6 +66,14 @@ public:
     */
     void setMessageModel(MessageModel *messageModel);
 
+    ClientModel* getClientModel() {
+        return this->clientModel;
+    }
+
+    WalletModel* getWalletModel() {
+        return this->walletModel;
+    }
+
 protected:
     void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
@@ -79,21 +96,24 @@ private:
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
+    FractalUI *fractalUI;
     SignVerifyMessageDialog *signVerifyMessageDialog;
     MasternodeManager *masternodeManagerPage;
     MessagePage *messagePage;
     QLabel* netLabel;
     BlockBrowser *blockBrowser;
-    QLabel *labelEncryptionIcon;
-    QLabel *labelStakingIcon;
-    QLabel *labelConnectionsIcon;
-    QLabel *labelBlocksIcon;
-    QLabel *progressBarLabel;
-    QProgressBar *progressBar;
-    QProgressDialog *progressDialog;
+    SettingsPage *settingsPage;
+    //QLabel *labelEncryptionIcon;
+    //QLabel *labelStakingIcon;
+    //QLabel *labelConnectionsIcon;
+    //QLabel *labelBlocksIcon;
+    //QLabel *progressBarLabel;
+    //QProgressBar *progressBar;
+    //QProgressDialog *progressDialog;
 
     QMenuBar *appMenuBar;
     QAction *overviewAction;
+    QAction *fractalUIAction;
     QAction *historyAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
@@ -116,6 +136,7 @@ private:
     QAction *masternodeManagerAction;
     QAction *messageAction;
     QAction *blockAction;
+    QAction *settingsAction;
     QAction *showBackupsAction;
     QAction *editConfigAction;
     QAction *editConfigExtAction;
@@ -126,7 +147,7 @@ private:
     TransactionView *transactionView;
     RPCConsole *rpcConsole;
 
-    QMovie *syncIconMovie;
+    //QMovie *syncIconMovie;
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
 
@@ -135,7 +156,7 @@ private:
     /** Create the main UI actions. */
     void createActions();
     /** Create the menu bar and sub-menus. */
-    void createMenuBar();
+    //void createMenuBar();
     /** Create the toolbars */
     void createToolBars();
     /** Create system tray (notification) icon */
@@ -152,7 +173,16 @@ public slots:
        @param[in] status            current encryption status
        @see WalletModel::EncryptionStatus
     */
-    void setEncryptionStatus(int status);
+    static void setEncryptionStatus(int status);
+    void setWalletUnlockStakingOnly();
+    void setUnencrypted();
+    void setUnlocked();
+    void setLocked();
+
+    void aboutQtExt_Internal();
+    static void aboutQtExt_Static();
+
+    static void gotoHistoryPage_static();
 
     /** Notify the user of an error in the network or transaction handling code. */
     void error(const QString &title, const QString &message, bool modal);
@@ -178,6 +208,8 @@ public slots:
 private slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    /** Switch to fractalui(websites on the blockchain) page */
+    void gotoFractalUI();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */
@@ -186,9 +218,11 @@ private slots:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage();
-    /** Switch to block explorer*/
+    /** Switch to block explorer */
     void gotoBlockBrowser();
-    /** Switch to masternode manager page*/
+    /** Switch to settings page */
+    void gotoSettingsPage();
+    /** Switch to masternode manager page */
     void gotoMasternodeManagerPage();
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
@@ -231,13 +265,13 @@ private slots:
     void toggleHidden();
 
     void updateWeight();
-    void updateStakingIcon();
+    //void updateStakingIcon();
 
     /** called by a timer to check if fRequestShutdown has been set **/
     void detectShutdown();
 
     /** Show progress dialog e.g. for verifychain */
-    void showProgress(const QString &title, int nProgress);
+    //void showProgress(const QString &title, int nProgress);
 
     /** Edit the Konjungate.conf file */
     void editConfig();

@@ -13,11 +13,20 @@
   <property name="windowTitle">
    <string>Import private key</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(32, 32, 32);
+color: rgb(255, 255, 255);</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>&amp;Label</string>
        </property>
@@ -28,6 +37,11 @@
      </item>
      <item>
       <widget class="QLineEdit" name="labelEdit">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="toolTip">
         <string>The label associated with this address book entry</string>
        </property>
@@ -39,6 +53,11 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Private Key</string>
        </property>
@@ -49,6 +68,11 @@
      </item>
      <item>
       <widget class="QLineEdit" name="keyEdit">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="toolTip">
         <string>The address associated with this address book entry. This can only be modified for sending addresses.</string>
        </property>
@@ -75,6 +99,11 @@
    </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="rescanCB">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>&amp;Rescan</string>
      </property>
@@ -82,6 +111,11 @@
    </item>
    <item row="3" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>

@@ -14,7 +14,8 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">background-color: rgb(32, 32, 32);
+color: rgb(255, 255, 255);</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -45,6 +46,23 @@
        </property>
        <property name="toolTip">
         <string>Enter a label for this address to add it to your address book</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="addressBookButton">
+       <property name="toolTip">
+        <string>Choose address from address book</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../bitcoin.qrc">
+         <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Alt+A</string>
        </property>
       </widget>
      </item>
@@ -95,27 +113,10 @@
      <item>
       <widget class="QValidatedLineEdit" name="sendTo">
        <property name="toolTip">
-        <string>The address to send the payment to  (e.g. KZFKfe559tX7LA8BDMeiPH3C8DbpTJ92Y8:dZv7b41skzqG8cj2d5S56MG1hVQbcK8jMoorX8Wdmf5v)</string>
+        <string>The address to send the payment to  (e.g. dZFKfe559tX7LA8BDMeiPH3C8DbpTJ92Y8:dZv7b41skzqG8cj2d5S56MG1hVQbcK8jMoorX8Wdmf5v)</string>
        </property>
        <property name="maxLength">
         <number>79</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="addressBookButton">
-       <property name="toolTip">
-        <string>Choose address from address book</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
-       </property>
-       <property name="shortcut">
-        <string>Alt+A</string>
        </property>
       </widget>
      </item>

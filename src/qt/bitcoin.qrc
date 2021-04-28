@@ -59,6 +59,10 @@
         <file alias="send-sidebar">res/icons/send-sidebar.png</file>
         <file alias="lock_closed_toolbar">res/icons/lock_closed_toolbar.png</file>
         <file alias="lock_open_toolbar">res/icons/lock_open_toolbar .png</file>
+        <file alias="fractal">res/icons/fractal.png</file>
+        <file alias="bvac">res/icons/bvac_import.jpg</file>
+        <file alias="qriconov">res/icons/qriconov.png</file>
+        <file alias="settings">res/icons/settings.png</file>
     </qresource>
     <qresource prefix="/icons/dark">
         <file alias="connect_0">res/icons/dark/connect0_16.png</file>
@@ -87,11 +91,8 @@
         <file alias="splash-dark">res/images/splash_dark.png</file>
         <file alias="about-dark">res/images/about_dark.png</file>
         <file alias="header-dark">res/images/header_dark.png</file>
-        <file alias="qt">res/images/qt.png</file>
-    </qresource>
-    <qresource prefix="/movies">
-        <file alias="update_spinner">res/movies/update_spinner.mng</file>
-        <file alias="update_spinner_black">res/movies/update_spinner_black.mng</file>
+        <file alias="background_light_alt">res/images/background_light_alt.png</file>
+        <file alias="background_light">res/images/background_light.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="ar">locale/bitcoin_ar.qm</file>
@@ -134,5 +135,10 @@
         <file alias="zh_CN">locale/bitcoin_zh_CN.qm</file>
         <file alias="zh_TW">locale/bitcoin_zh_TW.qm</file>
     </qresource>
-    <qresource prefix="/"/>
+    <qresource prefix="/gifs">
+        <file alias="syncgif">res/gifs/syncicon.gif</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="raleway">res/fonts/Raleway-Light.ttf</file>
+    </qresource>
 </RCC>

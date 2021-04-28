@@ -49,6 +49,7 @@ private slots:
     void on_pasteButton_clicked();
     void updateDisplayUnit();
 
+    void on_BVAC_import_pubkey_clicked();
 private:
     Ui::SendCoinsEntry *ui;
     WalletModel *model;

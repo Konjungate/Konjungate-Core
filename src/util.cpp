@@ -112,6 +112,9 @@ int64_t nLiveForkToggle = 0;
 int64_t nMasterNodeChecksDelayBaseTime = 0;
 //MasterNode peer IP advanced relay system toggle
 bool fMnAdvRelay = false;
+//Logic for lock/unlock GUI icon
+//does not affect daemon operation
+bool settingsStatus = false;
 //Max Blockheight Value
 int maxBlockHeight = -1;
 
@@ -508,7 +511,7 @@ vector<unsigned char> ParseHex(const string& str)
     return ParseHex(str.c_str());
 }
 
-static void InterpretNegativeSetting(string name, map<string, string>& mapSettingsRet)
+static void InterpretNegativeSetting(const std::string &name, map<string, string>& mapSettingsRet)
 {
     // interpret -nofoo as -foo=0 (and -nofoo=0 as -foo=1) as long as -foo not set
     if (name.find("-no") == 0)
@@ -1039,7 +1042,7 @@ bool ParseInt32(const std::string& str, int32_t *out)
         n <= std::numeric_limits<int32_t>::max();
 }
 
-std::string FormatParagraph(const std::string in, size_t width, size_t indent)
+std::string FormatParagraph(const std::string &in, size_t width, size_t indent)
 {
     std::stringstream out;
     size_t col = 0;
@@ -1228,36 +1231,6 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                fprintf(ConfFile, "addnode=37.187.180.53:19417\n");
                fprintf(ConfFile, "addnode=139.99.239.62\n");
                fprintf(ConfFile, "addnode=139.99.239.62:19417\n");
-               fprintf(ConfFile, "addnode=135.125.236.180\n");
-               fprintf(ConfFile, "addnode=135.125.236.180:19417\n");
-               fprintf(ConfFile, "addnode=178.115.129.33\n");
-               fprintf(ConfFile, "addnode=178.115.129.33:19417\n");
-               fprintf(ConfFile, "addnode=178.165.128.134\n");
-               fprintf(ConfFile, "addnode=178.165.128.134:19417\n");
-               fprintf(ConfFile, "addnode=209.126.81.147\n");
-               fprintf(ConfFile, "addnode=209.126.81.147:19417\n");
-               fprintf(ConfFile, "addnode=46.4.205.24\n");
-               fprintf(ConfFile, "addnode=46.4.205.24:19417\n");
-               fprintf(ConfFile, "addnode=49.197.49.189\n");
-               fprintf(ConfFile, "addnode=49.197.49.189:19417\n");
-               fprintf(ConfFile, "addnode=51.195.202.7\n");
-               fprintf(ConfFile, "addnode=51.195.202.7:19417\n");
-               fprintf(ConfFile, "addnode=65.21.85.253\n");
-               fprintf(ConfFile, "addnode=65.21.85.253:19417\n");
-               fprintf(ConfFile, "addnode=89.1.211.189\n");
-               fprintf(ConfFile, "addnode=89.1.211.189:19417\n");
-               fprintf(ConfFile, "addnode=89.106.208.86\n");
-               fprintf(ConfFile, "addnode=89.106.208.86:19417\n");
-               fprintf(ConfFile, "addnode=90.80.53.82\n");
-               fprintf(ConfFile, "addnode=90.80.53.82:19417\n");
-               fprintf(ConfFile, "addnode=91.141.0.129\n");
-               fprintf(ConfFile, "addnode=91.141.0.129:19417\n");
-               fprintf(ConfFile, "addnode=94.130.49.89\n");
-               fprintf(ConfFile, "addnode=94.130.49.89:19417\n");
-               fprintf(ConfFile, "addnode=95.216.127.168\n");
-               fprintf(ConfFile, "addnode=95.216.127.168:19417\n");
-               fprintf(ConfFile, "addnode=95.217.95.234\n");
-               fprintf(ConfFile, "addnode=95.217.95.234:19417\n");
                fclose(ConfFile);
     }
 

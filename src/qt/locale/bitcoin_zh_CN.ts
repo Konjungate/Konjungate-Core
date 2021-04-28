@@ -15,7 +15,7 @@
         <location line="+41"/>
         <source>Copyright © 2009-2014 The Bitcoin developers
 Copyright © 2012-2014 The NovaCoin developers
-Copyright © 2014 The Konjungate developers</source>
+Copyright © 2020-2021 The Konjungate developers</source>
         <translation>版权所有 © 2009-2014 比特币Konjungate开发组
 版权所有 © 2012-2014 新星币Novacoin开发组
 版权所有 © 2014 黑币Konjungate开发组</translation>

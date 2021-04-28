@@ -16,10 +16,22 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1,0">
    <property name="bottomMargin">
     <number>8</number>
    </property>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Send Coins</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QFrame" name="frameCoinControl">
      <property name="sizePolicy">
@@ -33,6 +45,11 @@
        <width>16777215</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background: transparent;
+background-color: rgb(20, 20, 20, 0.35);
+</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -82,6 +99,7 @@
             </property>
             <property name="font">
              <font>
+              <pointsize>10</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -106,6 +124,11 @@
           </property>
           <item>
            <widget class="QPushButton" name="pushButtonCoinControl">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -116,6 +139,11 @@
           </item>
           <item>
            <widget class="QLabel" name="labelCoinControlAutomaticallySelected">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>automatically selected</string>
             </property>
@@ -128,6 +156,7 @@
            <widget class="QLabel" name="labelCoinControlInsuffFunds">
             <property name="font">
              <font>
+              <pointsize>10</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -218,6 +247,13 @@
                </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="labelCoinControlQuantityText">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
                  </property>
@@ -256,6 +292,13 @@
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="labelCoinControlBytesText">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
                  </property>
@@ -307,6 +350,13 @@
                </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="labelCoinControlAmountText">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
                  </property>
@@ -342,6 +392,13 @@
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="labelCoinControlPriorityText">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
                  </property>
@@ -393,6 +450,13 @@
                </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="labelCoinControlFeeText">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
                  </property>
@@ -428,6 +492,13 @@
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="labelCoinControlLowOutputText">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
                  </property>
@@ -479,6 +550,13 @@
                </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="labelCoinControlAfterFeeText">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
                  </property>
@@ -514,6 +592,13 @@
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="labelCoinControlChangeText">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
                  </property>
@@ -567,6 +652,11 @@
           </property>
           <item>
            <widget class="QCheckBox" name="checkBoxCoinControlChange">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>custom change address</string>
             </property>
@@ -582,6 +672,11 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
             </property>
            </widget>
           </item>
@@ -629,6 +724,11 @@
    </item>
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="styleSheet">
+      <string notr="true">background: transparent;
+background-color: rgb(20, 20, 20, 0.19);
+</string>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -638,7 +738,7 @@
         <x>0</x>
         <y>0</y>
         <width>830</width>
-        <height>170</height>
+        <height>133</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -682,6 +782,11 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="addButton">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="toolTip">
         <string>Send to multiple recipients at once</string>
        </property>
@@ -700,6 +805,11 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
        </property>
        <property name="toolTip">
         <string>Remove all transaction fields</string>
@@ -731,6 +841,14 @@
            <height>0</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="text">
           <string>InstantX</string>
          </property>
@@ -743,6 +861,14 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>Balance:</string>
@@ -757,8 +883,16 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
          </property>
          <property name="text">
           <string>123.456 KONJ</string>
@@ -790,6 +924,11 @@
          <width>150</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
        </property>
        <property name="toolTip">
         <string>Confirm the send action</string>

@@ -18,6 +18,8 @@
 #include <QDebug>
 #include <QFile>
 
+#include <boost/bind.hpp>
+
 static const int64_t nClientStartupTime = GetTime();
 
 ClientModel::ClientModel(OptionsModel *optionsModel, QObject *parent) :
@@ -112,6 +114,8 @@ void ClientModel::updateTimer()
     }
 
     emit bytesChanged(getTotalBytesRecv(), getTotalBytesSent());
+
+    emit statusWalletLockChanged(settingsStatus);
 }
 
 void ClientModel::updateMnTimer()

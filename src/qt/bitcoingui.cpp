@@ -38,6 +38,8 @@
 #include "messagemodel.h"
 #include "messagepage.h"
 #include "blockbrowser.h"
+#include "fractalui.h"
+#include "settingspage.h"
 #include "importprivatekeydialog.h"
 
 #ifdef Q_OS_MAC
@@ -70,6 +72,7 @@
 #include <QScroller>
 #include <QTextDocument>
 #include <QInputDialog>
+#include <QFontDatabase>
 
 #include <iostream>
 
@@ -78,14 +81,19 @@ extern CWallet* pwalletMain;
 extern int64_t nLastCoinStakeSearchInterval;
 double GetPoSKernelPS();
 
+bool settingsLock = true;
+bool settingsChangePass = true;
+bool settingsRelock = false;
+bool settingsUncrypted = false;
+
 KonjungateGUI::KonjungateGUI(QWidget *parent):
     QMainWindow(parent),
     clientModel(0),
     walletModel(0),
     toolbar(0),
-    progressBarLabel(0),
-    progressBar(0),
-    progressDialog(0),
+    //progressBarLabel(0),
+    //progressBar(0),
+    //progressDialog(0),
     encryptWalletAction(0),
     changePassphraseAction(0),
     unlockWalletAction(0),
@@ -97,7 +105,7 @@ KonjungateGUI::KonjungateGUI(QWidget *parent):
     prevBlocks(0),
     nWeight(0)
 {
-    resize(900, 520);
+    setFixedSize(1280, 720);
     setWindowTitle(tr("Konjungate") + " - " + tr("Wallet"));
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(fUseDarkTheme ? ":/icons/dark/bitcoin-dark" : ":/icons/bitcoin"));
@@ -106,8 +114,11 @@ KonjungateGUI::KonjungateGUI(QWidget *parent):
     //setUnifiedTitleAndToolBarOnMac(true);
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
+    QFontDatabase fontDB;
+    fontDB.addApplicationFont("/fonts/raleway");
+
     setObjectName("Konjungate");
-    setStyleSheet("#Konjungate {background-image: url(:/images/qt) }");
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light); }");//background-color: #e6e6e6; color: #333333;
 
     // Accept D&D of URIs
     setAcceptDrops(true);
@@ -116,7 +127,7 @@ KonjungateGUI::KonjungateGUI(QWidget *parent):
     createActions();
 
     // Create application menu bar
-    createMenuBar();
+    //createMenuBar();
 
     // Create the toolbars
     createToolBars();
@@ -135,11 +146,15 @@ KonjungateGUI::KonjungateGUI(QWidget *parent):
 
     blockBrowser = new BlockBrowser(this);
 
+    settingsPage = new SettingsPage(this);
+
     addressBookPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::SendingTab);
 
     receiveCoinsPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::ReceivingTab);
 
     sendCoinsPage = new SendCoinsDialog(this);
+
+    fractalUI = new FractalUI(this);
 
     signVerifyMessageDialog = new SignVerifyMessageDialog(this);
 
@@ -157,6 +172,8 @@ KonjungateGUI::KonjungateGUI(QWidget *parent):
     centralStackedWidget->addWidget(masternodeManagerPage);
     centralStackedWidget->addWidget(messagePage);
     centralStackedWidget->addWidget(blockBrowser);
+    centralStackedWidget->addWidget(fractalUI);
+    centralStackedWidget->addWidget(settingsPage);
 
     QWidget *centralWidget = new QWidget();
     QVBoxLayout *centralLayout = new QVBoxLayout(centralWidget);
@@ -167,77 +184,78 @@ KonjungateGUI::KonjungateGUI(QWidget *parent):
     setCentralWidget(centralWidget);
 
     // Create status bar
-    statusBar();
+    //statusBar();
 
     // Disable size grip because it looks ugly and nobody needs it
-    statusBar()->setSizeGripEnabled(false);
+    //statusBar()->setSizeGripEnabled(false);
 
     // Status bar notification icons
     QWidget *frameBlocks = new QWidget();
     frameBlocks->setContentsMargins(0,0,0,0);
     frameBlocks->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    frameBlocks->setStyleSheet("QWidget { background: none; margin-bottom: 5px; }");
+    frameBlocks->setStyleSheet("QWidget { background: none; margin: 0px; }");
     QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
-    frameBlocksLayout->setContentsMargins(3,0,3,0);
-    frameBlocksLayout->setSpacing(3);
+    frameBlocksLayout->setContentsMargins(0,0,0,0);
+    frameBlocksLayout->setSpacing(0);
     frameBlocksLayout->setAlignment(Qt::AlignHCenter);
-    labelEncryptionIcon = new QLabel();
-    labelStakingIcon = new QLabel();
-    labelConnectionsIcon = new QLabel();
-    labelBlocksIcon = new QLabel();
+    //labelEncryptionIcon = new QLabel();
+    //labelStakingIcon = new QLabel();
+    //labelConnectionsIcon = new QLabel();
+    //labelBlocksIcon = new QLabel();
+    //frameBlocksLayout->addWidget(netLabel);
+    //frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addWidget(labelEncryptionIcon);
+    //frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addWidget(labelStakingIcon);
+    //frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addWidget(labelConnectionsIcon);
+    //frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addWidget(labelBlocksIcon);
+    //frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(netLabel);
     //frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelEncryptionIcon);
-    //frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelStakingIcon);
-    //frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelConnectionsIcon);
-    //frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelBlocksIcon);
-    //frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(netLabel);
-    //frameBlocksLayout->addStretch();
+     toolbar->addWidget(frameBlocks);
 
 
     if (GetBoolArg("-staking", true))
     {
-        QTimer *timerStakingIcon = new QTimer(labelStakingIcon);
-        connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(updateStakingIcon()));
-        timerStakingIcon->start(20 * 1000);
-        updateStakingIcon();
+        //QTimer *timerStakingIcon = new QTimer(labelStakingIcon);
+        //connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(updateStakingIcon()));
+        //timerStakingIcon->start(20 * 1000);
+        //updateStakingIcon();
     }
 
     // Progress bar and label for blocks download
-    progressBarLabel = new QLabel();
-    progressBarLabel->setVisible(false);
-    progressBar = new QProgressBar();
-    progressBar->setAlignment(Qt::AlignCenter);
-    progressBar->setVisible(false);
+    //progressBarLabel = new QLabel();
+    //progressBarLabel->setVisible(false);
+    //progressBar = new QProgressBar();
+    //progressBar->setAlignment(Qt::AlignCenter);
+    //progressBar->setVisible(false);
 
     if (!fUseDarkTheme)
     {
         // Override style sheet for progress bar for styles that have a segmented progress bar,
         // as they make the text unreadable (workaround for issue #1071)
         // See https://qt-project.org/doc/qt-4.8/gallery.html
-        QString curStyle = qApp->style()->metaObject()->className();
-        if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
-        {
-            progressBar->setStyleSheet("QProgressBar { color: #ffffff;background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #eb1f24, stop: 1 #4c5259); border-radius: 7px; margin: 0px; }");
-        }
+        //QString curStyle = qApp->style()->metaObject()->className();
+        //if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
+        //{
+        //    progressBar->setStyleSheet("QProgressBar { color: #333333;background-color: #cccccc; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #eb1f24, stop: 1 #4c5259); border-radius: 7px; margin: 0px; }");
+        //}
     }
 
-    statusBar()->addWidget(progressBarLabel);
-    statusBar()->addWidget(progressBar);
-    statusBar()->addPermanentWidget(frameBlocks);
-    statusBar()->setObjectName("statusBar");
-    statusBar()->setStyleSheet("#statusBar { color: #02ae9e; background-color: #41454d; }"); // TODO: Change color 3098c6 -> 03dac6
+    //statusBar()->addWidget(progressBarLabel);
+    //statusBar()->addWidget(progressBar);
+    //statusBar()->addPermanentWidget(frameBlocks);
+    //statusBar()->setObjectName("statusBar");
+    //statusBar()->setStyleSheet("#statusBar { color: #3098c6; background-color: #1d1f22; }");
 
     if (!fUseDarkTheme)
     {
-        statusBar()->setStyleSheet("#statusBar { color: #ffffff; background-color: #262626; }"); // 262626 < - 000000
+        //statusBar()->setStyleSheet("#statusBar { color: #333333; background-color: #cccccc; }");
     }
 
-    syncIconMovie = new QMovie(fUseDarkTheme ? ":/movies/update_spinner_black" : ":/movies/update_spinner", "mng", this);
+    //syncIconMovie = new QMovie(fUseDarkTheme ? ":/movies/update_spinner_black" : ":/movies/update_spinner", "mng", this);
 
     // Clicking on a transaction on the overview page simply sends you to transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
@@ -252,7 +270,7 @@ KonjungateGUI::KonjungateGUI(QWidget *parent):
     // clicking on automatic backups shows details
     connect(showBackupsAction, SIGNAL(triggered()), rpcConsole, SLOT(showBackups()));
 
-    // prevents an oben debug window from becoming stuck/unusable on client shutdown
+    // prevents an open debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
 
     // Clicking on "Verify Message" in the address book sends you to the verify message tab
@@ -325,10 +343,23 @@ void KonjungateGUI::createActions()
     blockAction->setCheckable(true);
     tabGroup->addAction(blockAction);
 
+    settingsAction = new QAction(QIcon(":/icons/settings"), tr("&Settings Page"), this);
+    settingsAction->setToolTip(tr("Go to Settings and Options page"));
+    settingsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_8));
+    settingsAction->setCheckable(true);
+    tabGroup->addAction(settingsAction);
+
+    fractalUIAction = new QAction(QIcon(":/icons/fractal"), tr("&Fractal UI"), this);
+    fractalUIAction->setToolTip(tr("KONJ Fractal Network"));
+    fractalUIAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_9));
+    fractalUIAction->setCheckable(true);
+    tabGroup->addAction(fractalUIAction);
+
     showBackupsAction = new QAction(QIcon(":/icons/browse"), tr("Show Auto&Backups"), this);
     showBackupsAction->setStatusTip(tr("S"));
 
     connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
+    connect(settingsAction, SIGNAL(triggered()), this, SLOT(gotoSettingsPage()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -343,6 +374,8 @@ void KonjungateGUI::createActions()
     connect(masternodeManagerAction, SIGNAL(triggered()), this, SLOT(gotoMasternodeManagerPage()));
     connect(messageAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(messageAction, SIGNAL(triggered()), this, SLOT(gotoMessagePage()));
+    connect(fractalUIAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(fractalUIAction, SIGNAL(triggered()), this, SLOT(gotoFractalUI()));
 
     quitAction = new QAction(QIcon(":icons/quit"), tr("E&xit"), this);
     quitAction->setToolTip(tr("Quit application"));
@@ -403,47 +436,47 @@ void KonjungateGUI::createActions()
     connect(openDataDirAction, SIGNAL(triggered()), this, SLOT(openDataDir()));
 }
 
-void KonjungateGUI::createMenuBar()
-{
-#ifdef Q_OS_MAC
-    appMenuBar = new QMenuBar();
-#else
-    appMenuBar = menuBar();
-#endif
+//void KonjungateGUI::createMenuBar()
+//{
+//#ifdef Q_OS_MAC
+    //appMenuBar = new QMenuBar();
+//#else
+    //appMenuBar = menuBar();
+//#endif
 
     // Configure the menus
-    QMenu *file = appMenuBar->addMenu(tr("&File"));
-    file->addAction(backupWalletAction);
-    file->addAction(importPrivateKeyAction);
-    file->addAction(exportAction);
-    file->addAction(signMessageAction);
-    file->addAction(verifyMessageAction);
-    file->addSeparator();
-    file->addAction(quitAction);
+    //QMenu *file = appMenuBar->addMenu(tr("&File"));
+    //file->addAction(backupWalletAction);
+    //file->addAction(importPrivateKeyAction);
+    //file->addAction(exportAction);
+    //file->addAction(signMessageAction);
+    //file->addAction(verifyMessageAction);
+    //file->addSeparator();
+    //file->addAction(quitAction);
 
-    QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
-    settings->addAction(encryptWalletAction);
-    settings->addAction(changePassphraseAction);
-    settings->addAction(unlockWalletAction);
-    settings->addAction(lockWalletAction);
-    settings->addSeparator();
-    settings->addAction(optionsAction);
-    settings->addAction(showBackupsAction);
+    //QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
+    //settings->addAction(encryptWalletAction);
+    //settings->addAction(changePassphraseAction);
+    //settings->addAction(unlockWalletAction);
+    //settings->addAction(lockWalletAction);
+    //settings->addSeparator();
+    //settings->addAction(optionsAction);
+    //settings->addAction(showBackupsAction);
 
-    QMenu *help = appMenuBar->addMenu(tr("&Help"));
-    help->addAction(openRPCConsoleAction);
-    help->addAction(openDataDirAction);
-    help->addAction(editConfigAction);
-    help->addAction(editConfigExtAction);
-    help->addSeparator();
-    help->addAction(aboutAction);
-    help->addAction(aboutQtAction);
-}
+    //QMenu *help = appMenuBar->addMenu(tr("&Help"));
+    //help->addAction(openRPCConsoleAction);
+    //help->addAction(openDataDirAction);
+    //help->addAction(editConfigAction);
+    //help->addAction(editConfigExtAction);
+    //help->addSeparator();
+    //help->addAction(aboutAction);
+    //help->addAction(aboutQtAction);
+//}
 
 static QWidget* makeToolBarSpacer()
 {
     QWidget* spacer = new QWidget();
-    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     spacer->setStyleSheet("QWidget { background: none; }");
     return spacer;
 }
@@ -452,63 +485,76 @@ void KonjungateGUI::createToolBars()
 {
     fLiteMode = GetBoolArg("-litemode", false);
 
+    //QFontDatabase fontDB;
+    //fontDB.addApplicationFont("/fonts/raleway");
+
     toolbar = new QToolBar(tr("Tabs toolbar"));
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
     toolbar->setObjectName("tabs");
-    toolbar->setStyleSheet("QToolButton { color: #ffffff; font-weight:bold; background-color: #41454d;} QToolButton:hover { background-color: #3a3e45; } QToolButton:checked { background-color: #2d3035 } QToolButton:pressed { background-color: #34373d; } #tabs { color: #ffffff; background-color: #41454d; }");
-    toolbar->setIconSize(QSize(24,24));
+    toolbar->setStyleSheet("QToolBar { background: none; } QToolButton { color: #ffffff; background: none; } QToolButton:hover { background-color: rgba(58, 62, 69, 0.6); } QToolButton:checked { background-color: rgba(45, 48, 53, 0.7); } QToolButton:pressed { background-color: rgba(52, 55, 61, 0.7); } #tabs { color: #ffffff; background: none; border: none;}");
+    toolbar->setIconSize(QSize(64,64));
 
     if(!fUseDarkTheme)
     {
-        toolbar->setStyleSheet("QToolButton { color: #ffffff; font-weight:bold; } QToolButton:hover { background-color: #191919; } QToolButton:checked { background-color: #000000; } QToolButton:pressed { background-color: #0c0c0c; } #tabs { color: #ffffff; background-color: #262626; }"); // here
+        toolbar->setStyleSheet("QToolBar { background: none; } QToolButton { color: #ffffff; background: none;} QToolButton:hover { background-color: rgba(58, 62, 69, 0.7); } QToolButton:checked { background-color: rgba(45, 48, 53, 0.7); } QToolButton:pressed { background-color: rgba(52, 55, 61, 0.7); } #tabs { color: #ffffff; background: none; border: none;}");//QToolBar { background: none; }
     }
 
     QLabel* header = new QLabel();
-    header->setMinimumSize(142, 142);
+    header->setMinimumSize(70, 132);
     header->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     header->setPixmap(QPixmap(fUseDarkTheme ? ":/images/header-dark" : ":/images/header"));
-    header->setMaximumSize(142,142);
-    header->setScaledContents(true);
+    //header->setStyleSheet("QLabel {max-height: 95;}");
+    //header->setStyleSheet("QLabel { margin-left: 26px; margin-bottom: 10px; }");
+    header->setMaximumSize(70, 132);
+    header->setScaledContents(false);
     toolbar->addWidget(header);
 
     toolbar->addAction(overviewAction);
-    toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(sendCoinsAction);
-    toolbar->addAction(historyAction);
+    toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(addressBookAction);
     toolbar->addAction(masternodeManagerAction);
-    if (!fLiteMode){
-        toolbar->addAction(messageAction);
-    }
-    toolbar->addAction(blockAction);
+    toolbar->addAction(fractalUIAction);
+    //toolbar->addAction(blockAction);
+    toolbar->addAction(settingsAction);
+
+    //toolbar->addAction(historyAction);
+
+    //if (!fLiteMode){
+        //toolbar->addAction(messageAction);
+    //}
     netLabel = new QLabel();
 
-    QWidget *spacer = makeToolBarSpacer();
+    //QWidget *spacer = makeToolBarSpacer();
     netLabel->setObjectName("netLabel");
     netLabel->setStyleSheet("#netLabel { color: #ffffff; }");
-    toolbar->addWidget(spacer);
+    //toolbar->addWidget(spacer);
+
+    //QLabel* footer = new QLabel();
+    //footer->setMinimumSize(64, 64);
+    //footer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    //footer->setPixmap(QPixmap(fUseDarkTheme ? ":/icons/footer" : ":/icons/footer"));
+    //footer->setMaximumSize(64, 64);
+   // footer->setScaledContents(true);
+    //toolbar->addWidget(footer);
+
+    toolbar->addWidget(makeToolBarSpacer());
+
     toolbar->setOrientation(Qt::Vertical);
     toolbar->setMovable(false);
 
     addToolBar(Qt::LeftToolBarArea, toolbar);
 
     foreach(QAction *action, toolbar->actions()) {
-        toolbar->widgetForAction(action)->setFixedWidth(142);
+        toolbar->widgetForAction(action)->setFixedWidth(70);
+        //toolbar->widgetForAction(action)->setFixedHeight(64);
     }
 }
 
 void KonjungateGUI::setClientModel(ClientModel *clientModel)
 {
-    if(!fOnlyTor)
-    netLabel->setText("CLEARNET");
-    else
-    {
-    if(!IsLimited(NET_TOR))
-    {
-    netLabel->setText("TOR");
-    }
-    }
+    netLabel->setText("v1.1.2.0");// Version in GUI
 
     this->clientModel = clientModel;
     if(clientModel)
@@ -542,8 +588,8 @@ void KonjungateGUI::setClientModel(ClientModel *clientModel)
         connect(clientModel, SIGNAL(message(QString,QString,bool,unsigned int)), this, SLOT(message(QString,QString,bool,unsigned int)));
 
         // Show progress dialog
-        connect(clientModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
-        connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
+        //connect(clientModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
+        //connect(walletModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
 
         overviewPage->setClientModel(clientModel);
         rpcConsole->setClientModel(clientModel);
@@ -564,6 +610,7 @@ void KonjungateGUI::setWalletModel(WalletModel *walletModel)
         // Put transaction list in tabs
         transactionView->setModel(walletModel);
         overviewPage->setWalletModel(walletModel);
+        settingsPage->setModel(walletModel);
         addressBookPage->setModel(walletModel->getAddressTableModel());
         receiveCoinsPage->setModel(walletModel->getAddressTableModel());
         sendCoinsPage->setModel(walletModel);
@@ -665,6 +712,16 @@ void KonjungateGUI::aboutClicked()
     dlg.exec();
 }
 
+void KonjungateGUI::aboutQtExt_Internal()
+{
+    aboutQtAction->triggered();
+}
+
+void KonjungateGUI::aboutQtExt_Static()
+{
+    guiref->aboutQtExt_Internal();
+}
+
 void KonjungateGUI::setNumConnections(int count)
 {
     QString icon;
@@ -676,8 +733,8 @@ void KonjungateGUI::setNumConnections(int count)
     case 7: case 8: case 9: icon = fUseDarkTheme ? ":/icons/dark/connect_3" : ":/icons/connect_3"; break;
     default: icon = fUseDarkTheme ? ":/icons/dark/connect_4" : ":/icons/connect_4"; break;
     }
-    labelConnectionsIcon->setPixmap(QIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Konjungate network", "", count));
+    //labelConnectionsIcon->setPixmap(QIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+    //labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Konjungate network", "", count));
 }
 
 void KonjungateGUI::setNumBlocks(int count)
@@ -695,12 +752,13 @@ void KonjungateGUI::setNumBlocks(int count)
     if(secs < 90*60)
     {
         tooltip = tr("Up to date") + QString(".<br>") + tooltip;
-        labelBlocksIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/synced" : ":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        //labelBlocksIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/synced" : ":/icons/synced").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
 
         overviewPage->showOutOfSyncWarning(false);
+        overviewPage->ShowSynchronizedMessage(true);
 
-        progressBarLabel->setVisible(false);
-        progressBar->setVisible(false);
+        //progressBarLabel->setVisible(false);
+        //progressBar->setVisible(false);
     }
     else
     {
@@ -729,24 +787,22 @@ void KonjungateGUI::setNumBlocks(int count)
             timeBehindText = tr("%1 and %2").arg(tr("%n year(s)", "", years)).arg(tr("%n week(s)","", remainder/WEEK_IN_SECONDS));
         }
 
-        progressBarLabel->setText(tr(clientModel->isImporting() ? "Importing blocks..." : "Synchronizing with network..."));
-        progressBarLabel->setVisible(true);
-        progressBarLabel->setStyleSheet("QLabel { color: #ffffff; background-color: #41454d; }");
-        if(!fUseDarkTheme){
-        progressBarLabel->setStyleSheet("QLabel { color: #ffffff; background-color: #262626; }"); // here
-        }
-        progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
-        progressBar->setMaximum(totalSecs);
-        progressBar->setValue(totalSecs - secs);
-        progressBar->setVisible(true);
+        //progressBarLabel->setText(tr(clientModel->isImporting() ? "Importing blocks..." : "Synchronizing with network..."));
+        //progressBarLabel->setVisible(true);
+        //progressBarLabel->setStyleSheet("QLabel { color: #ffffff; }");
+        //progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
+        //progressBar->setMaximum(totalSecs);
+        //progressBar->setValue(totalSecs - secs);
+        //progressBar->setVisible(true);
 
         tooltip = tr("Catching up...") + QString("<br>") + tooltip;
-        labelBlocksIcon->setMovie(syncIconMovie);
-        if(count != prevBlocks)
-            syncIconMovie->jumpToNextFrame();
+        //labelBlocksIcon->setMovie(syncIconMovie);
+        //if(count != prevBlocks)
+            //syncIconMovie->jumpToNextFrame();
         prevBlocks = count;
 
         overviewPage->showOutOfSyncWarning(true);
+        overviewPage->ShowSynchronizedMessage(false);
 
         tooltip += QString("<br>");
         tooltip += tr("Last received block was generated %1 ago.").arg(timeBehindText);
@@ -757,11 +813,11 @@ void KonjungateGUI::setNumBlocks(int count)
     // Don't word-wrap this (fixed-width) tooltip
     tooltip = QString("<nobr>") + tooltip + QString("</nobr>");
 
-    labelBlocksIcon->setToolTip(tooltip);
-    progressBarLabel->setToolTip(tooltip);
-    progressBar->setToolTip(tooltip);
+    //labelBlocksIcon->setToolTip(tooltip);
+    //progressBarLabel->setToolTip(tooltip);
+    //progressBar->setToolTip(tooltip);
 
-    statusBar()->setVisible(true);
+    //statusBar()->setVisible(true);
 }
 
 void KonjungateGUI::message(const QString &title, const QString &message, bool modal, unsigned int style)
@@ -951,15 +1007,29 @@ void KonjungateGUI::gotoMasternodeManagerPage()
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light_alt); }");
 }
+
+void KonjungateGUI::gotoFractalUI()
+{
+    fractalUIAction->setChecked(true);
+    centralStackedWidget->setCurrentWidget(fractalUI);
+
+    exportAction->setEnabled(false);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+}
+
 
 void KonjungateGUI::gotoBlockBrowser()
 {
-    blockAction->setChecked(true);
+    //blockAction->setChecked(true);
     centralStackedWidget->setCurrentWidget(blockBrowser);
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light_alt); }");
 }
 
 void KonjungateGUI::gotoOverviewPage()
@@ -969,6 +1039,8 @@ void KonjungateGUI::gotoOverviewPage()
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light); }");
 }
 
 void KonjungateGUI::gotoHistoryPage()
@@ -979,6 +1051,12 @@ void KonjungateGUI::gotoHistoryPage()
     exportAction->setEnabled(true);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
     connect(exportAction, SIGNAL(triggered()), transactionView, SLOT(exportClicked()));
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light_alt); }");
+}
+
+void KonjungateGUI::gotoHistoryPage_static()
+{
+    guiref->gotoHistoryPage();
 }
 
 void KonjungateGUI::gotoAddressBookPage()
@@ -989,6 +1067,8 @@ void KonjungateGUI::gotoAddressBookPage()
     exportAction->setEnabled(true);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
     connect(exportAction, SIGNAL(triggered()), addressBookPage, SLOT(exportClicked()));
+
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light_alt); }");
 }
 
 void KonjungateGUI::gotoReceiveCoinsPage()
@@ -999,6 +1079,8 @@ void KonjungateGUI::gotoReceiveCoinsPage()
     exportAction->setEnabled(true);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
     connect(exportAction, SIGNAL(triggered()), receiveCoinsPage, SLOT(exportClicked()));
+
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light_alt); }");
 }
 
 void KonjungateGUI::gotoSendCoinsPage()
@@ -1008,6 +1090,8 @@ void KonjungateGUI::gotoSendCoinsPage()
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light_alt); }");
 }
 
 void KonjungateGUI::gotoSignMessageTab(QString addr)
@@ -1036,7 +1120,21 @@ void KonjungateGUI::gotoMessagePage()
     exportAction->setEnabled(true);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
     connect(exportAction, SIGNAL(triggered()), messagePage, SLOT(exportClicked()));
+
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light_alt); }");
 }
+
+void KonjungateGUI::gotoSettingsPage()
+{
+    settingsAction->setChecked(true);
+    centralStackedWidget->setCurrentWidget(settingsPage);
+
+    exportAction->setEnabled(false);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+
+    setStyleSheet("#Konjungate { background-image: url(:/images/background_light_alt); }");
+}
+
 
 void KonjungateGUI::dragEnterEvent(QDragEnterEvent *event)
 {
@@ -1079,17 +1177,66 @@ void KonjungateGUI::handleURI(QString strURI)
         notificator->notify(Notificator::Warning, tr("URI handling"), tr("URI can not be parsed! This can be caused by an invalid Konjungate address or malformed URI parameters."));
 }
 
+void KonjungateGUI::setWalletUnlockStakingOnly()
+{
+
+    changePassphraseAction->setEnabled(false);
+    unlockWalletAction->setVisible(true);
+    lockWalletAction->setVisible(true);
+    encryptWalletAction->setEnabled(false);
+    settingsLock = true;
+    settingsChangePass = false;
+    settingsRelock = true;
+    settingsUncrypted = false;
+    settingsStatus = false;
+}
+
+void KonjungateGUI::setUnencrypted()
+{
+    changePassphraseAction->setEnabled(false);
+    unlockWalletAction->setVisible(false);
+    lockWalletAction->setVisible(false);
+    encryptWalletAction->setEnabled(true);
+    settingsLock = false;
+    settingsChangePass = false;
+    settingsRelock = false;
+    settingsUncrypted = true;
+    settingsStatus = false;
+}
+
+void KonjungateGUI::setUnlocked()
+{
+    changePassphraseAction->setEnabled(true);
+    unlockWalletAction->setVisible(false);
+    lockWalletAction->setVisible(true);
+    encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
+    settingsLock = true;
+    settingsChangePass = true;
+    settingsRelock = true;
+    settingsUncrypted = false;
+    settingsStatus = false;
+}
+
+void KonjungateGUI::setLocked()
+{
+    changePassphraseAction->setEnabled(true);
+    unlockWalletAction->setVisible(true);
+    lockWalletAction->setVisible(false);
+    encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
+    settingsLock = true;
+    settingsChangePass = false;
+    settingsRelock = false;
+    settingsUncrypted = false;
+    settingsStatus = true;
+}
+
 void KonjungateGUI::setEncryptionStatus(int status)
 {
     if(fWalletUnlockStakingOnly)
     {
-    labelEncryptionIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/lock_open" : ":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-        labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked for staking only</b>"));
-        changePassphraseAction->setEnabled(false);
-        unlockWalletAction->setVisible(true);
-        lockWalletAction->setVisible(true);
-        encryptWalletAction->setEnabled(false);
-        sendCoinsAction->setEnabled(false);
+        //labelEncryptionIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/lock_open" : ":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        //labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked for staking only</b>"));
+        guiref->setWalletUnlockStakingOnly();
     }
     else
     {
@@ -1097,28 +1244,19 @@ void KonjungateGUI::setEncryptionStatus(int status)
     switch(status)
     {
     case WalletModel::Unencrypted:
-        labelEncryptionIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/lock_open" : ":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-        labelEncryptionIcon->setToolTip(tr("Wallet is <b>not encrypted</b>"));
-        changePassphraseAction->setEnabled(false);
-        unlockWalletAction->setVisible(false);
-        lockWalletAction->setVisible(false);
-        encryptWalletAction->setEnabled(true);
+        //labelEncryptionIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/lock_open" : ":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        //labelEncryptionIcon->setToolTip(tr("Wallet is <b>not encrypted</b>"));
+        guiref->setUnencrypted();
         break;
     case WalletModel::Unlocked:
-        labelEncryptionIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/lock_open" : ":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-        labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
-        changePassphraseAction->setEnabled(true);
-        unlockWalletAction->setVisible(false);
-        lockWalletAction->setVisible(true);
-        encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
+        //labelEncryptionIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/lock_open" : ":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        //labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
+        guiref->setUnlocked();
         break;
     case WalletModel::Locked:
-        labelEncryptionIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/lock_closed" : ":/icons/lock_closed").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-        labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
-        changePassphraseAction->setEnabled(true);
-        unlockWalletAction->setVisible(true);
-        lockWalletAction->setVisible(false);
-        encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
+        //labelEncryptionIcon->setPixmap(QIcon(fUseDarkTheme ? ":/icons/dark/lock_closed" : ":/icons/lock_closed").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        //labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
+        guiref->setLocked();
         break;
     }
 
@@ -1228,7 +1366,7 @@ void KonjungateGUI::updateWeight()
     nWeight = pwalletMain->GetStakeWeight();
 }
 
-void KonjungateGUI::updateStakingIcon()
+/*void KonjungateGUI::updateStakingIcon()
 {
     updateWeight();
 
@@ -1277,7 +1415,7 @@ void KonjungateGUI::updateStakingIcon()
         else
             labelStakingIcon->setToolTip(tr("Not staking"));
     }
-}
+}*/
 
 void KonjungateGUI::detectShutdown()
 {
@@ -1285,7 +1423,7 @@ void KonjungateGUI::detectShutdown()
         QMetaObject::invokeMethod(QCoreApplication::instance(), "quit", Qt::QueuedConnection);
 }
 
-void KonjungateGUI::showProgress(const QString &title, int nProgress)
+/*void KonjungateGUI::showProgress(const QString &title, int nProgress)
 {
     if (nProgress == 0)
     {
@@ -1306,7 +1444,7 @@ void KonjungateGUI::showProgress(const QString &title, int nProgress)
     }
     else if (progressDialog)
         progressDialog->setValue(nProgress);
-}
+}*/
 
 void KonjungateGUI::editConfig()
 {

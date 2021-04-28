@@ -10,6 +10,32 @@
 
 #include <sstream>
 #include <string>
+
+BlockBrowser::BlockBrowser(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::BlockBrowser)
+{
+    ui->setupUi(this);
+
+    setFixedSize(880, 500);
+
+    connect(ui->blockButton, SIGNAL(pressed()), this, SLOT(blockClicked()));
+    connect(ui->txButton, SIGNAL(pressed()), this, SLOT(txClicked()));
+}
+
+void BlockBrowser::setModel(WalletModel *model)
+{
+    if(model) {
+        this->model = model;
+        setWindowTitle(QString("Block Browser"));
+    }
+}
+
+BlockBrowser::~BlockBrowser()
+{
+    delete ui;
+}
+
 double getBlockHardness(int height)
 {
     const CBlockIndex* blockindex = getBlockIndex(height);
@@ -324,19 +350,6 @@ double getTxFees(std::string txid)
     return value0 - value;
 }
 
-
-BlockBrowser::BlockBrowser(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::BlockBrowser)
-{
-    ui->setupUi(this);
-
-    setFixedSize(400, 420);
-
-    connect(ui->blockButton, SIGNAL(pressed()), this, SLOT(blockClicked()));
-    connect(ui->txButton, SIGNAL(pressed()), this, SLOT(txClicked()));
-}
-
 void BlockBrowser::updateExplorer(bool block)
 {
     if(block)
@@ -433,14 +446,4 @@ void BlockBrowser::txClicked()
 void BlockBrowser::blockClicked()
 {
     updateExplorer(true);
-}
-
-void BlockBrowser::setModel(WalletModel *model)
-{
-    this->model = model;
-}
-
-BlockBrowser::~BlockBrowser()
-{
-    delete ui;
 }

@@ -1,5 +1,3 @@
-
-
 // Copyright (c) 2014-2015 The Dash developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -80,7 +78,7 @@ public:
         enabled = false;
     }
 
-    bool SetPrivKey(std::string strPrivKey);
+    bool SetPrivKey(const std::string strPrivKey);
     bool CheckSignature(CMasternodePaymentWinner& winner);
     bool Sign(CMasternodePaymentWinner& winner);
 
