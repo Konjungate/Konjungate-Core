@@ -461,59 +461,59 @@ unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfS
 // PoW coin base reward
 //
 int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
-        int64_t nSubsidy = nBlockStandardReward;// Reward amount
-        int64_t nMasterNodeAdjustment = 113.75 * COIN;// Masternode extra generation
-        if(pindexBest->nHeight > 488888){
-            nMasterNodeAdjustment = 153.75 * COIN;// 17% Step up payment adjustment base
-        }
-        if(pindexBest->GetBlockTime() < nPaymentUpdate_4){ // POS FIX
-            if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
-                int64_t nDownSubsidy = nSubsidy / 10;// 10% step down value
-                int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
-                int64_t i2 = 0;// Base value for loop logic
-                while(i2 <= i){// Loop for as many times as possible
-                    if(i2 <= 9){// Only drop subsidy up to 9 times, regardless of loop count
-                        nSubsidy -= nDownSubsidy;// 10% Step down payment adjustment
-                    } else if(i2 <= 19){
-                        int64_t nMNdownSubsidy = nMasterNodeAdjustment / 17;// 17% step up value
-                        nSubsidy += nMasterNodeAdjustment + nMNdownSubsidy;// 17% Step up payment adjustment
-                    } else {
-                        break;// Limit looping to max loop rounds
-                    }
-                    i2++;// Move up in loop round
+    int64_t nSubsidy = nBlockStandardReward;// Reward amount
+    int64_t nMasterNodeAdjustment = 113.75 * COIN;// Masternode extra generation
+    if(pindexBest->nHeight > 488888){
+        nMasterNodeAdjustment = 153.75 * COIN;// 17% Step up payment adjustment base
+    }
+    if(pindexBest->GetBlockTime() < nPaymentUpdate_4){ // POS FIX
+        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
+            int64_t nDownSubsidy = nSubsidy / 10;// 10% step down value
+            int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
+            int64_t i2 = 0;// Base value for loop logic
+            while(i2 <= i){// Loop for as many times as possible
+                if(i2 <= 9){// Only drop subsidy up to 9 times, regardless of loop count
+                    nSubsidy -= nDownSubsidy;// 10% Step down payment adjustment
+                } else if(i2 <= 19) {
+                    int64_t nMNdownSubsidy = nMasterNodeAdjustment / 17;// 17% step up value
+                    nSubsidy += nMasterNodeAdjustment + nMNdownSubsidy;// 17% Step up payment adjustment
+                } else {
+                    break;// Limit looping to max loop rounds
                 }
-            } else {
+                i2++;// Move up in loop round
+            }
+        } else {
+            nSubsidy += nMasterNodeAdjustment;
+        }
+    } else if (pindexBest->GetBlockTime() >= nPaymentUpdate_4){
+        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
+            double nDownSubsidy = (nSubsidy * 10) / 100;// 10% step down value
+            int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
+            int64_t i2 = 0;// Base value for loop logic
+            while(i2 <= i){// Loop for as many times as possible
+                if(i2 <= 3){// Only drop subsidy up to 9 times, regardless of loop count
+                    nSubsidy -= (nSubsidy * 15) / 100;// 10% Step down payment adjustment
+                }
+                nMasterNodeAdjustment += (nMasterNodeAdjustment * 17) / 100;// 17% step up value
+                if(i2 == 19) break;// Limit looping to max loop rounds
+                i2++;// Move up in loop round
+            }
                 nSubsidy += nMasterNodeAdjustment;
-            }
-        } else if (pindexBest->GetBlockTime() >= nPaymentUpdate_4){
-            if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
-                double nDownSubsidy = (nSubsidy * 10) / 100;// 10% step down value
-                int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
-                int64_t i2 = 0;// Base value for loop logic
-                while(i2 <= i){// Loop for as many times as possible
-                    if(i2 <= 3){// Only drop subsidy up to 9 times, regardless of loop count
-                        nSubsidy -= (nSubsidy * 15) / 100;// 10% Step down payment adjustment
-                    }
-                    nMasterNodeAdjustment += (nMasterNodeAdjustment * 17) / 100;// 17% step up value
-                    if(i2 == 19) break;// Limit looping to max loop rounds
-                        i2++;// Move up in loop round
-                }
-                    nSubsidy += nMasterNodeAdjustment;
-            }
-            //premine function
-            if(nHeight > nReservePhaseStart) {
-                if(pindexBest->nMoneySupply < (nBlockRewardReserve * 100)) {
-                    nSubsidy = nBlockRewardReserve;
-                }
-            }
-            // 30.21 = PoW Payments for regular miners
-            // hardCap v2.1
-            if(pindexBest->nMoneySupply > MAX_SINGLE_TX){
-                LogPrint("MINEOUT", "GetProofOfWorkReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
-                return nFees;
-            }
-            return nSubsidy + nFees;
         }
+        //premine function
+        if(nHeight > nReservePhaseStart) {
+            if(pindexBest->nMoneySupply < (nBlockRewardReserve * 100)) {
+                nSubsidy = nBlockRewardReserve;
+            }
+        }
+        // 30.21 = PoW Payments for regular miners
+        // hardCap v2.1
+        if(pindexBest->nMoneySupply > MAX_SINGLE_TX){
+            LogPrint("MINEOUT", "GetProofOfWorkReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
+            return nFees;
+        }
+        return nSubsidy + nFees;
+    }
 }
 
 //
@@ -521,7 +521,6 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
 //
 int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, int64_t nFees)
 {
-
     int64_t nSubsidy = 48.75 * COIN;// Reward amount
     int64_t nMasterNodeAdjustment = 113.75 * COIN;// Masternode extra generation
     if(pindexBest->nHeight > 488888){
