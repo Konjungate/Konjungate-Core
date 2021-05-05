@@ -1992,6 +1992,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         int64_t nReward = GetProofOfWorkReward(pindex->nHeight, nFees);
         // Check coinbase reward
         if (vtx[0].GetValueOut() > nReward)
+
             return DoS(50, error("ConnectBlock() : coinbase reward exceeded (actual=%d vs calculated=%d)",
                    vtx[0].GetValueOut(),
                    nReward));
@@ -2005,8 +2006,15 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees);
 
-        if (nStakeReward > nCalculatedStakeReward)
-            return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+        if (nStakeReward > nCalculatedStakeReward){
+            if(IsInitialBlockDownload() && vtx[0].GetValueOut() == -277.37745097 * COIN)
+            {
+                // Allow Negative Reward Blocks
+                LogPrintf("IsProofOfStake() : Initial sync noticed possible corrupted PoS block, allowing block...\n");
+            } else {
+                return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+            }
+        }
     }
 
     // ppcoin: track money supply and mint amount info
