@@ -468,7 +468,7 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
         nMasterNodeAdjustment = 153.75 * COIN;// 17% Step up payment adjustment base
     }
     
-    if(pindexBest->GetBlockTime() < nPaymentUpdate_4){ // POS FIX    
+    if(pindexBest->nHeight < nPaymentUpdate_4){ // POS FIX
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)    
             int64_t nDownSubsidy = nSubsidy / 10;// 10% step down value
             int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
@@ -489,7 +489,7 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
             nSubsidy += nMasterNodeAdjustment;
         }
     } 
-    else if (pindexBest->GetBlockTime() >= nPaymentUpdate_4){        
+    else if (pindexBest->nHeight >= nPaymentUpdate_4){
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)        
             int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
