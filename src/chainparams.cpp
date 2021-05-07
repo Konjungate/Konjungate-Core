@@ -112,7 +112,7 @@ public:
         //FORK END
         if(pindexBest->nHeight < 699999){
             nEndPoWBlock = 0x7fffffff; // Will Now end on block 700000
-        }else if(pindexBest->nHeight > 699999 - 1){
+        }else if(pindexBest->nHeight > 699998){
             nEndPoWBlock = 700000;
         }
         nStartPoSBlock = 1;
