@@ -20,7 +20,7 @@ static const int64_t nBlockRewardReserve = 7500000 * COIN; // premine 750,000,00
 /** Standard block subsidy */
 static const int64_t nBlockStandardReward = 62.75 * COIN;
 /** PoS Fork Block for DevOps **/
-static const int64_t nBlockForkHeight0 = 353347; // One month from now
+//static const int64_t nBlockForkHeight0 = 353347; // One month from now
 /** Block spacing preferred */
 static const int64_t BLOCK_SPACING = (1 * 30); // Half of One Minute (30sec)
 /** Block spacing minimum */
