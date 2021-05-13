@@ -2006,9 +2006,13 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees);
         if (nStakeReward > nCalculatedStakeReward){
-            if(pindex->nHeight != 101 && pindex->nHeight != 102){ // block exceptions for 101 & 102
-                return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
-            }
+            //if(pindex->nHeight != 101 && pindex->nHeight != 102){ // block exceptions for 101 & 102
+                if(IsInitialBlockDownload() && vtx[0].GetValueOut() == 162.5 * COIN){
+                    LogPrintf("PoS reward is from before fork, permitting sync to block...");
+                } else {
+                    return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+                }
+            //}
         }
     }
 
