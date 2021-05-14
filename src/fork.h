@@ -17,7 +17,7 @@ static const int64_t nPaymentUpdate_2 = 1562094000;//TODO: Clean this up
 /** Masternode/Devops Payment Update 3 **/
 static const int64_t nPaymentUpdate_3 = 1562281200;//TODO: Clean this up
 /** Masternode/Devops Payment Update 4 **/
-static const int64_t nPaymentUpdate_4 = 545000;// Block 545000 Might have to be drawn close for beta
+static const int64_t nPaymentUpdate_4 = 484835;// Block that's 24 hour ahead of release, currently 484835 for beta
 /** PoW enabled again **/
 static const int64_t nPoWToggle = 1596844820; // Saturday, August 8, 2020 12:00:20 AM (GMT)
 /** Velocity toggle block */
