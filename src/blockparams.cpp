@@ -545,7 +545,7 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
         nMasterNodeAdjustment = 153.75 * COIN;// 17% Step up payment adjustment base
     }
     
-    if(pindexBest->GetBlockTime() < nPaymentUpdate_4 ){ // POS FIX    
+    if(pindexBest->nHeight < nPaymentUpdate_4 ){ // POS FIX
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)    
             int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
@@ -572,7 +572,7 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
             nSubsidy += 25 * COIN;
         }
     } 
-    else if(pindexBest->GetBlockTime() >= nPaymentUpdate_4){ // NEW REWARDS TAKE PLACE        
+    else if(pindexBest->nHeight >= nPaymentUpdate_4){ // NEW REWARDS TAKE PLACE
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
             
             int64_t i = ((pindexBest->nHeight - 488888) / 526000) - 1;// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
