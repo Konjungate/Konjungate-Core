@@ -631,7 +631,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
         nSubAdjust = 153.75 * COIN;
     }    
     nSubsidy = nSubAdjust;    
-    if(pindexBest->GetBlockTime() < nPaymentUpdate_4){        
+    if(pindexBest->nHeight < nPaymentUpdate_4){        
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)            
             int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic            
