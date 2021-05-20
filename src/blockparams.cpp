@@ -568,9 +568,9 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
         }
         
         //PoS block reward increase means it pays DevOps && meets proper rewards
-        if(pindexBest->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 ==> nPaymentUpdate_4 can be found in Mining.h
+        /*if(pindexBest->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 ==> nPaymentUpdate_4 can be found in Mining.h
             nSubsidy += 25 * COIN;
-        }
+        }*/
     } 
     else if(pindexBest->nHeight >= nPaymentUpdate_4){ // NEW REWARDS TAKE PLACE
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
