@@ -482,25 +482,25 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
                     nSubsidy += nMasterNodeAdjustment + nMNdownSubsidy;// 17% Step up payment adjustment
                 } else {
                     break;// Limit looping to max loop rounds
-                }                
+                }
                 i2++;// Move up in loop round
             }
         } else {
             nSubsidy += nMasterNodeAdjustment;
         }
-    } 
+    }
     else if (pindexBest->nHeight >= nPaymentUpdate_4){
-        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)        
+        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
             int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
         
-            while(i2 <= i){// Loop for as many times as possible                
+            while(i2 <= i){// Loop for as many times as possible
                 if(nSubsidy > 30 * COIN){
                     nSubsidy -= (nSubsidy * 10) / 100;// 10% Step down payment adjustment
                 } else {
                     nSubsidy = 30 * COIN;
                 }
-                if(i2 > 0){                    
+                if(i2 > 0){
                     if(nMasterNodeAdjustment < 210 * COIN){
                         nMasterNodeAdjustment += (nMasterNodeAdjustment * 17) / 100;// 17% Step up payment adjustment
                     } else {
@@ -508,9 +508,9 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
                     }
                 }
                 if(nSubsidy == 30 * COIN && nMasterNodeAdjustment == 210 * COIN)
-                    break;                
+                    break;
                 i2++;// Move up in loop round
-            }            
+            }
             nSubsidy += nMasterNodeAdjustment;
         }
     }
