@@ -488,8 +488,7 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
         } else {
             nSubsidy += nMasterNodeAdjustment;
         }
-    }
-    else if (pindexBest->nHeight >= nPaymentUpdate_4){
+    } else {
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
             int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
@@ -571,8 +570,7 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
         /*if(pindexBest->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 ==> nPaymentUpdate_4 can be found in Mining.h
             nSubsidy += 25 * COIN;
         }*/
-    } 
-    else if(pindexBest->nHeight >= nPaymentUpdate_4){ // NEW REWARDS TAKE PLACE
+    } else { // NEW REWARDS TAKE PLACE
         if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
             
             int64_t i = ((pindexBest->nHeight - 488888) / 526000) - 1;// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
@@ -595,9 +593,9 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
             }
             nSubsidy += nMasterNodeAdjustment;
             //PoS block reward increase means it pays DevOps && meets proper rewards
-            /*if(pindexBest->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 can be found in Mining.h permits staking fix for DevOps
+            if(pindexBest->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 can be found in Mining.h permits staking fix for DevOps
                 nSubsidy += 25 * COIN;
-            }*/
+            }
         }
     }
 
