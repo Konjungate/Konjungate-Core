@@ -6,10 +6,10 @@
 //
 
 // These need to be macros, as version.cpp's and bitcoin-qt.rc's voodoo requires it
-#define CLIENT_VERSION_MAJOR       1
-#define CLIENT_VERSION_MINOR       1
-#define CLIENT_VERSION_REVISION    2
-#define CLIENT_VERSION_BUILD       17
+#define CLIENT_VERSION_MAJOR       1 // Major Revision
+#define CLIENT_VERSION_MINOR       1 // Minor Revision (Updated cause of GUI update)
+#define CLIENT_VERSION_REVISION    3 // Revision of the build, should be increased by one every release
+#define CLIENT_VERSION_BUILD       0 // Build version, for everytime I hit the build button.
 
 // Set to true for release, false for prerelease or test build
 #define CLIENT_VERSION_IS_RELEASE  true

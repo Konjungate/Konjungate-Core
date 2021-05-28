@@ -18,7 +18,7 @@ static const int64_t nGenesisBlockReward = 1 * COIN;
 /** Reserve block subsidy */
 static const int64_t nBlockRewardReserve = 7500000 * COIN; // premine 750,000,000 KONJ over 100 blocks
 /** Standard block subsidy */
-static const int64_t nBlockStandardReward = 150.75 * COIN; // was 62.75
+static const int64_t nBlockStandardReward = 62.75 * COIN; // was 62.75
 /** PoS Fork Block for DevOps **/
 // static const int64_t nBlockForkHeight0 = 353347; // One month from now
 /** Block spacing preferred */
