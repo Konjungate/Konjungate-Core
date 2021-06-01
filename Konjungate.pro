@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = Konjungate-qt
-VERSION = 1.1.3.0
+VERSION = 1.1.3.1
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
