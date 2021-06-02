@@ -1990,6 +1990,10 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
     if (IsProofOfWork())
     {
         int64_t nReward = GetProofOfWorkReward(pindex->nHeight, nFees);
+
+        //Refund
+        if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund) nReward += nBlockStandardRefund;
+
         // Check coinbase reward
         if (vtx[0].GetValueOut() > nReward)
 
@@ -2005,6 +2009,10 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
             return error("ConnectBlock() : %s unable to get coin age for coinstake", vtx[1].GetHash().ToString());
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees);
+
+        //Refund
+        if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund) nCalculatedStakeReward += nBlockStandardRefund;
+
         if (nStakeReward > nCalculatedStakeReward){
                 return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
         }

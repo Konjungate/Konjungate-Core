@@ -3265,24 +3265,12 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         pBlockIndexRefund = mapBlockIndex[hash];
         blockRefund.ReadFromDisk(pBlockIndexRefund, true);
 
-        int prevSize = txNew.vout.size();
-        
         if(blockRefund.IsProofOfStake())
         {
             CScript refundpayee = blockRefund.vtx[1].vout[1].scriptPubKey;
             txNew.vout.resize(txNew.vout.size()+1);
             txNew.vout[txNew.vout.size()-1].scriptPubKey = refundpayee;
             txNew.vout[txNew.vout.size()-1].nValue = nBlockStandardRefund;
-        }
-
-        blockValue -= nBlockStandardRefund;
-        
-        if(prevSize == 5){ // 2 stake outputs, stake was split, plus a devops AND masternode payment
-            txNew.vout[1].nValue = (blockValue / 2 / CENT) * CENT;
-            txNew.vout[2].nValue = blockValue - txNew.vout[1].nValue;
-        }
-        else if(prevSize == 4){ // only 1 stake output, was not split, plus a devops AND masternode payment
-            txNew.vout[1].nValue = blockValue;
         }
     }
 

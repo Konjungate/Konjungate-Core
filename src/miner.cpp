@@ -483,8 +483,6 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                             pblock->vtx[0].vout[pblock->vtx[0].vout.size()-1].scriptPubKey = refundpayee;
                             pblock->vtx[0].vout[pblock->vtx[0].vout.size()-1].nValue = nBlockStandardRefund;
                         }
-
-                        pblock->vtx[0].vout[0].nValue = blockReward - nBlockStandardRefund;
                     }
                 }
             } //
