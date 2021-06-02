@@ -511,6 +511,12 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
                 i2++;// Move up in loop round
             }
             nSubsidy += nMasterNodeAdjustment;
+
+            //Refund
+            if(pindexBest->nHeight < nEndOfRefund)
+            {
+                nSubsidy += nBlockStandardRefund;
+            }
         }
     }
         
@@ -595,6 +601,12 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
             //PoS block reward increase means it pays DevOps && meets proper rewards
             if(pindexBest->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 can be found in Mining.h permits staking fix for DevOps
                 nSubsidy += 25 * COIN;
+            }
+
+            //Refund
+            if(pindexBest->nHeight < nEndOfRefund)
+            {
+                nSubsidy += nBlockStandardRefund;
             }
         }
     }
