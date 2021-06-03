@@ -461,6 +461,29 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                     masternodePayment, address2.ToString().c_str());
                     LogPrintf("CreateNewBlock(): Devops payment %lld to %s\n",
                     devopsPayment, address4.ToString().c_str());
+
+                    //Refund
+                    if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund)
+                    {
+                        int nHeightRefund = pindexBest->nHeight+1 - nNbrWrongBlocks;
+                        CBlock blockRefund;
+                        CBlockIndex* pBlockIndexRefund = mapBlockIndex[hashBestChain];
+                        while (pBlockIndexRefund->nHeight > nHeightRefund)
+                            pBlockIndexRefund = pBlockIndexRefund->pprev;
+
+                        uint256 hash = *pBlockIndexRefund->phashBlock;
+
+                        pBlockIndexRefund = mapBlockIndex[hash];
+                        blockRefund.ReadFromDisk(pBlockIndexRefund, true);
+
+                        if(blockRefund.IsProofOfStake())
+                        {
+                            CScript refundpayee = blockRefund.vtx[1].vout[1].scriptPubKey;
+                            pblock->vtx[0].vout.resize(pblock->vtx[0].vout.size()+1);
+                            pblock->vtx[0].vout[pblock->vtx[0].vout.size()-1].scriptPubKey = refundpayee;
+                            pblock->vtx[0].vout[pblock->vtx[0].vout.size()-1].nValue = nBlockStandardRefund;
+                        }
+                    }
                 }
             } //
         }

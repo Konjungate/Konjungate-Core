@@ -3251,6 +3251,29 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         }
     }
 
+    //Refund
+    if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund)
+    {
+        int nHeightRefund = pindexBest->nHeight+1 - nNbrWrongBlocks;
+        CBlock blockRefund;
+        CBlockIndex* pBlockIndexRefund = mapBlockIndex[hashBestChain];
+        while (pBlockIndexRefund->nHeight > nHeightRefund)
+            pBlockIndexRefund = pBlockIndexRefund->pprev;
+
+        uint256 hash = *pBlockIndexRefund->phashBlock;
+
+        pBlockIndexRefund = mapBlockIndex[hash];
+        blockRefund.ReadFromDisk(pBlockIndexRefund, true);
+
+        if(blockRefund.IsProofOfStake())
+        {
+            CScript refundpayee = blockRefund.vtx[1].vout[1].scriptPubKey;
+            txNew.vout.resize(txNew.vout.size()+1);
+            txNew.vout[txNew.vout.size()-1].scriptPubKey = refundpayee;
+            txNew.vout[txNew.vout.size()-1].nValue = nBlockStandardRefund;
+        }
+    }
+
     // Sign
     int nIn = 0;
     BOOST_FOREACH(const CWalletTx* pcoin, vwtxPrev)
