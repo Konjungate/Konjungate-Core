@@ -1991,11 +1991,13 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
     {
         int64_t nReward = GetProofOfWorkReward(pindex->nHeight, nFees);
         // Check coinbase reward
-        if (vtx[0].GetValueOut() > nReward)
-
+        if (vtx[0].GetValueOut() > nReward){
+            if(pindex->nHeight != nPaymentUpdate_4){
             return DoS(50, error("ConnectBlock() : coinbase reward exceeded (actual=%d vs calculated=%d)",
                    vtx[0].GetValueOut(),
                    nReward));
+            }
+        }
     }
     if (IsProofOfStake())
     {
@@ -2006,9 +2008,12 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees);
         if (nStakeReward > nCalculatedStakeReward){
+            if(pindex->nHeight != nPaymentUpdate_4){
                 return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+            }
         }
     }
+}
 
     // ppcoin: track money supply and mint amount info
     pindex->nMint = nValueOut - nValueIn + nFees;
