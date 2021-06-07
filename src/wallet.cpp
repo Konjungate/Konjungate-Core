@@ -3264,6 +3264,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if(mRefundableBlocksBuffer.count(nHeightRefund) != 0)
         {
             hash = mRefundableBlocksBuffer[nHeightRefund];
+            LogPrintf("CreateCoinStake(): I take refundable block from the buffer %d\n", nHeightRefund);
         }
         else
         {
@@ -3273,7 +3274,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             while (pBlockIndexRefund->nHeight > nHeightRefund){
                 pBlockIndexRefund = pBlockIndexRefund->pprev;
 
-                if(pBlockIndexRefund->nHeight < nHeightRefund + 500)
+                if(pBlockIndexRefund->nHeight < nHeightRefund + 10)
                     mRefundableBlocksBuffer[pBlockIndexRefund->nHeight] = *pBlockIndexRefund->phashBlock;
             }
 

@@ -345,12 +345,6 @@ void VRX_Dry_Run(const CBlockIndex* pindexLast)
         return; // can't index prevblock
     }
 
-    // Reward structure beta-test fork
-    if (pindexLast->nHeight >= nPaymentUpdate_4 && pindexLast->nHeight < nPaymentUpdate_4 + 5) {
-        fDryRun = true;
-        return;
-    }
-    
     // Test Fork
     if (nLiveForkToggle != 0) {
         // Do nothing
