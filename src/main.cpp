@@ -2025,7 +2025,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         bool containsDevopsPayment = false;
         bool containsRefundPayment = false;
 
-        BOOST_FOREACH(CTxOut& txOut, cRewardTx)
+        BOOST_FOREACH(CTxOut& txOut, cRewardTx.vout)
         {
             if(txOut.nValue == GetMasternodePayment(pindexBest->nHeight, 0)) containsMnPayment = true;
             if(txOut.nValue == GetDevOpsPayment(pindexBest->nHeight, 0)) containsDevopsPayment = true;
