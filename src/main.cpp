@@ -2018,6 +2018,30 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         }
     }
 
+    // Check MN, devops and refund payments
+    if(pindexBest->nHeight >= nPaymentUpdate_4){
+        CTransaction cRewardTx = IsProofOfStake() ? vtx[1] : vtx[0];
+        bool containsMnPayment = false;
+        bool containsDevopsPayment = false;
+        bool containsRefundPayment = false;
+
+        BOOST_FOREACH(CTxOut& txOut, cRewardTx)
+        {
+            if(txOut.nValue == GetMasternodePayment(pindexBest->nHeight, 0)) containsMnPayment = true;
+            if(txOut.nValue == GetDevOpsPayment(pindexBest->nHeight, 0)) containsDevopsPayment = true;
+            if(txOut.nValue == nBlockStandardRefund) containsRefundPayment = true;
+        }
+
+        if(!containsMnPayment)
+            return error("ConnectBlock() : masternode payment missing or incorrect");
+        
+        if(!containsDevopsPayment)
+            return error("ConnectBlock() : devops payment missing or incorrect");
+
+        if(pindexBest->nHeight < nEndOfRefund && !containsRefundPayment)
+            return error("ConnectBlock() : refund payment missing or incorrect");
+    }
+    
     // ppcoin: track money supply and mint amount info
     pindex->nMint = nValueOut - nValueIn + nFees;
     pindex->nMoneySupply = (pindex->pprev? pindex->pprev->nMoneySupply : 0) + nValueOut - nValueIn;

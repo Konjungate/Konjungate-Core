@@ -467,12 +467,28 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                     {
                         int nHeightRefund = pindexBest->nHeight+1 - nNbrWrongBlocks;
                         CBlock blockRefund;
-                        CBlockIndex* pBlockIndexRefund = mapBlockIndex[hashBestChain];
-                        while (pBlockIndexRefund->nHeight > nHeightRefund)
-                            pBlockIndexRefund = pBlockIndexRefund->pprev;
+                        CBlockIndex* pBlockIndexRefund;
+                        uint256 hash;
 
-                        uint256 hash = *pBlockIndexRefund->phashBlock;
+                        if(mRefundableBlocksBuffer.count(nHeightRefund) != 0)
+                        {
+                            hash = mRefundableBlocksBuffer[nHeightRefund];
+                        }
+                        else
+                        {
+                            mRefundableBlocksBuffer.clear();
+                            pBlockIndexRefund = mapBlockIndex[hashBestChain];
+                           
+                            while (pBlockIndexRefund->nHeight > nHeightRefund){
+                                pBlockIndexRefund = pBlockIndexRefund->pprev;
 
+                                if(pBlockIndexRefund->nHeight < nHeightRefund + 500)
+                                    mRefundableBlocksBuffer[pBlockIndexRefund->nHeight] = *pBlockIndexRefund->phashBlock;
+                            }
+
+                            hash = *pBlockIndexRefund->phashBlock;
+                        }
+                        
                         pBlockIndexRefund = mapBlockIndex[hash];
                         blockRefund.ReadFromDisk(pBlockIndexRefund, true);
 
