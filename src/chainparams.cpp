@@ -104,7 +104,7 @@ public:
         nPoolMaxTransactions = 9;
         strMNenginePoolDummyAddress = "K8LHiHK8be6YucgmvhsnzVxT2d7p7SDGnc"; // CcABDmWkcSZPw8rMtoobShVFuudhf1svZu devopsaddress is dHy3LZvqX5B2rAAoLiA7Y7rpvkLXKTkD18
         strDevOpsAddress = "K7gNsQQKF1ynvpgM3kMc5oB52C3oJdCJDU"; // CORRECT ADDRESS
-        nEndPoWBlock = 526180; // Will Now end on block 700000
+        nEndPoWBlock = 700000; // Will Now end on block 700000
         nStartPoSBlock = 1;
     }
 

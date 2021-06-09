@@ -2097,8 +2097,6 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
                     
                     if (cRewardTx.vout[nRefundIndex].scriptPubKey != refundpayee)
                         return error("ConnectBlock() : refund payee is incorrect");
-
-                    LogPrintf("ConnectBlock(): we did it %d\n", pindexBest->nHeight + 1);
                 }
             }
         }

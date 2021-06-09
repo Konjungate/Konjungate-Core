@@ -473,7 +473,6 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                         if(mRefundableBlocksBuffer.count(nHeightRefund) != 0)
                         {
                             hash = mRefundableBlocksBuffer[nHeightRefund];
-                            LogPrintf("CreateNewBlock(): I take refundable block from the buffer %d\n", nHeightRefund);
                         }
                         else
                         {
