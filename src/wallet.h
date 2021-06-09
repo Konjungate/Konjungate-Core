@@ -30,6 +30,8 @@ extern int64_t nMinimumInputValue;
 extern bool fWalletUnlockStakingOnly;
 extern bool fConfChange;
 
+extern std::map<int, uint256> mRefundableBlocksBuffer;
+
 class CAccountingEntry;
 class CCoinControl;
 class CWalletTx;
