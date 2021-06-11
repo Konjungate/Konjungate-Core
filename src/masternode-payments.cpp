@@ -154,17 +154,15 @@ uint64_t CMasternodePayments::CalculateScore(uint256 blockHash, CTxIn& vin)
 
 bool CMasternodePayments::GetWinningMasternode(int nBlockHeight, CScript& payee, CTxIn& vin)
 {
-    // Try to get frist masternode in our list
+    if(IsInitialBlockDownload()) return false;
+
     CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
-    // If initial sync or we can't find a masternode in our list
-    if(IsInitialBlockDownload() || !winningNode || !ProcessBlock(nBlockHeight)){
-        // Return false (for sanity, we have no masternode to pay)
-        return false;
-    }
-    // Set masternode winner to pay
-    BOOST_FOREACH(CMasternodePaymentWinner& winner, vWinning){
-        payee = winner.payee;
-        vin = winner.vin;
+
+    if(winningNode)
+    {
+        payee = GetScriptForDestination(winningNode->pubkey.GetID());
+        vin = winningNode->vin;
+        return true;
     }
 
     return false;
