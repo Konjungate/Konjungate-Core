@@ -9,7 +9,8 @@ BlockSize (depending on block saturation): 1.525612 MB min - 15.256128 MB max<br
 BlockTime: ~ 30 sec.
 
 Rewards per Block:
-250 KONJ / BLOCK (shared as follow)<br/><br/>
+Dynamic to Block 6800888 (see image below)
+From Block 6800889: 245 KONJ / BLOCK (shared as follow)<br/><br/>
 
 Dynamic reward structure.<br/><br/>
 
