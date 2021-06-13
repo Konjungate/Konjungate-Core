@@ -1,8 +1,8 @@
-# Konjungate Core v1.0.3.6
+# Konjungate Core v1.1.6.1
 
 Name: Konjungate<br/>
 Ticker: KONJ<br/>
-Type: Hybrid, POS / POW / Masternodes<br/>
+Type: Hybrid, POS / Masternodes< --> POW ends on Block 700000br/>
 Algorithm: bmw512<br/>
 Total Coin Supply: 21 billion<br/>
 BlockSize (depending on block saturation): 1.525612 MB min - 15.256128 MB max<br/>
@@ -20,16 +20,17 @@ MN. 113,75 KONJ increasing 17% every 6 month<br/><br/>
 Masternode Collateral: 2750000 KONJ
 
 
-Charity fee (taken from POW): 25 KONJ to support contemporary ART.<br/>
-Please visit https://www.machfeld-foundation.net to see our supported Projects.
+Charity fee: 25 KONJ to support contemporary ART.<br/>
+Please visit https://www.machfeld-foundation.net and https://wendy.network to see our supported Projects.
 
 Official Website:<br/>
 https://www.konjungate.net
 
 ## What is Konjungate?
-KONJUNGATE - The Artbased Blockchain To change the funding of Artists and Institutions. Based on the cyber novel MACHFELD by Michael Mastrototaro © 1999
+KONJUNGATE - The Artbased Blockchain is based on the cyber novel MACHFELD by Michael Mastrototaro © 1999
 
-Konjungate will chance the funding of contemporary Art and Art-Institutions using blockchain technology to change the way of contemporary art funding.
+Konjungate will chance the funding of contemporary Art and Art-Institutions using blockchain technology to change the way of contemporary art funding. 
+We are also developping our side chain solution. In addition to NFTs and Smart Contracts, this will also enable Web3 and dAPPs solutions. As part of the UUNIGATE community, our chain will then be able to communicate with all the alt coins involved. It’s even possible to “Whitelist” ETH and BSC and other network contracts we deem viable and safe for our users to interact with and allow them to join our fractal ecosystem More about this in a separate announcement.
 
 See our projects at:<br/>
 https://wendy.network<br/>
@@ -47,7 +48,9 @@ https://pool.konjungate.net/<br/>
 https://ahamay.net/
 
 Block Explorer:
-http://explore.konjungate.net/<br/><br/>
+http://explore.konjungate.net/<br/>
+https://openchains.info/coin/konjungate<br/>
+https://chainz.cryptoid.info/konj/<br><br>
 
 ## Social Media:<br/>
 Discord: https://discord.gg/K7hAfXg 
@@ -112,7 +115,7 @@ https://wallet.autradex.systems/markets/epltc?markets=all&column=name&order=asc&
 ---------------->>>-----<<<<<<---------------------
 
 ## Developer
-Thanks to https://github.com/SaltineChips/ for his great work!! :)
+Thanks to https://github.com/SaltineChips/  and https://github.com/Pepsinside for there brains and work!! :)
 
 
 
