@@ -1227,10 +1227,12 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                fprintf(ConfFile, "rpcallowip=127.0.0.1\n");
                fprintf(ConfFile, "addnode=159.89.18.103\n");
                fprintf(ConfFile, "addnode=159.89.18.103:19417\n");
-               /*fprintf(ConfFile, "addnode=37.187.180.53\n");
-               fprintf(ConfFile, "addnode=37.187.180.53:19417\n");
+               fprintf(ConfFile, "addnode=51.68.175.13\n");
+               fprintf(ConfFile, "addnode=51.68.175.13:19417\n");
                fprintf(ConfFile, "addnode=139.99.239.62\n");
-               fprintf(ConfFile, "addnode=139.99.239.62:19417\n");*/
+               fprintf(ConfFile, "addnode=139.99.239.62:19417\n");
+               fprintf(ConfFile, "addnode=51.195.42.49\n");
+               fprintf(ConfFile, "addnode=51.195.42.49:19417\n");
                fclose(ConfFile);
     }
 

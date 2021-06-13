@@ -155,14 +155,14 @@ uint64_t CMasternodePayments::CalculateScore(uint256 blockHash, CTxIn& vin)
 bool CMasternodePayments::GetWinningMasternode(int nBlockHeight, CScript& payee, CTxIn& vin)
 {
     if(IsInitialBlockDownload()) return false;
-
+    
     CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
-
+    
     if(winningNode)
     {
         payee = GetScriptForDestination(winningNode->pubkey.GetID());
         vin = winningNode->vin;
-        return true;
+        return true; 
     }
 
     return false;

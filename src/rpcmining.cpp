@@ -177,8 +177,8 @@ Value checkkernel(const Array& params, bool fHelp)
     if (vNodes.empty())
         throw JSONRPCError(-9, "Konjungate is not connected!");
 
-    /*if (IsInitialBlockDownload()) // Prevents a User from mining before sync
-        throw JSONRPCError(-10, "Konjungate is downloading blocks...");*/
+    if (IsInitialBlockDownload()) // Prevents a User from mining before sync
+        throw JSONRPCError(-10, "Konjungate is downloading blocks...");
 
     COutPoint kernel;
     CBlockIndex* pindexPrev = pindexBest;
