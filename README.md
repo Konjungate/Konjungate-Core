@@ -13,9 +13,7 @@ Rewards per Block:
 
 Dynamic reward structure.<br/><br/>
 
-POW 62.5 KONJ decreasing 10% every 6 month<br/>
-POS 48.75 KONJ decreasing 15% every 6 month <br/>
-MN. 113,75 KONJ increasing 17% every 6 month<br/><br/>
+<img width="964" alt="Screen Shot 2021-06-13 at 22 44 53" src="https://user-images.githubusercontent.com/55807677/121821413-0cb23400-cc99-11eb-8be6-591b71cc9133.png">
 
 Masternode Collateral: 2750000 KONJ
 
