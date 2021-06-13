@@ -2,7 +2,7 @@
 
 Name: Konjungate<br/>
 Ticker: KONJ<br/>
-Type: Hybrid, POS / Masternodes< --> POW ends on Block 700000br/>
+Type: Hybrid, POS / Masternodes --> POW ends on Block 700000<br/>
 Algorithm: bmw512<br/>
 Total Coin Supply: 21 billion<br/>
 BlockSize (depending on block saturation): 1.525612 MB min - 15.256128 MB max<br/>
