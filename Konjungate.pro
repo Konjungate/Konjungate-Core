@@ -79,7 +79,10 @@ win32:QMAKE_LFLAGS *= -Wl,--dynamicbase -Wl,--nxcompat
 win32:QMAKE_LFLAGS *= -Wl,--large-address-aware -static
 # i686-w64-mingw32
 win32:QMAKE_LFLAGS *= -static-libgcc -static-libstdc++
-
+# PFX Certificate signing
+wince*: {
+win32:SIGNATURE_FILE = C:/Users/PepperedCrumpets/Documents/CERTIFICATE_KONJ/certificate_konj.pfx
+}
 # use: qmake "USE_QRCODE=1"
 # libqrencode (http://fukuchi.org/works/qrencode/index.en.html) must be installed for support
 USE_QRCODE=1
