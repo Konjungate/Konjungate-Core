@@ -1,4 +1,4 @@
-# Konjungate Core v1.1.6.1
+# Konjungate Core v1.1.6.2
 
 Name: Konjungate<br/>
 Ticker: KONJ<br/>
