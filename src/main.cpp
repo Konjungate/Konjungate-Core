@@ -2076,7 +2076,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
             
             if(!IsInitialBlockDownload())
             {
-                int nHeightRefund = pindexBest->nHeight+1 - nNbrWrongBlocks;
+                int nHeightRefund = pindex->pprev->nHeight+1 - nNbrWrongBlocks;
                 CBlock blockRefund;
                 CBlockIndex* pBlockIndexRefund;
                 uint256 hash;
