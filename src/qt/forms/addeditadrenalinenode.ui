@@ -14,7 +14,8 @@
    <string>Add/Edit Konjungate Node</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">background-color: rgb(32, 32, 32);
+color: rgb(255, 255, 255);</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -28,8 +29,13 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter an Alias (friendly name) for your Master Node and its address (either clearnet IP and port or Tor onion address and port). The address should be in the format 123.456.789.123:51441 or akjdsafxjkhasdf.onion:51441. You must send exactly 2,750,000 KONJ to the collateral address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter an Alias (friendly name) for your Master Node and its address (either clearnet IP and port or Tor onion address and port). The address should be in the format 123.456.789.123:20028 or akjdsafxjkhasdf.onion:20028. You must send exactly 500,000 KONJ to the collateral address.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -43,13 +49,24 @@
      </property>
      <item>
       <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Alias*</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="aliasLineEdit"/>
+      <widget class="QLineEdit" name="aliasLineEdit">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -60,13 +77,24 @@
      </property>
      <item>
       <widget class="QLabel" name="label_6">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Address*</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="addressLineEdit"/>
+      <widget class="QLineEdit" name="addressLineEdit">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QToolButton" name="AddEditAddressPasteButton">
@@ -94,13 +122,24 @@
      </property>
      <item>
       <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>PrivKey*</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="privkeyLineEdit"/>
+      <widget class="QLineEdit" name="privkeyLineEdit">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QToolButton" name="AddEditPrivkeyPasteButton">
@@ -128,13 +167,24 @@
      </property>
      <item>
       <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>TxHash*</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="txhashLineEdit"/>
+      <widget class="QLineEdit" name="txhashLineEdit">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QToolButton" name="AddEditTxhashPasteButton">
@@ -162,13 +212,24 @@
      </property>
      <item>
       <widget class="QLabel" name="label_8">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Output Index*</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="outputindexLineEdit"/>
+      <widget class="QLineEdit" name="outputindexLineEdit">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -176,6 +237,11 @@
     <layout class="QHBoxLayout" name="horizontalLayout_Buttons">
      <item>
       <widget class="QPushButton" name="okButton">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>&amp;OK</string>
        </property>
@@ -183,6 +249,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="cancelButton">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>&amp;Cancel</string>
        </property>

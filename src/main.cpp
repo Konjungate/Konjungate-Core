@@ -1990,8 +1990,13 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
     if (IsProofOfWork())
     {
         int64_t nReward = GetProofOfWorkReward(pindex->nHeight, nFees);
+
+        //Refund
+        if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund) nReward += nBlockStandardRefund;
+
         // Check coinbase reward
         if (vtx[0].GetValueOut() > nReward)
+
             return DoS(50, error("ConnectBlock() : coinbase reward exceeded (actual=%d vs calculated=%d)",
                    vtx[0].GetValueOut(),
                    nReward));
@@ -2005,10 +2010,98 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees);
 
-        if (nStakeReward > nCalculatedStakeReward)
-            return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+        //Refund
+        if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund) nCalculatedStakeReward += nBlockStandardRefund;
+
+        if (nStakeReward > nCalculatedStakeReward){
+                return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+        }
     }
 
+    // Check MN, devops and refund payments
+    if(pindexBest->nHeight >= nPaymentUpdate_4){
+        CTransaction cRewardTx = IsProofOfStake() ? vtx[1] : vtx[0];
+        bool containsMnPayment = false;
+        bool containsDevopsPayment = false;
+        bool containsRefundPayment = false;
+        int nRefundIndex;
+
+        if(IsProofOfStake())
+        {
+            int nVoutSize = cRewardTx.vout.size();
+            
+            if(pindexBest->nHeight < nEndOfRefund)
+            {
+                if(nVoutSize < 5)
+                    return error("ConnectBlock() : not enough outputs in coinstake tx (%d)", nVoutSize); 
+
+                if(cRewardTx.vout[nVoutSize-1].nValue == nBlockStandardRefund){
+                    containsRefundPayment = true;
+                    nRefundIndex = nVoutSize-1;
+                    nVoutSize -= 1;
+                }
+            }
+
+            if(nVoutSize < 4)
+                    return error("ConnectBlock() : not enough outputs in coinstake tx (%d)", nVoutSize);           
+
+            if(cRewardTx.vout[nVoutSize-2].nValue == GetMasternodePayment(pindexBest->nHeight, 0)) containsMnPayment = true;
+            if(cRewardTx.vout[nVoutSize-1].nValue == GetDevOpsPayment(pindexBest->nHeight, 0)) containsDevopsPayment = true;
+        }
+        else
+        {
+            CTxOut txOut;
+            for (int i = 0; i < cRewardTx.vout.size(); i++)
+            {
+                txOut = cRewardTx.vout[i];
+                if(txOut.nValue == GetMasternodePayment(pindexBest->nHeight, 0)) containsMnPayment = true;
+                if(txOut.nValue == GetDevOpsPayment(pindexBest->nHeight, 0)) containsDevopsPayment = true;
+                if(txOut.nValue == nBlockStandardRefund){
+                    containsRefundPayment = true;
+                    nRefundIndex = i;
+                }
+            }
+        }
+
+        if(!containsMnPayment)
+            return error("ConnectBlock() : masternode payment missing or incorrect");
+        
+        if(!containsDevopsPayment)
+            return error("ConnectBlock() : devops payment missing or incorrect");
+
+        if(pindexBest->nHeight < nEndOfRefund) 
+        {
+            if(!containsRefundPayment)
+                return error("ConnectBlock() : refund payment missing or incorrect");
+            
+            if(!IsInitialBlockDownload())
+            {
+                int nHeightRefund = pindexBest->nHeight+1 - nNbrWrongBlocks;
+                CBlock blockRefund;
+                CBlockIndex* pBlockIndexRefund;
+                uint256 hash;
+                    
+                pBlockIndexRefund = mapBlockIndex[hashBestChain];
+                
+                while (pBlockIndexRefund->nHeight > nHeightRefund)
+                    pBlockIndexRefund = pBlockIndexRefund->pprev;
+
+                hash = *pBlockIndexRefund->phashBlock;
+                
+                pBlockIndexRefund = mapBlockIndex[hash];
+                blockRefund.ReadFromDisk(pBlockIndexRefund, true);
+
+                if(blockRefund.IsProofOfStake())
+                {
+                    CScript refundpayee = blockRefund.vtx[1].vout[1].scriptPubKey;
+                    
+                    if (cRewardTx.vout[nRefundIndex].scriptPubKey != refundpayee)
+                        return error("ConnectBlock() : refund payee is incorrect");
+                }
+            }
+        }
+    }
+    
     // ppcoin: track money supply and mint amount info
     pindex->nMint = nValueOut - nValueIn + nFees;
     pindex->nMoneySupply = (pindex->pprev? pindex->pprev->nMoneySupply : 0) + nValueOut - nValueIn;
@@ -3534,7 +3627,7 @@ void ThreadImport(std::vector<boost::filesystem::path> vImportFiles)
 extern map<uint256, CAlert> mapAlerts;
 extern CCriticalSection cs_mapAlerts;
 
-string GetWarnings(string strFor)
+string GetWarnings(const std::string strFor)
 {
     int nPriority = 0;
     string strStatusBar;

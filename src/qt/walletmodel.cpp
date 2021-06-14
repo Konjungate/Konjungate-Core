@@ -27,7 +27,11 @@
 #include <QSet>
 #include <QTimer>
 
+#include <boost/bind.hpp>
+
 using namespace std;
+
+bool getWalletLocked;
 
 WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *parent) :
     QObject(parent), wallet(wallet),
@@ -508,11 +512,13 @@ bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase, b
 {
     if(locked)
     {
+        getWalletLocked = true;
         // Lock
         return wallet->Lock();
     }
     else
     {
+        getWalletLocked = true;
         // Unlock
         return wallet->Unlock(passPhrase, stakingOnly);
     }

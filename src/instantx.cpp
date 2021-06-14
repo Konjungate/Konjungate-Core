@@ -242,7 +242,7 @@ int64_t CreateNewLock(CTransaction tx)
         CTransactionLock newLock;
         newLock.nBlockHeight = nBlockHeight;
         newLock.nExpiration = GetTime()+(20*60); //locks expire after 20 minutes (20 confirmations)
-        newLock.nTimeout = GetTime()+(60*5);
+        newLock.nTimeout = GetTime()+(30*60);
         newLock.txHash = tx.GetHash();
         mapTxLocks.insert(make_pair(tx.GetHash(), newLock));
     } else {

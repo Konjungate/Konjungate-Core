@@ -16,6 +16,12 @@ static const int64_t nPaymentUpdate_1 = 1558310400;//TODO: Clean this up
 static const int64_t nPaymentUpdate_2 = 1562094000;//TODO: Clean this up
 /** Masternode/Devops Payment Update 3 **/
 static const int64_t nPaymentUpdate_3 = 1562281200;//TODO: Clean this up
+/** Masternode/Devops Payment Update 4 **/
+static const int64_t nPaymentUpdate_4 = 600561;//Should take place after the snapshot on the nodes
+/** Refund **/
+static const int64_t nWrongBlocksStart = 526002;
+static const int64_t nNbrWrongBlocks = nPaymentUpdate_4 - nWrongBlocksStart + 1;
+static const int64_t nEndOfRefund = nPaymentUpdate_4 + nNbrWrongBlocks;
 /** PoW enabled again **/
 static const int64_t nPoWToggle = 1596844820; // Saturday, August 8, 2020 12:00:20 AM (GMT)
 /** Velocity toggle block */

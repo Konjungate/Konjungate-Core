@@ -103,8 +103,8 @@ public:
 
         nPoolMaxTransactions = 9;
         strMNenginePoolDummyAddress = "K8LHiHK8be6YucgmvhsnzVxT2d7p7SDGnc"; // CcABDmWkcSZPw8rMtoobShVFuudhf1svZu devopsaddress is dHy3LZvqX5B2rAAoLiA7Y7rpvkLXKTkD18
-        strDevOpsAddress = "KMWpXKTakT4KkP9FBZ66awR1k5ScXaQuab"; // Ce1XyENjUHHPBt8mxy2LupkH2PnequevMM
-        nEndPoWBlock = 0x7fffffff;
+        strDevOpsAddress = "K7gNsQQKF1ynvpgM3kMc5oB52C3oJdCJDU"; // CORRECT ADDRESS
+        nEndPoWBlock = 700000; // Will Now end on block 700000
         nStartPoSBlock = 1;
     }
 

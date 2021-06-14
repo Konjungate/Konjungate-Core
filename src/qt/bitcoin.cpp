@@ -16,6 +16,7 @@
 #include "wallet.h"
 #include "ui_interface.h"
 #include "paymentserver.h"
+
 #ifdef Q_OS_MAC
 #include "macdockiconhandler.h"
 #endif
@@ -40,7 +41,7 @@ Q_IMPORT_PLUGIN(qtaccessiblewidgets)
 #endif
 
 // Need a global reference for the notifications to find the GUI
-static KonjungateGUI *guiref;
+KonjungateGUI *guiref;
 static QSplashScreen *splashref;
 
 static void ThreadSafeMessageBox(const std::string& message, const std::string& caption, unsigned int style)
@@ -83,11 +84,11 @@ static void InitMessage(const std::string &message)
 {
     if(splashref)
     {
-        splashref->showMessage(QString::fromStdString(message), Qt::AlignBottom|Qt::AlignHCenter, QColor(255,255,255));
+        splashref->showMessage(QString::fromStdString(message), Qt::AlignBottom|Qt::AlignHCenter, QColor(252,144,5)); // splash color for dark theme
 
         if(!fUseDarkTheme)
         {
-            splashref->showMessage(QString::fromStdString(message), Qt::AlignBottom|Qt::AlignHCenter, QColor(97,78,176));
+            splashref->showMessage(QString::fromStdString(message), Qt::AlignBottom|Qt::AlignHCenter, QColor(252,144,5)); // splash color
         }
 
         QApplication::instance()->processEvents();
@@ -257,6 +258,8 @@ int main(int argc, char *argv[])
     {
         if (fUseDarkTheme)
             GUIUtil::SetDarkThemeQSS(app);
+        else
+            GUIUtil::SetLightThemeQSS(app);
 
         // Regenerate startup link, to fix links to old versions
         if (GUIUtil::GetStartOnSystemStartup())

@@ -1087,7 +1087,7 @@ bool AppInit2(boost::thread_group& threadGroup)
         activeMasternode.ManageStatus();
     }
 
-    if(GetBoolArg("-mnconflock", false)) {
+    if(GetBoolArg("-mnconflock", true)) {
         LogPrintf("Locking Masternodes:\n");
         uint256 mnTxHash;
         BOOST_FOREACH(CMasternodeConfig::CMasternodeEntry mne, masternodeConfig.getEntries()) {
@@ -1155,10 +1155,21 @@ bool AppInit2(boost::thread_group& threadGroup)
 
 #ifdef ENABLE_WALLET
     // Mine proof-of-stake blocks in the background
-    if (!GetBoolArg("-staking", true))
+    if (!GetBoolArg("-staking", false))
         LogPrintf("Staking disabled\n");
     else if (pwalletMain)
         threadGroup.create_thread(boost::bind(&ThreadStakeMiner, pwalletMain));
+
+    if(pwalletMain->IsLocked())
+    {
+        // Toggle wallet lock status
+        settingsStatus = true;
+    }
+    else
+    {
+        // Toggle wallet lock status
+        settingsStatus = false;
+    }
 #endif
 
     // ********************************************************* Step 12: finished
