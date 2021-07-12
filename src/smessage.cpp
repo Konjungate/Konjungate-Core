@@ -685,12 +685,13 @@ void ThreadSecureMsg()
                         LogPrint("smessage", "This node will ignore peer %d until %d.\n", nPeerId, ignoreUntil);
                     break;
                 };
-                if(fDebugSmsg)
-                    LogPrint("smessage", "smessage: ignoring - looked peer %d, status on search %u\n", nPeerId, fExists);
+            }
+    
+            if(fDebugSmsg)
+                LogPrint("smessage", "smessage: ignoring - looked peer %d, status on search %u\n", nPeerId, fExists);
         };
         
         MilliSleep(SMSG_THREAD_DELAY * 1000); //  // check every SMSG_THREAD_DELAY seconds
-        };
     };
 };
 
