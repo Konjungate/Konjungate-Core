@@ -8,6 +8,7 @@
 //
 // This is a completely experimental smart-contract platform written by
 // CryptoCoderz (Jonathan Dan Zaretsky - cryptocoderz@gmail.com)
+// dmEgc2xhdnUgZ29zcG9kZSBib2dlIGUgbmFzaCBzcGFzZXRhbCBlc3VzIGhyaXN0b3M=
 //
 // PLEASE USE AT YOUR OWN RISK!!!
 //
@@ -73,40 +74,52 @@ std::string fractalSCRIPT_methods[30] = { "SETPARAMS", "OBFUSCATION", "SETALIAS"
 };
 
 void write_contractDATA(std::string obfuscated_write_string, std::string contract_alias, int contract_type) {
-    //
-    //obfuscated_write_string = Obfuscated_Combined_String;
-    //contract_alias = selected_contract_alias;
 
-    boost::filesystem::path pathConfigFile(GetDataDir());
-    boost::filesystem::path pathConfigDir(GetDataDir());
+    // Init Main data directory.
+    boost::filesystem::path pathDefStorDir = GetDataDir() / "fractal";
+    // Init NFT data directory.
+    boost::filesystem::path pathNFTStorDir = GetDataDir() / "fractal/nft";
+    // Init NFT data directory.
+    boost::filesystem::path pathTokStorDir = GetDataDir() / "fractal/token";
+    boost::filesystem::path pathConfigFile;
 
-    if (contract_type == 3) {
-        pathConfigFile += "/" + contract_alias + ".ftl";// "/fractal/litContract"
-        //pathConfigDir += "/fractal/litContract/";
-    } else if (contract_type == 2) {
-        pathConfigFile += "/fractal/nftContract/" + contract_alias + ".ftl";
-        //pathConfigDir += "/fractal/nftContract/";
-    } else if (contract_type == 1) {
-        pathConfigFile += "/fractal/web3Contract/" + contract_alias + ".ftl";
-        //pathConfigDir += "/fractal/web3Contract/";
-    } else {
-        pathConfigFile += "/" + contract_alias + ".ftl";
-        //pathConfigDir += "/fractal/tknContract/";
+    // Ensure directories exist
+    boost::filesystem::ifstream streamFractalMainData(pathDefStorDir);
+    if (!streamFractalMainData.good()) {
+        boost::filesystem::create_directory(pathDefStorDir);
+        LogPrintf("Creating Fractal Data Directory in %s\n", pathDefStorDir.string());
     }
 
-    //if (!boost::filesystem::exists(pathConfigDir)) {
-        //
-        //boost::filesystem::create_directory(pathConfigDir);
-    //}
+    if (contract_type == 3) {
+        // Ensure directories exist
+        boost::filesystem::ifstream streamFractalNFTData(pathNFTStorDir);
+        if (!streamFractalNFTData.good())
+        {
+            boost::filesystem::create_directory(pathNFTStorDir);
+            LogPrintf("Creating NFT Data Directory in %s\n", pathNFTStorDir.string());
+        }
+        pathNFTStorDir += "/" + contract_alias + ".ftl";
+        pathConfigFile = pathNFTStorDir;
+    } else if (contract_type == 2) {
+        pathConfigFile = GetDataDir();
+    } else if (contract_type == 1) {
+        pathConfigFile = GetDataDir();
+    } else {
+        // Ensure directories exist
+        boost::filesystem::ifstream streamFractalTOKData(pathTokStorDir);
+        if (!streamFractalTOKData.good())
+        {
+            boost::filesystem::create_directory(pathTokStorDir);
+            LogPrintf("Creating Token Data Directory in %s\n", pathTokStorDir.string());
+        }
+        pathTokStorDir += "/" + contract_alias + ".ftl";
+        pathConfigFile = pathTokStorDir;
+    }
 
-    // dataContract, web3Contract, nftContract, tokenContract, literatureContract
     boost::filesystem::ifstream streamFractalConfig(pathConfigFile);
-    if (!streamFractalConfig.good())
-    {
+    if (!streamFractalConfig.good()) {
                FILE* ConfFile = fopen(pathConfigFile.string().c_str(), "w");
                fprintf(ConfFile, "%s|%s\n", obfuscated_write_string.c_str(), contract_alias.c_str());
-               //fprintf(ConfFile, "data\n");
-               //fprintf(ConfFile, "data\n");
 
                fclose(ConfFile);
 
@@ -115,8 +128,6 @@ void write_contractDATA(std::string obfuscated_write_string, std::string contrac
     } else {
         FILE* ConfFile = fopen(pathConfigFile.string().c_str(), "w");
         fprintf(ConfFile, "\n%s|%s\n", obfuscated_write_string.c_str(), contract_alias.c_str());
-               //fprintf(ConfFile, "data\n");
-               //fprintf(ConfFile, "data\n");
 
                fclose(ConfFile);
 
@@ -125,10 +136,31 @@ void write_contractDATA(std::string obfuscated_write_string, std::string contrac
     }
 }
 
-void read_contractDATA(std::string obfuscated_read_string, std::string contract_alias, int contract_type) {
-    //
-    obfuscated_read_string = Obfuscated_Combined_String;
-    contract_alias = selected_contract_alias;
+void read_contractDATA(std::string contract_alias, int contract_type) {
+    // Init Main data directory.
+    boost::filesystem::path pathDefStorDir = GetDataDir() / "fractal";
+    // Init NFT data directory.
+    boost::filesystem::path pathNFTStorDir = GetDataDir() / "fractal/nft";
+    // Init NFT data directory.
+    boost::filesystem::path pathTokStorDir = GetDataDir() / "fractal/token";
+    boost::filesystem::path pathConfigFile;
+
+    if(contract_type == 3) {
+        pathConfigFile = pathNFTStorDir;
+    } else if(contract_type == 2) {
+        pathConfigFile = pathDefStorDir;
+    } else if(contract_type == 1) {
+        pathConfigFile = pathDefStorDir;
+    } else {
+        pathConfigFile = pathTokStorDir;
+    }
+
+    std::string cleaned_Path = pathConfigFile.string().c_str();
+    std::replace( cleaned_Path.begin(), cleaned_Path.end(), '\\', '/');
+    cleaned_Path += "/" + contract_alias;
+    ext_Contract_Path = cleaned_Path + ".jpg";
+    cleaned_Path += ".ftl";
+    open_smartCONTRACT(cleaned_Path, contract_type);
 }
 
 void parse_fractalSCRIPT(std::string fractal_SCRIPT) {
