@@ -49,7 +49,7 @@ Value getsubsidy(const Array& params, bool fHelp)
             "getsubsidy [nTarget]\n"
             "Returns proof-of-work subsidy value for the specified value of target.");
 
-    return (int64_t)GetProofOfStakeReward(pindexBest, 0, 0);
+    return (int64_t)GetProofOfStakeReward(pindexBest->pprev, 0, 0);
 }
 
 Value getstakesubsidy(const Array& params, bool fHelp)
@@ -76,7 +76,7 @@ Value getstakesubsidy(const Array& params, bool fHelp)
     if (!tx.GetCoinAge(txdb, pindexBest, nCoinAge))
         throw JSONRPCError(RPC_MISC_ERROR, "GetCoinAge failed");
 
-    return (uint64_t)GetProofOfStakeReward(pindexBest, nCoinAge, 0);
+    return (uint64_t)GetProofOfStakeReward(pindexBest->pprev, nCoinAge, 0);
 }
 
 Value getmininginfo(const Array& params, bool fHelp)
@@ -91,7 +91,7 @@ Value getmininginfo(const Array& params, bool fHelp)
         nWeight = pwalletMain->GetStakeWeight();
 
     // Define block rewards
-    int64_t nRewardPoW = (uint64_t)GetProofOfWorkReward(nBestHeight+1, 0);
+    int64_t nRewardPoW = (uint64_t)GetProofOfWorkReward(nBestHeight, 0);
 
     Object obj, diff, weight;
     obj.push_back(Pair("blocks",        (int)nBestHeight));
@@ -638,7 +638,7 @@ Value getblocktemplate(const Array& params, bool fHelp)
         bool fInvalid = false;
         if (tx.FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
         {
-            entry.push_back(Pair("fee", (int64_t)(tx.GetValueMapIn(mapInputs) - tx.GetValueOut())));
+            entry.push_back(Pair("fee", (int64_t)(tx.GetValueIn(mapInputs) - tx.GetValueOut())));
 
             Array deps;
             BOOST_FOREACH (MapPrevTx::value_type& inp, mapInputs)
@@ -686,8 +686,8 @@ Value getblocktemplate(const Array& params, bool fHelp)
         if (pindexBest->GetBlockTime() > nPaymentUpdate_1) // Monday, May 20, 2019 12:00:00 AM
         {
             // Set Masternode / DevOps payments
-            int64_t masternodePayment = GetMasternodePayment(pindexPrev->nHeight, networkPayment);
-            int64_t devopsPayment = GetDevOpsPayment(pindexPrev->nHeight, networkPayment);
+            int64_t masternodePayment = GetMasternodePayment(pindexPrev->nHeight+1, networkPayment);
+            int64_t devopsPayment = GetDevOpsPayment(pindexPrev->nHeight+1, networkPayment);
             std::string devopsPayee = "K7gNsQQKF1ynvpgM3kMc5oB52C3oJdCJDU"; // K8LHiHK8be6YucgmvhsnzVxT2d7p7SDGnc
             std::string masternodePayee;
 
