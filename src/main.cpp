@@ -733,23 +733,6 @@ double CTransaction::ComputePriority(double dPriorityInputs, unsigned int nTxSiz
     return dPriorityInputs / nTxSize;
 }
 
-void CTransaction::GetMapTxInputs(MapPrevTx& mapInputs) const
-{
-    // Load TX inputs
-    CTxDB txdb("r");
-    map<uint256, CTxIndex> mapUnused;
-    bool fInvalid = false;
-    // Ensure we can fetch inputs
-    if (!this->FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
-    {
-        if (fInvalid)
-        {
-            LogPrintf("Invalid TX attempted to set in GetMapTXInputs\n");
-            return;
-        }
-    }
-}
-
 bool CTransaction::CheckTransaction() const
 {
     // Basic checks that don't depend on any context
@@ -932,11 +915,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
                           error("AcceptToMemoryPool : too many sigops %s, %d > %d",
                                 hash.ToString(), nSigOps, MAX_TX_SIGOPS));
 
-        int64_t nFees = tx.GetValueMapIn(mapInputs)-tx.GetValueOut();
-        if (tx.GetValueMapIn(mapInputs) < tx.GetValueOut()) {
-            LogPrintf("AcceptToMemoryPool : tx input is less that output\n");
-            return tx.DoS(100, error("AcceptToMemoryPool : tx input is less that output"));
-        }
+        int64_t nFees = tx.GetValueIn(mapInputs)-tx.GetValueOut();
         unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 
         // Don't accept it if it can't get into a block
@@ -1098,11 +1077,7 @@ bool AcceptableInputs(CTxMemPool& pool, const CTransaction &txo, bool fLimitFree
                           error("AcceptableInputs : too many sigops %s, %d > %d",
                                 hash.ToString(), nSigOps, MAX_TX_SIGOPS));
 
-        int64_t nFees = tx.GetValueMapIn(mapInputs)-tx.GetValueOut();
-        if (tx.GetValueMapIn(mapInputs) < tx.GetValueOut()) {
-            LogPrintf("AcceptableInputs : tx input is less that output\n");
-            return error("AcceptableInputs : tx input is less than output");
-        }
+        int64_t nFees = tx.GetValueIn(mapInputs)-tx.GetValueOut();
         unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
         int64_t txMinFee = GetMinFee(tx, nSize, true, GMF_RELAY);
 
@@ -1591,7 +1566,7 @@ bool CTransaction::DisconnectInputs(CTxDB& txdb)
 
 
 bool CTransaction::FetchInputs(CTxDB& txdb, const map<uint256, CTxIndex>& mapTestPool,
-                               bool fBlock, bool fMiner, MapPrevTx& inputsRet, bool& fInvalid) const
+                               bool fBlock, bool fMiner, MapPrevTx& inputsRet, bool& fInvalid)
 {
     // FetchInputs can return false either because we just haven't seen some inputs
     // (in which case the transaction should be stored as an orphan)
@@ -1674,7 +1649,7 @@ const CTxOut& CTransaction::GetOutputFor(const CTxIn& input, const MapPrevTx& in
     return txPrev.vout[input.prevout.n];
 }
 
-int64_t CTransaction::GetValueMapIn(const MapPrevTx& inputs) const
+int64_t CTransaction::GetValueIn(const MapPrevTx& inputs) const
 {
     if (IsCoinBase())
         return 0;
@@ -1995,17 +1970,12 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
             if (nSigOps > MAX_BLOCK_SIGOPS)
                 return DoS(100, error("ConnectBlock() : too many sigops"));
 
-            int64_t nTxValueIn = tx.GetValueMapIn(mapInputs);
+            int64_t nTxValueIn = tx.GetValueIn(mapInputs);
             int64_t nTxValueOut = tx.GetValueOut();
             nValueIn += nTxValueIn;
             nValueOut += nTxValueOut;
-            if (!tx.IsCoinStake()) {
+            if (!tx.IsCoinStake())
                 nFees += nTxValueIn - nTxValueOut;
-                if (nTxValueIn < nTxValueOut) {
-                    LogPrintf("ConnectBlock : block contains a tx input that is less that output\n");
-                    return false;
-                }
-            }
             if (tx.IsCoinStake())
                 nStakeReward = nTxValueOut - nTxValueIn;
 
@@ -2022,7 +1992,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         int64_t nReward = GetProofOfWorkReward(pindex->nHeight, nFees);
 
         //Refund
-        if(pindex->nHeight > nPaymentUpdate_4 && pindex->nHeight <= nEndOfRefund) nReward += nBlockStandardRefund;
+        if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund) nReward += nBlockStandardRefund;
 
         // Check coinbase reward
         if (vtx[0].GetValueOut() > nReward)
@@ -2041,13 +2011,97 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees);
 
         //Refund
-        if(pindex->nHeight > nPaymentUpdate_4 && pindex->nHeight <= nEndOfRefund) nCalculatedStakeReward += nBlockStandardRefund;
+        if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund) nCalculatedStakeReward += nBlockStandardRefund;
 
         if (nStakeReward > nCalculatedStakeReward){
                 return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
         }
     }
 
+    // Check MN, devops and refund payments
+    if(pindexBest->nHeight >= nPaymentUpdate_4){
+        CTransaction cRewardTx = IsProofOfStake() ? vtx[1] : vtx[0];
+        bool containsMnPayment = false;
+        bool containsDevopsPayment = false;
+        bool containsRefundPayment = false;
+        int nRefundIndex;
+
+        if(IsProofOfStake())
+        {
+            int nVoutSize = cRewardTx.vout.size();
+            
+            if(pindexBest->nHeight < nEndOfRefund)
+            {
+                if(nVoutSize < 5)
+                    return error("ConnectBlock() : not enough outputs in coinstake tx (%d)", nVoutSize); 
+
+                if(cRewardTx.vout[nVoutSize-1].nValue == nBlockStandardRefund){
+                    containsRefundPayment = true;
+                    nRefundIndex = nVoutSize-1;
+                    nVoutSize -= 1;
+                }
+            }
+
+            if(nVoutSize < 4)
+                    return error("ConnectBlock() : not enough outputs in coinstake tx (%d)", nVoutSize);           
+
+            if(cRewardTx.vout[nVoutSize-2].nValue == GetMasternodePayment(pindexBest->nHeight, 0)) containsMnPayment = true;
+            if(cRewardTx.vout[nVoutSize-1].nValue == GetDevOpsPayment(pindexBest->nHeight, 0)) containsDevopsPayment = true;
+        }
+        else
+        {
+            CTxOut txOut;
+            for (int i = 0; i < cRewardTx.vout.size(); i++)
+            {
+                txOut = cRewardTx.vout[i];
+                if(txOut.nValue == GetMasternodePayment(pindexBest->nHeight, 0)) containsMnPayment = true;
+                if(txOut.nValue == GetDevOpsPayment(pindexBest->nHeight, 0)) containsDevopsPayment = true;
+                if(txOut.nValue == nBlockStandardRefund){
+                    containsRefundPayment = true;
+                    nRefundIndex = i;
+                }
+            }
+        }
+
+        if(!containsMnPayment)
+            return error("ConnectBlock() : masternode payment missing or incorrect");
+        
+        if(!containsDevopsPayment)
+            return error("ConnectBlock() : devops payment missing or incorrect");
+
+        if(pindexBest->nHeight < nEndOfRefund) 
+        {
+            if(!containsRefundPayment)
+                return error("ConnectBlock() : refund payment missing or incorrect");
+            
+            if(!IsInitialBlockDownload())
+            {
+                int nHeightRefund = pindexBest->nHeight+1 - nNbrWrongBlocks;
+                CBlock blockRefund;
+                CBlockIndex* pBlockIndexRefund;
+                uint256 hash;
+                    
+                pBlockIndexRefund = mapBlockIndex[hashBestChain];
+                
+                while (pBlockIndexRefund->nHeight > nHeightRefund)
+                    pBlockIndexRefund = pBlockIndexRefund->pprev;
+
+                hash = *pBlockIndexRefund->phashBlock;
+                
+                pBlockIndexRefund = mapBlockIndex[hash];
+                blockRefund.ReadFromDisk(pBlockIndexRefund, true);
+
+                if(blockRefund.IsProofOfStake())
+                {
+                    CScript refundpayee = blockRefund.vtx[1].vout[1].scriptPubKey;
+                    
+                    if (cRewardTx.vout[nRefundIndex].scriptPubKey != refundpayee)
+                        return error("ConnectBlock() : refund payee is incorrect");
+                }
+            }
+        }
+    }
+    
     // ppcoin: track money supply and mint amount info
     pindex->nMint = nValueOut - nValueIn + nFees;
     pindex->nMoneySupply = (pindex->pprev? pindex->pprev->nMoneySupply : 0) + nValueOut - nValueIn;
@@ -2953,28 +3007,10 @@ bool CBlock::AcceptBlock()
     if (GetBlockTime() <= pindexPrev->GetPastTimeLimit() || FutureDrift(GetBlockTime()) < pindexPrev->GetBlockTime())
         return error("AcceptBlock() : block's timestamp is too early");
 
-    // Set logged values
-    CAmount tx_inputs_values = 0;
-    CAmount tx_outputs_values = 0;
-    CAmount tx_threshold = (500 * COIN);
-
     // Check that all transactions are finalized
-    BOOST_FOREACH(const CTransaction& tx, vtx) {
-        if (!IsFinalTx(tx, nHeight, GetBlockTime())) {
+    BOOST_FOREACH(const CTransaction& tx, vtx)
+        if (!IsFinalTx(tx, nHeight, GetBlockTime()))
             return DoS(10, error("AcceptBlock() : contains a non-final transaction"));
-        }
-        // Log inputs/output values
-        MapPrevTx mapInputs;
-        tx.GetMapTxInputs(mapInputs);
-        tx_inputs_values += tx.GetValueMapIn(mapInputs);
-        tx_outputs_values += tx.GetValueOut();
-    }
-
-    // Ensure input/output sanity of transactions in the block
-    if((tx_inputs_values + tx_threshold) < tx_outputs_values)
-    {
-            return DoS(100, error("AcceptBlock() : block contains a tx input that is less that output"));
-    }
 
     // Check that the block chain matches the known block chain up to a checkpoint
     if (!Checkpoints::CheckHardened(nHeight, hash))
@@ -3000,10 +3036,6 @@ bool CBlock::AcceptBlock()
         !std::equal(expect.begin(), expect.end(), vtx[0].vin[0].scriptSig.begin()))
         return DoS(100, error("AcceptBlock() : block height mismatch in coinbase"));
 
-    // Check that the reward structure is correct
-    if (!IsRewardStructureValid(pindexPrev))
-        return error("AcceptBlock() : invalid reward structure");
-
     // Write block to history file
     if (!CheckDiskSpace(::GetSerializeSize(*this, SER_DISK, CLIENT_VERSION)))
         return error("AcceptBlock() : out of disk space");
@@ -3024,101 +3056,6 @@ bool CBlock::AcceptBlock()
                 pnode->PushInventory(CInv(MSG_BLOCK, hash));
     }
 
-    return true;
-}
-
-bool CBlock::IsRewardStructureValid(const CBlockIndex* pindexLast)
-{
-    // Validation starts after nPaymentUpdate_4
-    if(pindexLast->nHeight < nPaymentUpdate_4)
-        return true;
-
-    // HardCap
-    if(pindexBest->nMoneySupply > MAX_SINGLE_TX) 
-        return true;
-    
-    CTransaction cRewardTx = IsProofOfStake() ? vtx[1] : vtx[0];
-    bool containsMnPayment = false;
-    bool containsDevopsPayment = false;
-    bool containsRefundPayment = false;
-    int nRefundIndex;
-
-    if(IsProofOfStake())
-    {
-        int nVoutSize = cRewardTx.vout.size();
-        
-        if(pindexLast->nHeight < nEndOfRefund)
-        {
-            if(nVoutSize < 5)
-                return error("ConnectBlock() : not enough outputs in coinstake tx (%d)", nVoutSize); 
-
-            if(cRewardTx.vout[nVoutSize-1].nValue == nBlockStandardRefund){
-                containsRefundPayment = true;
-                nRefundIndex = nVoutSize-1;
-                nVoutSize -= 1;
-            }
-        }
-
-        if(nVoutSize < 4)
-                return error("ConnectBlock() : not enough outputs in coinstake tx (%d)", nVoutSize);           
-
-        if(cRewardTx.vout[nVoutSize-2].nValue == GetMasternodePayment(pindexLast->nHeight, 0)) containsMnPayment = true;
-        if(cRewardTx.vout[nVoutSize-1].nValue == GetDevOpsPayment(pindexLast->nHeight, 0)) containsDevopsPayment = true;
-    }
-    else
-    {
-        CTxOut txOut;
-        for (int i = 0; i < cRewardTx.vout.size(); i++)
-        {
-            txOut = cRewardTx.vout[i];
-            if(txOut.nValue == GetMasternodePayment(pindexLast->nHeight, 0)) containsMnPayment = true;
-            if(txOut.nValue == GetDevOpsPayment(pindexLast->nHeight, 0)) containsDevopsPayment = true;
-            if(txOut.nValue == nBlockStandardRefund){
-                containsRefundPayment = true;
-                nRefundIndex = i;
-            }
-        }
-    }
-
-    if(!containsMnPayment)
-        return error("ConnectBlock() : masternode payment missing or incorrect");
-    
-    if(!containsDevopsPayment)
-        return error("ConnectBlock() : devops payment missing or incorrect");
-
-    if(pindexLast->nHeight < nEndOfRefund) 
-    {
-        if(!containsRefundPayment)
-            return error("ConnectBlock() : refund payment missing or incorrect");
-        
-        if(!IsInitialBlockDownload())
-        {
-            int nHeightRefund = pindexLast->nHeight+1 - nNbrWrongBlocks;
-            CBlock blockRefund;
-            CBlockIndex* pBlockIndexRefund;
-            uint256 hash;
-                
-            pBlockIndexRefund = mapBlockIndex[hashBestChain];
-            
-            while (pBlockIndexRefund->nHeight > nHeightRefund)
-                pBlockIndexRefund = pBlockIndexRefund->pprev;
-
-            hash = *pBlockIndexRefund->phashBlock;
-            
-            pBlockIndexRefund = mapBlockIndex[hash];
-            blockRefund.ReadFromDisk(pBlockIndexRefund, true);
-
-            if(blockRefund.IsProofOfStake())
-            {
-                CScript refundpayee = blockRefund.vtx[1].vout[1].scriptPubKey;
-                
-                if (cRewardTx.vout[nRefundIndex].scriptPubKey != refundpayee)
-                    return error("ConnectBlock() : refund payee is incorrect");
-            }
-        }
-    }
-
-    LogPrintf("IsRewardStructureValid() : Reward structure is valid\n");
     return true;
 }
 
