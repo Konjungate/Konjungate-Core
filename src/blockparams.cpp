@@ -470,14 +470,14 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
     int64_t nSubsidy = nBlockStandardReward;// Reward amount
     int64_t nMasterNodeAdjustment = 113.75 * COIN;// Masternode extra generation
     
-    if(pindexBest->nHeight > 488888){
+    if(nHeight-1 > 488888){
         nMasterNodeAdjustment = 153.75 * COIN;// 17% Step up payment adjustment base
     }
     
-    if(pindexBest->nHeight < nPaymentUpdate_4){ // POS FIX
-        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)    
+    if(nHeight-1 < nPaymentUpdate_4){ // POS FIX
+        if(nHeight-1 > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)    
             int64_t nDownSubsidy = nSubsidy / 10;// 10% step down value
-            int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
+            int64_t i = ((nHeight-1 - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
     
             while(i2 <= i){// Loop for as many times as possible    
@@ -495,8 +495,8 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
             nSubsidy += nMasterNodeAdjustment;
         }
     } else {
-        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
-            int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
+        if(nHeight-1 > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
+            int64_t i = ((nHeight-1 - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
         
             while(i2 <= i){// Loop for as many times as possible
@@ -521,7 +521,7 @@ int64_t GetProofOfWorkReward(int nHeight, int64_t nFees){
     }
         
     //premine function
-    if(nHeight > nReservePhaseStart) {
+    if(nHeight > nReservePhaseStart && nHeight < 102) {
         if(pindexBest->nMoneySupply < (nBlockRewardReserve * 100)) {
             nSubsidy = nBlockRewardReserve;
         }
@@ -545,14 +545,14 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
     int64_t nSubsidy = 48.75 * COIN;// Reward amount
     int64_t nMasterNodeAdjustment = 113.75 * COIN;// Masternode extra generation
     
-    if(pindexBest->nHeight > 488888){
+    if(pindexPrev->nHeight > 488888){
         nSubsidy = 68.75 * COIN;// 15% Step down payment adjustment baser
         nMasterNodeAdjustment = 153.75 * COIN;// 17% Step up payment adjustment base
     }
     
-    if(pindexBest->nHeight < nPaymentUpdate_4 ){ // POS FIX
-        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)    
-            int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
+    if(pindexPrev->nHeight < nPaymentUpdate_4 ){ // POS FIX
+        if(pindexPrev->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)    
+            int64_t i = ((pindexPrev->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
     
             while(i2 <= i){// Loop for as many times as possible    
@@ -573,13 +573,13 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
         }
         
         //PoS block reward increase means it pays DevOps && meets proper rewards
-        /*if(pindexBest->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 ==> nPaymentUpdate_4 can be found in Mining.h
+        /*if(pindexPrev->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 ==> nPaymentUpdate_4 can be found in Mining.h
             nSubsidy += 25 * COIN;
         }*/
     } else { // NEW REWARDS TAKE PLACE
-        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
+        if(pindexPrev->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)
             
-            int64_t i = ((pindexBest->nHeight - 488888) / 526000) - 1;// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
+            int64_t i = ((pindexPrev->nHeight - 488888) / 526000) - 1;// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic
             
             while(i2 <= i){// Loop for as many times as possible                
@@ -599,21 +599,21 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
             }
             nSubsidy += nMasterNodeAdjustment;
             //PoS block reward increase means it pays DevOps && meets proper rewards
-            if(pindexBest->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 can be found in Mining.h permits staking fix for DevOps
+            if(pindexPrev->nHeight > nPaymentUpdate_4){ //nBlockForkHeight0 can be found in Mining.h permits staking fix for DevOps
                 nSubsidy += 25 * COIN;
             }
         }
     }
 
     //premine function
-    if(pindexBest->nHeight > nReservePhaseStart) {
-        if(pindexBest->nMoneySupply < (nBlockRewardReserve * 100)) {
+    if(pindexPrev->nHeight > nReservePhaseStart) {
+        if(pindexPrev->nMoneySupply < (nBlockRewardReserve * 100)) {
             nSubsidy = nBlockRewardReserve;
         }
     }
 
     // hardCap v2.1
-    if(pindexBest->nMoneySupply > MAX_SINGLE_TX)
+    if(pindexPrev->nMoneySupply > MAX_SINGLE_TX)
     {
         LogPrint("MINEOUT", "GetProofOfStakeReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
         return nFees;
@@ -631,13 +631,13 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
     int64_t nSubsidy = 0;// Reward amount
     int64_t nSubAdjust = 113.75 * COIN;
     
-    if(pindexBest->nHeight > 488888){
+    if(nHeight > 488888){
         nSubAdjust = 153.75 * COIN;
     }    
     nSubsidy = nSubAdjust;    
-    if(pindexBest->nHeight < nPaymentUpdate_4){        
-        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)            
-            int64_t i = ((pindexBest->nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
+    if(nHeight < nPaymentUpdate_4){        
+        if(nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)            
+            int64_t i = ((nHeight - 488888) / 526000);// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic            
             while(i2 <= i){// Loop for as many times as possible                
                 if(i2 <= 19){// Only go up subsidy up to 19 times, regardless of loop count
@@ -650,8 +650,8 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
             }
         }
     } else { // NEW REWARDS TAKE PLACE        
-        if(pindexBest->nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)            
-            int64_t i = ((pindexBest->nHeight - 488888) / 526000) - 1;// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
+        if(nHeight > 526000){// Fork toggle (Has to be the first loop or else height - fork height = negative....)            
+            int64_t i = ((nHeight - 488888) / 526000) - 1;// CURRENT_HEIGHT - FORK_HEIGHT(desired) / 6 Months = possible loops
             int64_t i2 = 0;// Base value for loop logic            
             while(i2 <= i){// Loop for as many times as possible                
                 nSubsidy += (nSubsidy * 17) / 100;// 17% Step up payment adjustment                

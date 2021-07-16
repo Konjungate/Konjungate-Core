@@ -316,7 +316,7 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
             if (!tx.FetchInputs(txdb, mapTestPoolTmp, false, true, mapInputs, fInvalid))
                 continue;
 
-            int64_t nTxFees = tx.GetValueIn(mapInputs)-tx.GetValueOut();
+            int64_t nTxFees = tx.GetValueMapIn(mapInputs)-tx.GetValueOut();
 
             nTxSigOps += GetP2SHSigOpCount(tx, mapInputs);
             if (nBlockSigOps + nTxSigOps >= MAX_BLOCK_SIGOPS)
@@ -439,8 +439,8 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                         hasPayment = false;
                     }
                     int64_t blockReward = GetProofOfWorkReward(pindexPrev->nHeight + 1, nFees);
-                    CAmount masternodePayment = GetMasternodePayment(nHeight, blockReward);
-                    CAmount devopsPayment = GetDevOpsPayment(nHeight, blockReward);
+                    CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockReward);
+                    CAmount devopsPayment = GetDevOpsPayment(pindexPrev->nHeight, blockReward);
 
                     if (hasPayment) {
                         pblock->vtx[0].vout.resize(3);
