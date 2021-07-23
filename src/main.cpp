@@ -62,6 +62,7 @@ bool fImporting = false;
 bool fReindex = false;
 bool fAddrIndex = false;
 bool fHaveGUI = false;
+bool fRollingCheckpoint = false;
 
 struct COrphanBlock {
     uint256 hashBlock;
@@ -933,10 +934,6 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
                                 hash.ToString(), nSigOps, MAX_TX_SIGOPS));
 
         int64_t nFees = tx.GetValueMapIn(mapInputs)-tx.GetValueOut();
-        if (tx.GetValueMapIn(mapInputs) < tx.GetValueOut()) {
-            LogPrintf("AcceptToMemoryPool : tx input is less that output\n");
-            return tx.DoS(100, error("AcceptToMemoryPool : tx input is less that output"));
-        }
         unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 
         // Don't accept it if it can't get into a block
@@ -1099,10 +1096,6 @@ bool AcceptableInputs(CTxMemPool& pool, const CTransaction &txo, bool fLimitFree
                                 hash.ToString(), nSigOps, MAX_TX_SIGOPS));
 
         int64_t nFees = tx.GetValueMapIn(mapInputs)-tx.GetValueOut();
-        if (tx.GetValueMapIn(mapInputs) < tx.GetValueOut()) {
-            LogPrintf("AcceptableInputs : tx input is less that output\n");
-            return error("AcceptableInputs : tx input is less than output");
-        }
         unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
         int64_t txMinFee = GetMinFee(tx, nSize, true, GMF_RELAY);
 
@@ -2134,9 +2127,41 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
 {
     LogPrintf("REORGANIZE\n");
 
-    // Find the fork
+    // Set values
     CBlockIndex* pfork = pindexBest;
     CBlockIndex* plonger = pindexNew;
+        CBlockIndex* plongerindex = plonger;
+    int64_t pfinglonger = (plonger->nHeight - pfork->nHeight);
+    int64_t pheightlonger = plonger->nHeight;
+
+    // Ensure reorganize depth sanity
+    if (pfinglonger > BLOCK_REORG_MAX_DEPTH) {
+        return error("Reorganize() : Maximum depth exceeded");
+    }
+    if (pfinglonger < BLOCK_REORG_MIN_DEPTH) {
+        return error("Reorganize() : Minimum depth exceeded");
+    }
+
+    // Get a checkpoint for quality assurance
+    if (fRollingCheckpoint) {
+        // Verify chain quality
+        while (pheightlonger > RollingHeight)
+        {
+            if(plongerindex->GetBlockHash() == RollingBlock) {
+                break;
+            }
+            plongerindex = plongerindex->pprev;
+            pheightlonger --;
+        }
+        if(plongerindex->GetBlockHash() != RollingBlock) {
+            return error("Reorganize() : Chain quality failed, blockhash is invalid");
+        }
+    } else {
+        //
+        return error("Reorganize() : Chain quality failed, blockheight is invalid");
+    }
+
+    // Find the fork
     while (pfork != plonger)
     {
         while (plonger->nHeight > pfork->nHeight)
@@ -3023,6 +3048,9 @@ bool CBlock::AcceptBlock()
             if (nBestHeight > (pnode->nStartingHeight != -1 ? pnode->nStartingHeight - 2000 : nBlockEstimate))
                 pnode->PushInventory(CInv(MSG_BLOCK, hash));
     }
+    
+    // Set rolling checkpoint status
+    fRollingCheckpoint = RollingCheckpoints(nHeight);
 
     return true;
 }
