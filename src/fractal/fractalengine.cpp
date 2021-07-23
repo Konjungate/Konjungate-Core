@@ -120,15 +120,13 @@ void write_contractDATA(std::string obfuscated_write_string, std::string contrac
     if (!streamFractalConfig.good()) {
                FILE* ConfFile = fopen(pathConfigFile.string().c_str(), "w");
                fprintf(ConfFile, "%s|%s\n", obfuscated_write_string.c_str(), contract_alias.c_str());
-
                fclose(ConfFile);
 
                // Returns our config path, created config file is loaded during initial run...
                return ;
     } else {
-        FILE* ConfFile = fopen(pathConfigFile.string().c_str(), "w");
-        fprintf(ConfFile, "\n%s|%s\n", obfuscated_write_string.c_str(), contract_alias.c_str());
-
+               FILE* ConfFile = fopen(pathConfigFile.string().c_str(), "w");
+               fprintf(ConfFile, "\n%s|%s\n", obfuscated_write_string.c_str(), contract_alias.c_str());
                fclose(ConfFile);
 
                // Returns our config path, created config file is loaded during initial run...

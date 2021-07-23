@@ -69,6 +69,7 @@ using namespace std;
 int input_character_length = 0;
 int input_length = 0;
 int shifts = 0;
+int pivots = 0;
 int position = 0;
 std::string Obfuscated_String = "";
 std::string Obfuscated_Combined_String = "";
@@ -146,7 +147,7 @@ void character_obfuscation(std::string contract_input, std::string contract_alia
     int letter_total = 1;
     // Define character loop position
     int character_detection_loop = 0;
-
+    
     // Keep looping through "tokens" while one of the
     // delimiters present in str[]. 
     while (wrdcount != NULL) 
@@ -225,7 +226,7 @@ void character_obfuscation(std::string contract_input, std::string contract_alia
         wrdcount = strtok(NULL, " ");
 
         // Break loop if maximum obfuscatable word count is reached
-        if(word_total >= 90000)
+        if(word_total >= 5000)
         {
             break;
         }
@@ -264,7 +265,7 @@ void character_obfuscation(std::string contract_input, std::string contract_alia
     // --
     // write obfuscated string to fractal engine
     write_contractDATA(Obfuscated_Combined_String, contract_alias, contract_type);
-
+  
     return; 
 }
 
@@ -278,11 +279,14 @@ void obfuscation_shift(int input_data_shift, std::string input_data_text, bool c
     if(char_ob) {
         //
         ignition(input_data_shift, input_data_text);
+
     } else {
         //
         flameout(input_data_shift, input_data_text);
     }
 
+
+  
     return; 
 } 
 
@@ -707,7 +711,6 @@ void gateKeeper(std::string contract_decode, int contract_type) {
 void reassembly(std::string input1, std::string input2) {
     // Print for debugging
     LogPrintf("reassembly - INFO - starting... \n");
-
     // Set local values from global
     std::string builder_key = input2;
     std::string builder_teeth = input1;
@@ -744,7 +747,6 @@ void reassembly(std::string input1, std::string input2) {
     std::string str_ob_sets = std::string(ob_sets);
     // Print for debugging
     LogPrintf("reassembly - INFO - set first movement from position: 0 to position: %u \n", str_ob_sets);
-
     // Loop through and extract key data
     while(cur_loop < clean_threshold) {
         // Convert value for proper comparison
@@ -802,6 +804,7 @@ void character_deob(std::string to_deob, int contract_type) {
         }
         to_deob.erase(0, to_deob.find("C") + std::string("C").length());
         ob_count = to_deob.substr(0, to_deob.find("C"));
+
     }
 
     // Print for debugging

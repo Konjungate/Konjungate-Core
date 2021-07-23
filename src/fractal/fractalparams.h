@@ -8,4 +8,4 @@
 #include <string>
 
 
-#endif // FRACTALPARAMS_H 
+#endif // FRACTALPARAMS_H

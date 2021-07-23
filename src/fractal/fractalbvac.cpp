@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2021 The Espers Project/CryptoCoderz Team
+// Copyright (c) 2017-2021 The Espers Project/CryptoCoderz Team
 // Copyright (c) 2020-2021 The Konjungate Project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -9,7 +9,8 @@
 // CryptoCoderz (Jonathan Dan Zaretsky - cryptocoderz@gmail.com)
 // and
 // SaltineChips (Jeremiah Cook - jeremiahwcook@gmail.com)
-// dmEgc2xhdnUgZ29zcG9kZSBib2dlIGUgbmFzaCBzcGFzZXRhbCBlc3VzIGhyaXN0b3M=//
+// dmEgc2xhdnUgZ29zcG9kZSBib2dlIGUgbmFzaCBzcGFzZXRhbCBlc3VzIGhyaXN0b3M=
+//
 //
 // PLEASE USE AT YOUR OWN RISK!!!
 //

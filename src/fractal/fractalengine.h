@@ -11,4 +11,4 @@ void write_contractDATA(std::string obfuscated_write_string, std::string contrac
 void read_contractDATA(std::string contract_alias, int contract_type);
 void parse_fractalSCRIPT(std::string fractal_SCRIPT);
 
-#endif // FRACTALENGINE_H 
+#endif // FRACTALENGINE_H
