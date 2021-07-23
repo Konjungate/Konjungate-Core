@@ -1,11 +1,12 @@
-// Copyright (c) 2020-2021 The Espers Project/CryptoCoderz Team
+// Copyright (c) 2017-2021 The Espers Project/CryptoCoderz Team
+// Copyright (c) 2020-2021 The Konjungate Project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 // NOTICE!
 //
 // This is a completely experimental NFT data storage and retrieval written by
-// CrpytoCoderz (Jonathan Dan Zaretsky - cryptocoderz@gmail.com)
+// CryptoCoderz (Jonathan Dan Zaretsky - cryptocoderz@gmail.com)
 // and
 // SaltineChips (Jeremiah Cook - jeremiahwcook@gmail.com)
 // dmEgc2xhdnUgZ29zcG9kZSBib2dlIGUgbmFzaCBzcGFzZXRhbCBlc3VzIGhyaXN0b3M=
@@ -63,13 +64,13 @@ void NFTrender(std::string input_nft_data, std::string input_alias, string rende
     while((position = input_nft_data.find(" ")) != std::string::npos) {
         // Set array data
         NFTparserdata += pixel_count;
+        // Log word count found
+        log_found ++;
         // Break loop if maximum render pixel line count is reached
         if(log_found > 400)
         {
             break;
         }
-        //Log Word count found
-        log_found ++;
         // Move to next word
         input_nft_data.erase(0, input_nft_data.find(" ") + std::string(" ").length());
         pixel_count = input_nft_data.substr(0, input_nft_data.find(" "));
@@ -137,7 +138,7 @@ void NFTprintRENDER(unsigned char NFTdata[], int w, int h, int channels, std::st
     int PNGdata = (w * channels);
     write_image(passed_alias.c_str(), w, h, channels, NFTdata, contract_type, PNGdata);
 }
-//     Set image to parse | filename = "image.jpg";
+
 void NFTparse(std::string image_to_deCode) {
     // Clear possible left over data
     NFTparserdata = "";
@@ -145,7 +146,7 @@ void NFTparse(std::string image_to_deCode) {
     NFT_run = false;
     NFTBASE_run = NFT_run;
     int width, height;
-    int r, g, b; // a;
+    int r, g, b;//, a;
     std::vector<unsigned char> image;
     std::string str_x, str_y, str_r, str_g, str_b, str_a;
     std::string nftBUF = "C";
@@ -224,7 +225,6 @@ void NFTparse(std::string image_to_deCode) {
         str_r = std::to_string(r);
         str_g = std::to_string(g);
         str_b = std::to_string(b);
-        str_a = std::to_string(a);
         //str_a = std::to_string(a);
         // Print for debugging
         //LogPrintf("NFT Parser - Pixel |%u| Position x=%s y=%s - RGB data parsed: %s, %s, %s\n", p, str_x, str_y, str_r, str_g, str_b);
@@ -249,7 +249,7 @@ void NFTparse(std::string image_to_deCode) {
     n = 0;
 
     // Match data and get ready for use
-    NFTenCode(NFTparserdata)
+    NFTenCode(NFTparserdata);
 }
 
 void NFTenCode(std::string input_pixeldata) {
