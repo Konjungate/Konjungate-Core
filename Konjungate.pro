@@ -26,8 +26,8 @@ OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2u/include
 OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2u
 MINIUPNPC_INCLUDE_PATH=C:/deps/
 MINIUPNPC_LIB_PATH=C:/deps/miniupnpc-2.1
-QRENCODE_INCLUDE_PATH=C:/deps/qrencode-4.0.2
-QRENCODE_LIB_PATH=C:/deps/qrencode-4.0.2/.libs
+QRENCODE_INCLUDE_PATH=C:/deps/qrencode-4.1.1
+QRENCODE_LIB_PATH=C:/deps/qrencode-4.1.1/.libs
 SECP256K1_INCLUDE_PATH=C:/deps/secp256k1/include
 SECP256K1_LIB_PATH=C:/deps/secp256k1
 }
