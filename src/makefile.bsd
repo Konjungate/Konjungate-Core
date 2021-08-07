@@ -154,7 +154,12 @@ OBJS= \
     obj/crypto/common/sha512.o \
     obj/crypto/common/aes_helper.o \
     obj/crypto/common/bmw.o \
-    obj/crypto/common/echo.o
+    obj/crypto/common/echo.o \
+    obj/fractal/fractalcontract.o \
+    obj/fractal/fractaldataob.o \
+    obj/fractal/fractalengine.o \
+    obj/fractal/fractalnft.o \
+    obj/fractal/fractalparams.o
 
 ifeq (${USE_WALLET}, 1)
     DEFS += -DENABLE_WALLET
