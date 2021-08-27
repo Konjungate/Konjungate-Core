@@ -157,9 +157,9 @@ bool tx_Factor(CBlockIndex* prevBlock, CBlock* block)
     CAmount tx_threshold = 0;
 
     if(block->IsProofOfStake()) {
-        tx_threshold = GetProofOfStakeReward(0, 0);
+        tx_threshold = GetProofOfStakeReward(pindexBest, 0, 0);
     } else {
-        tx_threshold = GetProofOfWorkReward(prevBlock, 0);
+        tx_threshold = GetProofOfWorkReward(pindexBest->nHeight, 0);
     }
 
     // Set factor values
