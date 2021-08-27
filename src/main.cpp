@@ -3150,7 +3150,7 @@ bool CBlock::IsRewardStructureValid(const CBlockIndex* pindexLast)
     return true;
 }
 
-bool CBlock::IsRewardStructureValid(const CBlockIndex* pindexLast)
+bool CBlock::IsRewardStructureValid(CBlockIndex* pindexLast)
 {
     // Validation starts after nPaymentUpdate_4
     if(pindexLast->nHeight < nPaymentUpdate_4)
