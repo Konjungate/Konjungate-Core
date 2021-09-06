@@ -126,6 +126,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "move", 3 },
     { "sendfrom", 2 },
     { "sendfrom", 3 },
+    { "liststakerewards", 0 },
     { "listtransactions", 1 },
     { "listtransactions", 2 },
     { "listtransactions", 3 },
@@ -168,6 +169,8 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "searchrawtransactions", 1 },
     { "searchrawtransactions", 2 },
     { "searchrawtransactions", 3 },
+    { "smsgoutbox", 1 },
+    { "smsginbox", 1 },
 };
 
 class CRPCConvertTable
