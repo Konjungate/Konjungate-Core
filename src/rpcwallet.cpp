@@ -1634,7 +1634,7 @@ Value liststakerewards(const Array& params, bool fHelp)
             "  {\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the stake reward. \n"
             "                                                It will be \"\" for the default account.\n"
-            "    \"address\":\"CampusCash\",    (string) The CampusCash address which received the stake reward. \n"
+            "    \"address\":\"Konjungate\",    (string) The Konjungate address which received the stake reward. \n"
             "    \"category\":\"orphan|immature|generate\", (string) The transaction category. 'orphan' has no confirmations.\n"
             "    \"amount\": x.xxx,          (numeric) The amount of the stake reward. \n"
             "    \"confirmations\": n,       (numeric) The number of confirmations for the transaction. \n"
