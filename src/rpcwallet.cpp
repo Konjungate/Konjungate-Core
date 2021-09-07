@@ -1570,6 +1570,111 @@ Value listtransactions(const Array& params, bool fHelp)
     return ret;
 }
 
+void ListStakeRewards(const CWalletTx& wtx, Array& ret, const isminefilter& filter)
+{
+    CAmount nFee;
+    CAmount nAmount;
+    string strSentAccount;
+    CTxDestination address;
+
+    // Stakes
+    if(wtx.IsCoinStake())
+    {
+        wtx.GetStakeAmounts(nFee, nAmount, strSentAccount, address, filter);
+
+        if (nAmount > 0)
+        {
+            Object entry;
+            string account;
+            
+            if (pwalletMain->mapAddressBook.count(address))
+                account = pwalletMain->mapAddressBook[address];
+            entry.push_back(Pair("account", account));
+            MaybePushAddress(entry, address);
+            
+            if (wtx.GetDepthInMainChain() < 1)
+                entry.push_back(Pair("category", "orphan"));
+            else if (wtx.GetBlocksToMaturity() > 0)
+                entry.push_back(Pair("category", "immature"));
+            else
+                entry.push_back(Pair("category", "generate"));
+
+            entry.push_back(Pair("amount", ValueFromAmount(nAmount)));
+
+            int confirms = wtx.GetDepthInMainChain(false);
+            int confirmsTotal = GetIXConfirmations(wtx.GetHash()) + confirms;
+            entry.push_back(Pair("confirmations", confirmsTotal));
+            entry.push_back(Pair("bcconfirmations", confirms));
+            
+            if (confirms > 0)
+            {
+                entry.push_back(Pair("blockhash", wtx.hashBlock.GetHex()));
+            }
+            uint256 hash = wtx.GetHash();
+            entry.push_back(Pair("txid", hash.GetHex()));
+            entry.push_back(Pair("time", wtx.GetTxTime()));
+            entry.push_back(Pair("timereceived", (int64_t)wtx.nTimeReceived));
+
+            ret.push_back(entry);
+        }
+    }
+}
+
+Value liststakerewards(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() > 1)
+        throw runtime_error(
+            "liststakerewards (count)\n"
+            "\nReturns up to 'count' most recent stake rewards.\n"
+            "\nArguments:\n"
+            "1. count          (numeric, optional, default=10) The number of transactions to return\n"
+
+            "\nResult:\n"
+            "[\n"
+            "  {\n"
+            "    \"account\":\"accountname\",       (string) The account name associated with the stake reward. \n"
+            "                                                It will be \"\" for the default account.\n"
+            "    \"address\":\"CampusCash\",    (string) The CampusCash address which received the stake reward. \n"
+            "    \"category\":\"orphan|immature|generate\", (string) The transaction category. 'orphan' has no confirmations.\n"
+            "    \"amount\": x.xxx,          (numeric) The amount of the stake reward. \n"
+            "    \"confirmations\": n,       (numeric) The number of confirmations for the transaction. \n"
+            "    \"bcconfirmations\": n,     (numeric) The number of Blcokchain confirmations for the transaction. \n"
+            "    \"blockhash\": \"hashvalue\", (string) The block hash containing the transaction. \n"
+            "    \"txid\": \"transactionid\", (string) The transaction id. Available.\n"
+            "    \"time\": xxx,              (numeric) The transaction time in seconds since epoch (midnight Jan 1 1970 GMT).\n"
+            "    \"timereceived\": xxx,      (numeric) The time received in seconds since epoch (midnight Jan 1 1970 GMT).\n"
+            "  }\n"
+            "]\n"
+        );
+
+    int nCount = 10;
+    if (params.size() > 0)
+        nCount = params[0].get_int();
+    
+    isminefilter filter = ISMINE_ALL;
+
+    if (nCount < 0)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Negative count");
+    
+    Array ret;
+
+    const CWallet::TxItems & txOrdered = pwalletMain->wtxOrdered;
+
+    // iterate backwards until we have nCount items to return:
+    for (CWallet::TxItems::const_reverse_iterator it = txOrdered.rbegin(); it != txOrdered.rend(); ++it)
+    {
+        CWalletTx *const pwtx = (*it).second.first;
+        if (pwtx != 0 && pwtx->IsCoinStake())
+            ListStakeRewards(*pwtx, ret, filter);
+        
+        if ((int)ret.size() >= (nCount)) break;
+    }
+    // ret is newest to oldest
+    std::reverse(ret.begin(), ret.end()); // Return oldest to newest
+
+    return ret;
+}
+
 Value listaccounts(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 2)
