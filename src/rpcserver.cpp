@@ -296,7 +296,7 @@ static const CRPCCommand vRPCCommands[] =
     { "addmultisigaddress",     &addmultisigaddress,     false,     false,     true },
     { "addredeemscript",        &addredeemscript,        false,     false,     true },
     { "gettransaction",         &gettransaction,         false,     false,     true },
-    { "listtransactions",       &listtransactions,       false,     false,     true },\
+    { "listtransactions",       &listtransactions,       false,     false,     true },
     { "liststakerewards",       &liststakerewards,       false,     false,     true },
     { "listaddressgroupings",   &listaddressgroupings,   false,     false,     true },
     { "signmessage",            &signmessage,            false,     false,     true },
