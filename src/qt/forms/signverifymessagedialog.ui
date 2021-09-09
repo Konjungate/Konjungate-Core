@@ -107,7 +107,7 @@ color: rgb(255, 255, 255);</string>
           </color>
          </brush>
         </colorrole>
-        <colorrole role="Base">
+        <colorrole role="PlaceholderText">
          <brush brushstyle="NoBrush">
           <color alpha="128">
            <red>255</red>
@@ -199,7 +199,7 @@ color: rgb(255, 255, 255);</string>
           </color>
          </brush>
         </colorrole>
-        <colorrole role="Base">
+        <colorrole role="PlaceholderText">
          <brush brushstyle="NoBrush">
           <color alpha="128">
            <red>255</red>
@@ -291,7 +291,7 @@ color: rgb(255, 255, 255);</string>
           </color>
          </brush>
         </colorrole>
-        <colorrole role="Base">
+        <colorrole role="PlaceholderText">
          <brush brushstyle="NoBrush">
           <color alpha="128">
            <red>255</red>

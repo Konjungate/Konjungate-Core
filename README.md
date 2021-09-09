@@ -1,4 +1,4 @@
-# Konjungate Core v1.1.6.3
+# Konjungate Core v1.1.6.2
 
 Name: Konjungate<br/>
 Ticker: KONJ<br/>
@@ -26,10 +26,10 @@ Official Website:<br/>
 https://www.konjungate.net
 
 ## What is Konjungate?
-KONJUNGATE - The Artbased Blockchain is based on the cyber novel MACHFELD by Michael Mastrototaro © 1999 
+KONJUNGATE - The Artbased Blockchain is based on the cyber novel MACHFELD by Michael Mastrototaro © 1999
 
 Konjungate will chance the funding of contemporary Art and Art-Institutions using blockchain technology to change the way of contemporary art funding. 
-**We are also developping our side chain solution. In addition to NFTs and Smart Contracts, this will also enable Web3 and dAPPs solutions. As part of the UUNIGATE community, our chain will then be able to communicate with all the alt coins involved. It’s even possible to “Whitelist” ETH and BSC and other network contracts we deem viable and safe for our users to interact with and allow them to join our fractal ecosystem More about this in a separate announcement.**
+We are also developping our side chain solution. In addition to NFTs and Smart Contracts, this will also enable Web3 and dAPPs solutions. As part of the UUNIGATE community, our chain will then be able to communicate with all the alt coins involved. It’s even possible to “Whitelist” ETH and BSC and other network contracts we deem viable and safe for our users to interact with and allow them to join our fractal ecosystem More about this in a separate announcement.
 
 See our projects at:<br/>
 https://wendy.network<br/>

@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = Konjungate-qt
-VERSION = 1.1.7.0
+VERSION = 1.1.6.3
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
@@ -26,8 +26,8 @@ OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2u/include
 OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2u
 MINIUPNPC_INCLUDE_PATH=C:/deps/
 MINIUPNPC_LIB_PATH=C:/deps/miniupnpc-2.1
-QRENCODE_INCLUDE_PATH=C:/deps/qrencode-4.1.1
-QRENCODE_LIB_PATH=C:/deps/qrencode-4.1.1/.libs
+QRENCODE_INCLUDE_PATH=C:/deps/qrencode-4.0.2
+QRENCODE_LIB_PATH=C:/deps/qrencode-4.0.2/.libs
 SECP256K1_INCLUDE_PATH=C:/deps/secp256k1/include
 SECP256K1_LIB_PATH=C:/deps/secp256k1
 }
@@ -51,11 +51,12 @@ UI_DIR = build
 
 # use: qmake "RELEASE=1"
 contains(RELEASE, 1) {
-    # Mac: compile for maximum compatibility (10.13, 64-bit)
-macx:QMAKE_CXXFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-macx:QMAKE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-macx:QMAKE_LFLAGS +=  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-macx:QMAKE_OBJECTIVE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+    # Mac: compile for maximum compatibility (10.12, 64-bit)
+    macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
+    macx:QMAKE_CFLAGS += -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
+    macx:QMAKE_LFLAGS += -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
+    macx:QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
+
 
     !windows:!macx {
         # Linux: static link
@@ -291,8 +292,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/limitedmap.h \
     src/qt/fractalui.h \
     src/qt/tokenui.h \
-    src/qt/nftui.h \
-    src/qt/contractui.h \
     src/qt/overviewpage.h \
     src/qt/csvmodelwriter.h \
     src/crypter.h \
@@ -336,7 +335,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/fractal/fractalcontract.h \
     src/fractal/fractalparams.h \
     src/fractal/fractaldataob.h \
-    src/fractal/fractalnftbase.h \
     src/fractal/fractalnft.h \
     src/fractal/fractalbvac.h \
     src/qt/masternodemanager.h \
@@ -447,13 +445,10 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/pbkdf2.cpp \
     src/qt/fractalui.cpp \
     src/qt/tokenui.cpp \
-    src/qt/nftui.cpp \
-    src/qt/contractui.cpp \
     src/fractal/fractalengine.cpp \
     src/fractal/fractalcontract.cpp \
     src/fractal/fractalparams.cpp \
     src/fractal/fractaldataob.cpp \
-    src/fractal/fractalnftbase.cpp \
     src/fractal/fractalnft.cpp \
     src/fractal/fractalbvac.cpp \
     src/support/cleanse.cpp \
@@ -521,8 +516,6 @@ FORMS += \
     src/qt/forms/settingspage.ui \
     src/qt/forms/fractalui.ui \
     src/qt/forms/tokenui.ui \
-    src/qt/forms/nftui.ui \
-    src/qt/forms/contractui.ui \
     src/qt/plugins/mrichtexteditor/mrichtextedit.ui
 
 contains(USE_QRCODE, 1) {
@@ -566,47 +559,37 @@ isEmpty(BOOST_THREAD_LIB_SUFFIX) {
     #else:BOOST_THREAD_LIB_SUFFIX = $$BOOST_LIB_SUFFIX
 }
 
-equals(QMAKE_HOST.arch, x86_64) {
-    message( "It's x86" )
-    LIBOSXPATH=/usr/local
-}
-
-equals(QMAKE_HOST.arch, arm64) {
-    message( "It's M1" )
-    LIBOSXPATH=/opt/homebrew
-}
-
 isEmpty(BDB_LIB_PATH) {
-    macx:BDB_LIB_PATH = $${LIBOSXPATH}/Cellar/BerkeleyDB.6.2/lib
+    macx:BDB_LIB_PATH = /usr/local/Cellar/berkeley-db4/4.8.30/lib
     windows:BDB_LIB_PATH=C:/dev/coindeps32/bdb-4.8/lib
 }
 
 isEmpty(BDB_LIB_SUFFIX) {
-    macx:BDB_LIB_SUFFIX = -6.2
+    macx:BDB_LIB_SUFFIX = -4.8
 }
 
 isEmpty(BDB_INCLUDE_PATH) {
-    macx:BDB_INCLUDE_PATH = $${LIBOSXPATH}/Cellar/BerkeleyDB.6.2/include
+    macx:BDB_INCLUDE_PATH = /usr/local/Cellar/berkeley-db4/4.8.30/include
     windows:BDB_INCLUDE_PATH=C:/dev/coindeps32/bdb-4.8/include
 }
 
 isEmpty(BOOST_LIB_PATH) {
-    macx:BOOST_LIB_PATH = $${LIBOSXPATH}/lib
+    macx:BOOST_LIB_PATH = /usr/local/Cellar/boost/1.59.0/lib
     windows:BOOST_LIB_PATH=C:/dev/coindeps32/boost_1_57_0/lib
 }
 
 isEmpty(BOOST_INCLUDE_PATH) {
-    macx:BOOST_INCLUDE_PATH = $${LIBOSXPATH}/include
+    macx:BOOST_INCLUDE_PATH = /usr/local/Cellar/boost/1.59.0/include
     windows:BOOST_INCLUDE_PATH=C:/dev/coindeps32/boost_1_57_0/include
 }
 
 isEmpty(QRENCODE_LIB_PATH) {
-    macx:QRENCODE_LIB_PATH = $${LIBOSXPATH}/Cellar/qrencode/4.1.1/lib
+    macx:QRENCODE_LIB_PATH = /usr/local/lib
 	windows:QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.4/.libs	
 }
 
 isEmpty(QRENCODE_INCLUDE_PATH) {
-    macx:QRENCODE_INCLUDE_PATH = $${LIBOSXPATH}/Cellar/qrencode/4.1.1/include
+    macx:QRENCODE_INCLUDE_PATH = /usr/local/include
 	windows:QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.4/
 }
 
@@ -615,22 +598,22 @@ isEmpty(MINIUPNPC_LIB_SUFFIX) {
 }
 
 isEmpty(MINIUPNPC_INCLUDE_PATH) {
-    macx:MINIUPNPC_INCLUDE_PATH= $${LIBOSXPATH}/Cellar/miniupnpc/2.2.2/include
+    macx:MINIUPNPC_INCLUDE_PATH=/usr/local/Cellar/miniupnpc/1.9.20151008/include
     windows:MINIUPNPC_INCLUDE_PATH=C:/dev/coindeps32/miniupnpc-1.9
 }
 
 isEmpty(MINIUPNPC_LIB_PATH) {
-    macx:MINIUPNPC_LIB_PATH= $${LIBOSXPATH}/Cellar/miniupnpc/2.2.2/lib
+    macx:MINIUPNPC_LIB_PATH=/usr/local/Cellar/miniupnpc/1.9.20151008/lib
     windows:MINIUPNPC_LIB_PATH=C:/dev/coindeps32/miniupnpc-1.9
 }
 
 isEmpty(OPENSSL_INCLUDE_PATH) {
-    macx:OPENSSL_INCLUDE_PATH = $${LIBOSXPATH}/Cellar/openssl@1.1/1.1.1k/include
+    macx:OPENSSL_INCLUDE_PATH = /usr/local/openssl-1.0.1p/include
     windows:OPENSSL_INCLUDE_PATH=C:/dev/coindeps32/openssl-1.0.1p/include
 }
 
 isEmpty(OPENSSL_LIB_PATH) {
-    macx:OPENSSL_LIB_PATH = $${LIBOSXPATH}/Cellar/openssl@1.1/1.1.1k/lib
+    macx:OPENSSL_LIB_PATH = /usr/local/openssl-1.0.1p/lib
     windows:OPENSSL_LIB_PATH=C:/dev/coindeps32/openssl-1.0.1p/lib
 }
 
@@ -660,7 +643,7 @@ macx:QMAKE_CXXFLAGS_THREAD += -pthread
 macx:QMAKE_INFO_PLIST = share/qt/Info.plist
 
 # Set libraries and includes at end, to use platform-defined defaults if not overridden
-INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH $$BDB_INCLUDE_PATH
+INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH
 LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
 LIBS += -lssl -lcrypto -lz -ldb_cxx$$BDB_LIB_SUFFIX
 # -lgdi32 has to happen after -lcrypto (see  #681)
