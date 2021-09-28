@@ -11,6 +11,9 @@
 #include "main.h"
 #include "uint256.h"
 
+
+static const int nCheckpointSpan = 5000;
+
 namespace Checkpoints
 {
     typedef std::map<int, uint256> MapCheckpoints;
@@ -49,13 +52,15 @@ namespace Checkpoints
         (550000, uint256("0x5680dcb37fd20160c3b6f9b737657ccada8d5ed7bcfe861fa0c4e6face67dec6"))
         (600000, uint256("0x276a8d53f8e19a341299034829d98bb996f060ebdaa959a41aa31828fbff2aaf"))
         (602073, uint256("0x0000000003e461bb4107459397a3561cee787eefb3dae398024dca0502c0816b"))
-        (605000, uint256("0x000000000ddc05cb90f306894367f55eb375b92db3e3fac3aa9851306b6284c6"))
-        (610000, uint256("0x0000000001b08635dc6b19162f589026712799868ee8af790df9afa7811cf538"))
         (625000, uint256("0x0000000002cf42960483dcf438e74a6c11410eb2687e3fa63ae975c4235d1477"))
-        (640000, uint256("0x24267a7b422f4acd39d4b72cf2f5335bf8d9ae71fe77c823ebc6561a29821e68"))
         (650000, uint256("0x301a0ce40a777d14ca2a40c885036e4fb21e281d8576bfa567be690d26c75afd"))
+        (675000, uint256("0x0000000013be01ded5961bb66d90f07aece18be4de200b9a40a9d8a3b6586b20"))
         (700000, uint256("0x000000000135d5196d23f0dd055c55060ec4da98b233e8faf0dddcb264b166a7"))
+        (725000, uint256("0x92e4fc040c008b91f8278a2f930e5d9f3b59f88628198540cdde7589a28776b9"))
         (750000, uint256("0x6c85d6bcb7ace94c67746941dccd239cd00aa12ff373c7608767c8b1817ebeac"))
+        (775000, uint256("0x2d1ed218811a007b1ddb6db0bfc1375c62b90568406440e31824ab2100533c32"))
+        (800000, uint256("0x855a8c9f8fc5eda57fae6e33a65bd7f0c21e80e58116629a0de6bcd1f663fc60"))
+        (807390, uint256("0x4622497276183e6a406a74d29fb4a857c88f05ae517436d9ce70963d6cb95ef6"))
     ;
 
     // TestNet has no checkpoints
@@ -98,7 +103,7 @@ namespace Checkpoints
     {
         const CBlockIndex *pindex = pindexBest;
         // Search backward for a block within max span and maturity window
-        while (pindex->pprev && pindex->nHeight + BLOCK_REORG_MAX_DEPTH > pindexBest->nHeight)
+        while (pindex->pprev && pindex->nHeight + nCheckpointSpan > pindexBest->nHeight)
             pindex = pindex->pprev;
         return pindex;
     }

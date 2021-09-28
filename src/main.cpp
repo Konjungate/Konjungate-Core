@@ -62,7 +62,6 @@ bool fImporting = false;
 bool fReindex = false;
 bool fAddrIndex = false;
 bool fHaveGUI = false;
-bool fRollingCheckpoint = false;
 
 struct COrphanBlock {
     uint256 hashBlock;
@@ -734,23 +733,6 @@ double CTransaction::ComputePriority(double dPriorityInputs, unsigned int nTxSiz
     return dPriorityInputs / nTxSize;
 }
 
-void CTransaction::GetMapTxInputs(MapPrevTx& mapInputs) const
-{
-    // Load TX inputs
-    CTxDB txdb("r");
-    map<uint256, CTxIndex> mapUnused;
-    bool fInvalid = false;
-    // Ensure we can fetch inputs
-    if (!this->FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
-    {
-        if (fInvalid)
-        {
-            LogPrintf("Invalid TX attempted to set in GetMapTXInputs\n");
-            return;
-        }
-    }
-}
-
 bool CTransaction::CheckTransaction() const
 {
     // Basic checks that don't depend on any context
@@ -933,7 +915,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
                           error("AcceptToMemoryPool : too many sigops %s, %d > %d",
                                 hash.ToString(), nSigOps, MAX_TX_SIGOPS));
 
-        int64_t nFees = tx.GetValueMapIn(mapInputs)-tx.GetValueOut();
+        int64_t nFees = tx.GetValueIn(mapInputs)-tx.GetValueOut();
         unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 
         // Don't accept it if it can't get into a block
@@ -1095,7 +1077,7 @@ bool AcceptableInputs(CTxMemPool& pool, const CTransaction &txo, bool fLimitFree
                           error("AcceptableInputs : too many sigops %s, %d > %d",
                                 hash.ToString(), nSigOps, MAX_TX_SIGOPS));
 
-        int64_t nFees = tx.GetValueMapIn(mapInputs)-tx.GetValueOut();
+        int64_t nFees = tx.GetValueIn(mapInputs)-tx.GetValueOut();
         unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
         int64_t txMinFee = GetMinFee(tx, nSize, true, GMF_RELAY);
 
@@ -1584,7 +1566,7 @@ bool CTransaction::DisconnectInputs(CTxDB& txdb)
 
 
 bool CTransaction::FetchInputs(CTxDB& txdb, const map<uint256, CTxIndex>& mapTestPool,
-                               bool fBlock, bool fMiner, MapPrevTx& inputsRet, bool& fInvalid) const
+                               bool fBlock, bool fMiner, MapPrevTx& inputsRet, bool& fInvalid)
 {
     // FetchInputs can return false either because we just haven't seen some inputs
     // (in which case the transaction should be stored as an orphan)
@@ -1667,7 +1649,7 @@ const CTxOut& CTransaction::GetOutputFor(const CTxIn& input, const MapPrevTx& in
     return txPrev.vout[input.prevout.n];
 }
 
-int64_t CTransaction::GetValueMapIn(const MapPrevTx& inputs) const
+int64_t CTransaction::GetValueIn(const MapPrevTx& inputs) const
 {
     if (IsCoinBase())
         return 0;
@@ -1988,17 +1970,12 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
             if (nSigOps > MAX_BLOCK_SIGOPS)
                 return DoS(100, error("ConnectBlock() : too many sigops"));
 
-            int64_t nTxValueIn = tx.GetValueMapIn(mapInputs);
+            int64_t nTxValueIn = tx.GetValueIn(mapInputs);
             int64_t nTxValueOut = tx.GetValueOut();
             nValueIn += nTxValueIn;
             nValueOut += nTxValueOut;
-            if (!tx.IsCoinStake()) {
+            if (!tx.IsCoinStake())
                 nFees += nTxValueIn - nTxValueOut;
-                if (nTxValueIn < nTxValueOut) {
-                    LogPrintf("ConnectBlock : block contains a tx input that is less that output\n");
-                    return false;
-                }
-            }
             if (tx.IsCoinStake())
                 nStakeReward = nTxValueOut - nTxValueIn;
 
@@ -2127,42 +2104,9 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
 {
     LogPrintf("REORGANIZE\n");
 
-    // Set values
+    // Find the fork
     CBlockIndex* pfork = pindexBest;
     CBlockIndex* plonger = pindexNew;
-        CBlockIndex* plongerindex = plonger;
-    int64_t pfinglonger = (plonger->nHeight - pfork->nHeight);
-    int64_t pheightlonger = plonger->nHeight;
-    int64_t preorgmax = (pfork->nHeight - BLOCK_REORG_MAX_DEPTH);
-
-    // Ensure reorganize depth sanity
-    if (pfinglonger > BLOCK_REORG_MAX_DEPTH) {
-        return error("Reorganize() : Maximum depth exceeded");
-    }
-    // Set rolling checkpoint status, just in case we haven't accepted any blocks yet
-    // TODO: Clean up to prevent redundant calls beween reorganize and AcceptBlock
-    fRollingCheckpoint = RollingCheckpoints(pfork->nHeight);
-
-    // Get a checkpoint for quality assurance
-    if (fRollingCheckpoint) {
-        // Verify chain quality
-        while (pheightlonger > RollingHeight)
-        {
-            if(plongerindex->GetBlockHash() == RollingBlock) {
-                break;
-            }
-            plongerindex = plongerindex->pprev;
-            pheightlonger --;
-        }
-        if(plongerindex->GetBlockHash() != RollingBlock) {
-            return error("Reorganize() : Chain quality failed, blockhash is invalid");
-        }
-    } else {
-        // Could not obtain checkpoint
-        return error("Reorganize() : Chain quality failed, blockheight is invalid");
-    }
-
-    // Find the fork
     while (pfork != plonger)
     {
         while (plonger->nHeight > pfork->nHeight)
@@ -2183,7 +2127,6 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
     vector<CBlockIndex*> vConnect;
     for (CBlockIndex* pindex = pindexNew; pindex != pfork; pindex = pindex->pprev)
         vConnect.push_back(pindex);
-    
     reverse(vConnect.begin(), vConnect.end());
 
     LogPrintf("REORGANIZE: Disconnect %u blocks; %s..%s\n", vDisconnect.size(), pfork->GetBlockHash().ToString(), pindexBest->GetBlockHash().ToString());
@@ -2197,13 +2140,13 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
         if (!block.ReadFromDisk(pindex))
             return error("Reorganize() : ReadFromDisk for disconnect failed");
         if (!block.DisconnectBlock(txdb, pindex))
-            return error("Reorganize() : DisconnectBlock failed for block: %s ", pindex->GetBlockHash().ToString());
+            return error("Reorganize() : DisconnectBlock %s failed", pindex->GetBlockHash().ToString());
 
         // Queue memory transactions to resurrect.
         // We only do this for blocks after the last checkpoint (reorganisation before that
         // point should only happen with -reindex/-loadblock, or a misbehaving peer.
         BOOST_REVERSE_FOREACH(const CTransaction& tx, block.vtx)
-            if (!(tx.IsCoinBase() || tx.IsCoinStake()) && pindex->nHeight > preorgmax)
+            if (!(tx.IsCoinBase() || tx.IsCoinStake()) && pindex->nHeight > Checkpoints::GetTotalBlocksEstimate())
                 vResurrect.push_front(tx);
     }
 
@@ -2218,16 +2161,7 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
         if (!block.ConnectBlock(txdb, pindex))
         {
             // Invalid block
-            return error("Reorganize() : ConnectBlock failed for block: %s", pindex->GetBlockHash().ToString());
-        }
-        if(Velocity_check(pindex->nHeight))
-        {
-            // Announce Velocity constraint failure
-            if(!Velocity(pindex->pprev, &block))
-            {
-                // Invalid data within block
-                return error("Reorganize() : tx_Factor failed at height: %u", pindex->nHeight);
-            }
+            return error("Reorganize() : ConnectBlock %s failed", pindex->GetBlockHash().ToString());
         }
 
         // Queue memory transactions to delete
@@ -2989,28 +2923,10 @@ bool CBlock::AcceptBlock()
     if (GetBlockTime() <= pindexPrev->GetPastTimeLimit() || FutureDrift(GetBlockTime()) < pindexPrev->GetBlockTime())
         return error("AcceptBlock() : block's timestamp is too early");
 
-    // Set logged values
-    CAmount tx_inputs_values = 0;
-    CAmount tx_outputs_values = 0;
-    CAmount tx_threshold = (500 * COIN);
-
     // Check that all transactions are finalized
-    BOOST_FOREACH(const CTransaction& tx, vtx) {
-        if (!IsFinalTx(tx, nHeight, GetBlockTime())) {
+    BOOST_FOREACH(const CTransaction& tx, vtx)
+        if (!IsFinalTx(tx, nHeight, GetBlockTime()))
             return DoS(10, error("AcceptBlock() : contains a non-final transaction"));
-        }
-        // Log inputs/output values
-        MapPrevTx mapInputs;
-        tx.GetMapTxInputs(mapInputs);
-        tx_inputs_values += tx.GetValueMapIn(mapInputs);
-        tx_outputs_values += tx.GetValueOut();
-    }
-
-    // Ensure input/output sanity of transactions in the block
-    if((tx_inputs_values + tx_threshold) < tx_outputs_values)
-    {
-            return DoS(100, error("AcceptBlock() : block contains a tx input that is less that output"));
-    }
 
     // Check that the block chain matches the known block chain up to a checkpoint
     if (!Checkpoints::CheckHardened(nHeight, hash))
@@ -3059,14 +2975,11 @@ bool CBlock::AcceptBlock()
             if (nBestHeight > (pnode->nStartingHeight != -1 ? pnode->nStartingHeight - 2000 : nBlockEstimate))
                 pnode->PushInventory(CInv(MSG_BLOCK, hash));
     }
-    
-    // Set rolling checkpoint status
-    fRollingCheckpoint = RollingCheckpoints(nHeight);
 
     return true;
 }
 
-bool CBlock::IsRewardStructureValid(CBlockIndex* pindexLast)
+bool CBlock::IsRewardStructureValid(const CBlockIndex* pindexLast)
 {
     // Validation starts after nPaymentUpdate_4
     if(pindexLast->nHeight < nPaymentUpdate_4)

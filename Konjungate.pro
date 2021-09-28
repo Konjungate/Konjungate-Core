@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = Konjungate-qt
-VERSION = 1.1.7.0
+VERSION = 1.1.6.3
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
@@ -56,6 +56,7 @@ macx:QMAKE_CXXFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Plat
 macx:QMAKE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 macx:QMAKE_LFLAGS +=  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 macx:QMAKE_OBJECTIVE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+
 
     !windows:!macx {
         # Linux: static link
@@ -291,8 +292,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/limitedmap.h \
     src/qt/fractalui.h \
     src/qt/tokenui.h \
-    src/qt/nftui.h \
-    src/qt/contractui.h \
     src/qt/overviewpage.h \
     src/qt/csvmodelwriter.h \
     src/crypter.h \
@@ -336,7 +335,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/fractal/fractalcontract.h \
     src/fractal/fractalparams.h \
     src/fractal/fractaldataob.h \
-    src/fractal/fractalnftbase.h \
     src/fractal/fractalnft.h \
     src/fractal/fractalbvac.h \
     src/qt/masternodemanager.h \
@@ -447,13 +445,10 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/pbkdf2.cpp \
     src/qt/fractalui.cpp \
     src/qt/tokenui.cpp \
-    src/qt/nftui.cpp \
-    src/qt/contractui.cpp \
     src/fractal/fractalengine.cpp \
     src/fractal/fractalcontract.cpp \
     src/fractal/fractalparams.cpp \
     src/fractal/fractaldataob.cpp \
-    src/fractal/fractalnftbase.cpp \
     src/fractal/fractalnft.cpp \
     src/fractal/fractalbvac.cpp \
     src/support/cleanse.cpp \
@@ -521,8 +516,6 @@ FORMS += \
     src/qt/forms/settingspage.ui \
     src/qt/forms/fractalui.ui \
     src/qt/forms/tokenui.ui \
-    src/qt/forms/nftui.ui \
-    src/qt/forms/contractui.ui \
     src/qt/plugins/mrichtexteditor/mrichtextedit.ui
 
 contains(USE_QRCODE, 1) {
@@ -602,12 +595,12 @@ isEmpty(BOOST_INCLUDE_PATH) {
 
 isEmpty(QRENCODE_LIB_PATH) {
     macx:QRENCODE_LIB_PATH = $${LIBOSXPATH}/Cellar/qrencode/4.1.1/lib
-	windows:QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.4/.libs	
+        windows:QRENCODE_LIB_PATH=C:/deps/qrencode-4.1.1/.libs
 }
 
 isEmpty(QRENCODE_INCLUDE_PATH) {
     macx:QRENCODE_INCLUDE_PATH = $${LIBOSXPATH}/Cellar/qrencode/4.1.1/include
-	windows:QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.4/
+        windows:QRENCODE_INCLUDE_PATH=C:/deps/qrencode-4.1.1/
 }
 
 isEmpty(MINIUPNPC_LIB_SUFFIX) {

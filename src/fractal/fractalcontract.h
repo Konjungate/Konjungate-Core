@@ -1,5 +1,5 @@
 // Copyright (c) 2017-2021 The Espers Project/CryptoCoderz Team
-// Copyright (c) 2020-2021 The Konjungate Project
+// Copyright (c) 2020-2021 The Konjungate Team
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef FRACTALCONTRACT_H
@@ -11,12 +11,10 @@ extern std::string selected_contract_alias;
 extern std::string set_raw_input_data;
 extern std::string set_contract_data;
 extern std::string set_fractal_SCRIPT;
-extern bool fextTokenDecodeSuccess;
-extern std::string ext_Contract_Path;
 
 void create_smartCONTRACT(std::string raw_input_data, std::string contract_alias, int contract_type);
 void edit_smartCONTRACT(std::string contract_data, std::string contract_alias);
-void open_smartCONTRACT(std::string contract_alias, int contract_type);
+void open_smartCONTRACT(std::string contract_data, std::string contract_alias);
 void remove_smartCONTRACT(std::string contract_data, std::string contract_alias);
 
-#endif // FRACTALCONTRACT_H
+#endif // FRACTALCONTRACT_H 
