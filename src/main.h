@@ -893,7 +893,7 @@ public:
     bool SignBlock(CWallet& keystore, int64_t nFees);
     bool CheckBlockSignature() const;
     void RebuildAddressIndex(CTxDB& txdb);
-    bool IsRewardStructureValid(const CBlockIndex* pindexLast);
+    bool IsRewardStructureValid(CBlockIndex* pindexLast);
 
 private:
     bool SetBestChainInner(CTxDB& txdb, CBlockIndex *pindexNew);
