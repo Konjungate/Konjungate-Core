@@ -304,6 +304,10 @@ std::string HelpMessage()
     strUsage += "  -liveforktoggle=<n> " + _("Toggle experimental features via block height testing fork, (example: -command=<fork_height>)") + "\n";
     strUsage += "  -mnadvrelay=<n> " + _("Toggle MasterNode Advanced Relay System via 1/0, (example: -command=<true/false>)") + "\n";
 
+    strUsage += "\n" + _("Demi-node feature options:") + "\n";
+    strUsage += "  -deminodes=<n> " + _("Toggle Demi-node features on/off, (0-1, default: 0") + "\n";
+    strUsage += "  -demimaxdepth=<n> " + _("Set the maximum override depth for chain reorganization, (default: 0") + "\n";
+
     return strUsage;
 }
 
@@ -1005,23 +1009,41 @@ bool AppInit2(boost::thread_group& threadGroup)
     if(!strLiveForkToggle.empty()){
         LogPrintf("Verifying height selection for experimental testing feature fork toggle...\n");
         std::istringstream(strLiveForkToggle) >> nLiveForkToggle;
-        if(nLiveForkToggle == 0)
-        {
+        if(nLiveForkToggle == 0) {
             LogPrintf("Continuing with fork toggle manually disabled by user...\n");
-        }
-        else if(nLiveForkToggle < nBestHeight)
-        {
+        } else if(nLiveForkToggle < nBestHeight) {
             return InitError(_("Invalid experimental testing feature fork toggle, please select a higher block than currently sync'd height\n"));
-        }
-        else
-        {
+        } else {
             LogPrintf("Continuing with fork toggle set for block: %s | Happy testing!\n", strLiveForkToggle.c_str());
         }
 
-    }
-    else {
+    } else {
         nLiveForkToggle = 0;
         LogPrintf("No experimental testing feature fork toggle detected... skipping...\n");
+    }
+
+    // Check for Demi-node toggle
+    uiInterface.InitMessage(_("Checking Demi-node feature toggle..."));
+    fDemiNodes = GetBoolArg("-deminodes", false);
+    LogPrintf("Checking for Demi-nodes feature toggle...\n");// BLOCK_REORG_OVERRIDE_DEPTH
+    if(fDemiNodes) {
+        // Set Demi-node values
+        uiInterface.InitMessage(_("Configuring Demi-node systems..."));
+        std::string strOverrideDepth = GetArg("-demimaxdepth", "");
+        if(!strOverrideDepth.empty()) {
+            std::istringstream(strOverrideDepth) >> BLOCK_REORG_OVERRIDE_DEPTH;
+            if(BLOCK_REORG_OVERRIDE_DEPTH == 0) {
+                LogPrintf("Continuing with Demi-node depth override manually disabled by user...\n");
+            } else if(BLOCK_REORG_OVERRIDE_DEPTH < 0) {
+                return InitError(_("Invalid Demi-node depth override, selected value must be higher than Zero!\n"));
+            } else {
+                BLOCK_REORG_THRESHOLD = (BLOCK_REORG_MAX_DEPTH + BLOCK_REORG_OVERRIDE_DEPTH);
+                LogPrintf("Continuing with Demi-node depth override height of: %s\n", strOverrideDepth.c_str());
+            }
+        }
+    } else {
+        // Demi-nodes disabled
+        LogPrintf("No Demi-node features selected... skipping...\n");
     }
 
     // Check toggle switch for masternode advanced relay
@@ -1030,8 +1052,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     LogPrintf("Checking for masternode advanced relay toggle...\n");
     if(fMnAdvRelay){
         LogPrintf("Continuing with toggle enabled | Happy relaying!\n");
-    }
-    else {
+    } else {
         fMnAdvRelay = false;
         LogPrintf("No masternode advanced relay toggle detected... skipping...\n");
     }
@@ -1114,8 +1135,6 @@ bool AppInit2(boost::thread_group& threadGroup)
     mnEnginePool.InitCollateralAddress();
 
     threadGroup.create_thread(boost::bind(&ThreadCheckMNenginePool));
-
-
 
     RandAddSeedPerfmon();
 

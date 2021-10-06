@@ -117,6 +117,8 @@ bool fMnAdvRelay = false;
 bool settingsStatus = false;
 //Max Blockheight Value
 int maxBlockHeight = -1;
+//Demi-node handling
+bool fDemiNodes = false;
 
 // Init OpenSSL library multithreading support
 static CCriticalSection** ppmutexOpenSSL;

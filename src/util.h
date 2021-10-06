@@ -128,6 +128,7 @@ extern std::string strMasterNodeAddr;
 extern int nMasternodeMinProtocol;
 extern int keysLoaded;
 extern bool fSucessfullyLoaded;
+// Standard args
 extern std::map<std::string, std::string> mapArgs;
 extern std::map<std::string, std::vector<std::string> > mapMultiArgs;
 extern bool fDebug;
@@ -142,9 +143,12 @@ extern std::string strMiscWarning;
 extern bool fNoListen;
 extern bool fLogTimestamps;
 extern volatile bool fReopenDebugLog;
-//Live fork toggle
+// Live fork toggle
 extern std::string strLiveForkToggle;
-extern int64_t nLiveForkToggle;
+extern int64_t nLiveForkToggle;// TODO: just have dependent functions create a non-extern within
+                               // their respective functions (start cleaning up externs)
+// Demi-node toggle
+extern bool fDemiNodes;
 //MasterNode recipient verification delay base time
 extern int64_t nMasterNodeChecksDelayBaseTime;
 //MasterNode peer IP advanced relay system toggle

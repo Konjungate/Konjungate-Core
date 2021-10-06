@@ -73,8 +73,12 @@ static const int MAX_BLOCKS_IN_TRANSIT_PER_PEER = 128;
 static const unsigned int BLOCK_DOWNLOAD_TIMEOUT = 60;
 /** Maximum block reorganize depth (consider else an invalid fork) */
 static const int BLOCK_REORG_MAX_DEPTH = 5;
+/** Maximum block reorganize depth override (enabled using demi-nodes) */
+static int BLOCK_REORG_OVERRIDE_DEPTH = 0;
+/** Combined Maximum block reorganize depth (consider else an invalid fork) */
+static int BLOCK_REORG_THRESHOLD = BLOCK_REORG_MAX_DEPTH + BLOCK_REORG_OVERRIDE_DEPTH;
 /** Depth for rolling checkpoing block */
-static const unsigned int BLOCK_TEMP_CHECKPOINT_DEPTH = 120;
+static const int BLOCK_TEMP_CHECKPOINT_DEPTH = 120;
 /** Defaults to yes, adaptively increase/decrease max/min/priority along with the re-calculated block size **/
 static const unsigned int DEFAULT_SCALE_BLOCK_SIZE_OPTIONS = 1;
 /** Future drift value */
