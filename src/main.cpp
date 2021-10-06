@@ -3840,10 +3840,10 @@ void static ProcessGetData(CNode* pfrom)
                     CBlock block;
                     block.ReadFromDisk((*mi).second);
                     // previous versions could accept sigs with high s
-                    if (!IsCanonicalBlockSignature(&block, true)) {
+                    /*if (!IsCanonicalBlockSignature(&block, true)) {
                         bool ret = EnsureLowS(block.vchBlockSig);
                         assert(ret);
-                    }
+                    }Z*/
 
                     // Send the requested block data to peer
                     pfrom->PushMessage("block", block);
@@ -3870,11 +3870,11 @@ void static ProcessGetData(CNode* pfrom)
                     CBlock block;
                     block.ReadFromDisk((*mi).second);
 
-                    // previous versions could accept sigs with high s
+                    /*// previous versions could accept sigs with high s
                     if (!IsCanonicalBlockSignature(&block, true)) {
                         bool ret = EnsureLowS(block.vchBlockSig);
                         assert(ret);
-                    }
+                    }*/
 
                     // Send the requested block to peer
                     pfrom->PushMessage("demiblock", block);
