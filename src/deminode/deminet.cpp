@@ -8,7 +8,7 @@
 // TODO: Open deminode.conf and scan for registered Demi-nodes
 // For now we hardset Team nodes as Demi-nodes
 std::string scanDeminodes[4] {
-    "80.211.102.238", "80.211.27.133", "134.122.23.191", "159.89.114.40" // TODO: Will have to pay for digitalnote servers
+    "80.211.102.238", "80.211.27.133", "134.122.23.191", "159.89.114.40" // TODO: Will have to pay for digitalocean servers
 };
 // Setup Demi network voting log
 int voteDeminodes[4] {
