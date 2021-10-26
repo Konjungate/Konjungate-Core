@@ -90,7 +90,7 @@ int64_t enforceMasternodePaymentsTime = 4085657524;
 int nMasternodeMinProtocol = 0;
 bool fSucessfullyLoaded = false;
 bool fEnableMNengine = false;
-//Standard features
+// Standard Arguments/toggles
 map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
 bool fDebug = false;
@@ -114,6 +114,7 @@ int64_t nMasterNodeChecksDelayBaseTime = 0;
 bool fMnAdvRelay = false;
 //Logic for lock/unlock GUI icon
 //does not affect daemon operation
+// <------ See if Masternode key has to be called here in debug, if not. Well. There's your sign. Literally.
 bool settingsStatus = false;
 //Max Blockheight Value
 int maxBlockHeight = -1;

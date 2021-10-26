@@ -8,7 +8,7 @@
 // TODO: Open deminode.conf and scan for registered Demi-nodes
 // For now we hardset Team nodes as Demi-nodes
 std::string scanDeminodes[4] {
-    "80.211.102.238", "80.211.27.133", "134.122.23.191", "159.89.114.40" // TODO: Will have to pay for digitalocean servers
+    "80.211.102.238:22448", "80.211.27.133:22448", "134.122.23.191:22448", "159.89.114.40:22448"
 };
 // Setup Demi network voting log
 int voteDeminodes[4] {
@@ -22,6 +22,26 @@ uint256 hashDeminodes[4] {
     0, 0, 0, 0
 };
 
+bool fDemiFound = false;
+
+bool fDemiPeerRelay(std::string peerAddr)
+{
+    int l = 0;
+    // Loop through Demi-node list
+    while(l == 0) {
+        if(peerAddr == scanDeminodes[l]) {
+            // Success if found
+            LogPrintf("Demi-node System: fDemiPeerRelay - Peer: %s matches listed Demi-node!\n", peerAddr);
+            return true;
+        }
+        // Move up in loop count
+        l++;
+    }
+    // Failure if not found
+    LogPrintf("Demi-node System: fDemiPeerRelay - Peer: %s does NOT match any listed Demi-node!\n", peerAddr);
+    return false;
+}
+
 static void DemiNodeFetch(uint256 blockHash)
 {
         LOCK(cs_vNodes);
@@ -29,6 +49,8 @@ static void DemiNodeFetch(uint256 blockHash)
         vector<CInv> vGetDemiData;
         const CInv& dinv = CInv(MSG_DEMIBLOCK, blockHash);
         vGetDemiData.push_back(dinv);
+        // Reset previously set data
+        fDemiFound = false;
         // Loop through peers/nodes
         BOOST_FOREACH(CNode* pnode, vNodes) {
             // Skip obsolete nodes

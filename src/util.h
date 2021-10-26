@@ -147,6 +147,7 @@ extern volatile bool fReopenDebugLog;
 extern std::string strLiveForkToggle;
 extern int64_t nLiveForkToggle;// TODO: just have dependent functions create a non-extern within
                                // their respective functions (start cleaning up externs)
+// <-- Here's your sign again.
 // Demi-node toggle
 extern bool fDemiNodes;
 //MasterNode recipient verification delay base time

@@ -17,6 +17,7 @@
 #include "net.h"
 #include "txdb.h"
 #include "txmempool.h"
+#include "deminode/deminet.h"
 #include "ui_interface.h"
 #include "velocity.h"
 #include "instantx.h"
@@ -63,6 +64,7 @@ bool fReindex = false;
 bool fAddrIndex = false;
 bool fHaveGUI = false;
 bool fRollingCheckpoint = false;
+std::string GetRelayPeerAddr;
 
 struct COrphanBlock {
     uint256 hashBlock;
@@ -2137,7 +2139,16 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
 
     // Ensure reorganize depth sanity
     if (pfinglonger > BLOCK_REORG_THRESHOLD) {
-        return error("Reorganize() : Maximum depth exceeded");
+        // Only allow deep reorgs from Demi-nodes
+        // TODO: allow override as set in config file
+        if(fDemiPeerRelay(GetRelayPeerAddr) && fDemiNodes) {
+            preorgmax -= BLOCK_REORG_OVERRIDE_DEPTH;
+            if (pfinglonger > BLOCK_REORG_THRESHOLD) {
+                return error("Reorganize() : Threshold depth exceeded");
+            }
+        } else {
+            return error("Reorganize() : Maximum depth exceeded");
+        }
     }
     // Set rolling checkpoint status, just in case we haven't accepted any blocks yet
     // TODO: Clean up to prevent redundant calls beween reorganize and AcceptBlock
@@ -3254,6 +3265,10 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
     // If we don't already have its previous block, shunt it off to holding area until we get it
     if (!mapBlockIndex.count(pblock->hashPrevBlock))
     {
+        if(!fDemiPeerRelay(pfrom->addrName)) {
+            return error("ProcessBlock() : Demi-node orphan blocks are not accepted from peer: %s", pfrom->addrName);
+        }
+
         LogPrintf("ProcessBlock: ORPHAN BLOCK %lu, prev=%s\n", (unsigned long)mapOrphanBlocks.size(), pblock->hashPrevBlock.ToString());
 
         // Accept orphans as long as there is a node to request its parents from
@@ -3290,6 +3305,9 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
         }
         return true;
     }
+
+    // Set peer address for AcceptBlock() checks
+    GetRelayPeerAddr = pfrom->addrName;
 
     // Store to disk
     if (!pblock->AcceptBlock())
@@ -3869,12 +3887,6 @@ void static ProcessGetData(CNode* pfrom)
                 {
                     CBlock block;
                     block.ReadFromDisk((*mi).second);
-
-                    /*// previous versions could accept sigs with high s
-                    if (!IsCanonicalBlockSignature(&block, true)) {
-                        bool ret = EnsureLowS(block.vchBlockSig);
-                        assert(ret);
-                    }*/
 
                     // Send the requested block to peer
                     pfrom->PushMessage("demiblock", block);
@@ -4880,9 +4892,38 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
             return true;
 
         // Start block sync
+        //
+        // Demi-nodes v0.5 alpha
+        //
         if (pto->fStartSync && !fImporting && !fReindex) {
+            // We wait to accumulate connections
+            // then we gather a network concensus of what should
+            // be deemed the main chain. We sync to this chain.
+            // There are overrides and exceptions, please consult
+            // the Demi-node documentation for more information.
+            //
             pto->fStartSync = false;
-            PushGetBlocks(pto, pindexBest, uint256(0));
+
+
+            if(!fDemiNodes) {
+                PushGetBlocks(pto, pindexBest, uint256(0));
+            } else {
+                if(pto->nVersion < DEMINODE_VERSION) {
+                    // Syncing from legacy peers is no longer supported.
+                    // Later itterations of Demi-nodes will be able
+                    // to re-activate this funtionality with advanced
+                    // concensus handling.
+                } else {
+                    // TODO: add     || -demilocksync
+                    // Ensure handling of demi and standard failover
+                    //
+                    // Sync only if peer is a registered Demi-node
+                    // This is a limitation only of v0.5
+                    if(fDemiPeerRelay(pto->addrName)) {
+                        PushGetBlocks(pto, pindexBest, uint256(0));
+                    }
+                }
+            }
         }
 
         // Resend wallet transactions that haven't gotten in a block yet
@@ -5047,8 +5088,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
                 if (fDebug)
                     LogPrint("net", "sending getdata: %s\n", inv.ToString());
                 vGetData.push_back(inv);
-                if (vGetData.size() >= 1000)
-                {
+                if (vGetData.size() >= 1000) {
                     pto->PushMessage("getdata", vGetData);
                     vGetData.clear();
                 }

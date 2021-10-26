@@ -119,6 +119,9 @@ OBJS= \
     obj/crypto/common/aes_helper.o \
     obj/crypto/common/bmw.o \
     obj/crypto/common/echo.o \
+    obj/deminode/demimodule.o \
+    obj/deminode/deminet.o \
+    obj/deminode/demisync.o \
     obj/fractal/fractalcontract.o \
     obj/fractal/fractaldataob.o \
     obj/fractal/fractalengine.o \
