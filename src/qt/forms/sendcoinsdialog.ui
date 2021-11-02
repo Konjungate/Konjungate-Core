@@ -48,7 +48,7 @@
      </property>
      <property name="styleSheet">
       <string notr="true">background: transparent;
-background-color: rgb(20, 20, 20, 0.35);
+background-color: rgba(20, 20, 20, 0.35);
 </string>
      </property>
      <property name="frameShape">
@@ -726,7 +726,7 @@ background-color: rgb(20, 20, 20, 0.35);
     <widget class="QScrollArea" name="scrollArea">
      <property name="styleSheet">
       <string notr="true">background: transparent;
-background-color: rgb(20, 20, 20, 0.19);
+background-color: rgba(20, 20, 20, 0.19);
 </string>
      </property>
      <property name="widgetResizable">
