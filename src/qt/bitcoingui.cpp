@@ -554,7 +554,7 @@ void KonjungateGUI::createToolBars()
 
 void KonjungateGUI::setClientModel(ClientModel *clientModel)
 {
-    netLabel->setText("v1.1.7.3b");// Version in GUI
+    netLabel->setText("v1.1.7.4b");// Version in GUI
 
     this->clientModel = clientModel;
     if(clientModel)
