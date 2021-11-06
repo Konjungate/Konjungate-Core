@@ -44,7 +44,7 @@ bool Velocity_check(int nHeight)
 /* Velocity(CBlockIndex* prevBlock, CBlock* block) ? true : false
    Goes close to the top of CBlock::AcceptBlock
    Returns true if proposed Block matches constrains */
-bool Velocity(CBlockIndex* prevBlock, CBlock* block)
+bool Velocity(CBlockIndex* prevBlock, CBlock* block, bool fFactor_tx)
 {
 
     // Define values
@@ -71,12 +71,11 @@ bool Velocity(CBlockIndex* prevBlock, CBlock* block)
     SYSbaseStamp = GetTime() + VELOCITY_MIN_RATE[i];
 
     // Factor in TXs for Velocity constraints
-    if(VELOCITY_FACTOR == true)
+    if(VELOCITY_FACTOR == true && fFactor_tx)
     {
-        // Run TX factoring
         if(!tx_Factor(prevBlock, block))
         {
-            LogPrintf("DENIED: Velocity denied block: %u\n", prevBlock->nHeight+1);
+            LogPrintf("DENIED: Velocity denied block: %u\n", nHeight);
             return false;
         }
     }
@@ -198,13 +197,23 @@ bool tx_Factor(CBlockIndex* prevBlock, CBlock* block)
         LogPrintf("DENIED: block contains a tx input that is less that output\n");
         return false;
     }
-    // Ensure expected coin supply matches actualy coin supply of block
-    if((prevBlock->nMoneySupply + (tx_threshold + (1 * COIN))) < (tx_outputs_values))
-    {
-        LogPrintf("DENIED: block contains invalid coin supply amount\n");
-        return false;
-    }
 
     // Return success if we get here
+    LogPrintf("CHECK_PASSED: transaction/input factoring has met Velocity constraints\n");
+    return true;
+}
+
+bool bIndex_Factor(CBlockIndex* InSplitPoint, CBlockIndex* InSplitEnd, int InFactor)
+{
+    CAmount tx_threshold = 500 * COIN;
+    tx_threshold *= InFactor;
+
+    // Ensure expected coin supply matches actualy coin supply of branch
+    if(((InSplitPoint->nMoneySupply + tx_threshold) / COIN) < (InSplitEnd->nMoneySupply / COIN))
+    {
+        LogPrintf("VELOCITY_FACTOR: Mismatched supply in branch, excpected: %u | found: %u\n", (int64_t)((InSplitPoint->nMoneySupply + tx_threshold) / COIN), (int64_t)(InSplitEnd->nMoneySupply / COIN));
+        LogPrintf("DENIED: branch contains invalid coin supply amount\n");
+        return false;
+    }
     return true;
 }
