@@ -7,8 +7,8 @@
 
 // TODO: Open deminode.conf and scan for registered Demi-nodes
 // For now we hardset Team nodes as Demi-nodes
-std::string scanDeminodes[5] {
-    "185.52.172.164:19417", "155.138.148.198:19417", "134.122.23.191", "159.89.114.40", // ips
+std::string scanDeminodes[7] {
+    "185.52.172.164:19417", "155.138.148.198:19417", "139.99.239.62:19417", "51.195.42.49:19417", "51.68.175.13:19417", "159.89.114.40", // ips
     "127.0.0.1"
 };
 // Setup Demi network voting log
