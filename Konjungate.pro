@@ -49,14 +49,14 @@ OBJECTS_DIR = build
 MOC_DIR = build
 UI_DIR = build
 
-# Mac: compile for maximum compatibility (10.14, 64-bit)
+# use: qmake "RELEASE=1"
+contains(RELEASE, 1) {
+    # Mac: compile for maximum compatibility (10.13, 64-bit)
 macx:QMAKE_CXXFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-macx:QMAKE_CFLAGS += -isysroot  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+macx:QMAKE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 macx:QMAKE_LFLAGS +=  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 macx:QMAKE_OBJECTIVE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 
-# use: qmake "RELEASE=1"
-contains(RELEASE, 1) {
     !windows:!macx {
         # Linux: static link
         # LIBS += -Wl,-Bstatic
@@ -562,7 +562,7 @@ OTHER_FILES += \
 
 # platform specific defaults, if not overridden on command line
 isEmpty(BOOST_LIB_SUFFIX) {
-    macx:BOOST_LIB_SUFFIX = -mt-x64
+    macx:BOOST_LIB_SUFFIX = -mt
     windows:BOOST_LIB_SUFFIX=-mgw49-mt-s-1_57
 }
 
@@ -574,16 +574,16 @@ isEmpty(BOOST_THREAD_LIB_SUFFIX) {
 
 equals(QMAKE_HOST.arch, x86_64) {
     message( "It's x86" )
-    LIBOSXPATH=/Users/m1chl/Dev
+    LIBOSXPATH=/usr/local
 }
 
 equals(QMAKE_HOST.arch, arm64) {
     message( "It's M1" )
-    LIBOSXPATH=/Users/m1chl/Dev
+    LIBOSXPATH=/opt/homebrew
 }
 
 isEmpty(BDB_LIB_PATH) {
-    macx:BDB_LIB_PATH = $${LIBOSXPATH}/db62/lib
+    macx:BDB_LIB_PATH = $${LIBOSXPATH}/Cellar/BerkeleyDB.6.2/lib
     windows:BDB_LIB_PATH=C:/dev/coindeps32/bdb-4.8/lib
 }
 
@@ -592,7 +592,7 @@ isEmpty(BDB_LIB_SUFFIX) {
 }
 
 isEmpty(BDB_INCLUDE_PATH) {
-    macx:BDB_INCLUDE_PATH = $${LIBOSXPATH}/db62/include
+    macx:BDB_INCLUDE_PATH = $${LIBOSXPATH}/Cellar/BerkeleyDB.6.2/include
     windows:BDB_INCLUDE_PATH=C:/dev/coindeps32/bdb-4.8/include
 }
 
@@ -607,12 +607,12 @@ isEmpty(BOOST_INCLUDE_PATH) {
 }
 
 isEmpty(QRENCODE_LIB_PATH) {
-    macx:QRENCODE_LIB_PATH = $${LIBOSXPATH}/qrencode/lib
+    macx:QRENCODE_LIB_PATH = $${LIBOSXPATH}/Cellar/qrencode/4.1.1/lib
 	windows:QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.4/.libs	
 }
 
 isEmpty(QRENCODE_INCLUDE_PATH) {
-    macx:QRENCODE_INCLUDE_PATH = $${LIBOSXPATH}/qrencode/include
+    macx:QRENCODE_INCLUDE_PATH = $${LIBOSXPATH}/Cellar/qrencode/4.1.1/include
 	windows:QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.4/
 }
 
@@ -621,22 +621,22 @@ isEmpty(MINIUPNPC_LIB_SUFFIX) {
 }
 
 isEmpty(MINIUPNPC_INCLUDE_PATH) {
-    macx:MINIUPNPC_INCLUDE_PATH= $${LIBOSXPATH}/include/miniupnpc
+    macx:MINIUPNPC_INCLUDE_PATH= $${LIBOSXPATH}/Cellar/miniupnpc/2.2.2/include
     windows:MINIUPNPC_INCLUDE_PATH=C:/dev/coindeps32/miniupnpc-1.9
 }
 
 isEmpty(MINIUPNPC_LIB_PATH) {
-    macx:MINIUPNPC_LIB_PATH= $${LIBOSXPATH}/lib
+    macx:MINIUPNPC_LIB_PATH= $${LIBOSXPATH}/Cellar/miniupnpc/2.2.2/lib
     windows:MINIUPNPC_LIB_PATH=C:/dev/coindeps32/miniupnpc-1.9
 }
 
 isEmpty(OPENSSL_INCLUDE_PATH) {
-    macx:OPENSSL_INCLUDE_PATH = $${LIBOSXPATH}/include/openssl
+    macx:OPENSSL_INCLUDE_PATH = $${LIBOSXPATH}/Cellar/openssl@1.1/1.1.1k/include
     windows:OPENSSL_INCLUDE_PATH=C:/dev/coindeps32/openssl-1.0.1p/include
 }
 
 isEmpty(OPENSSL_LIB_PATH) {
-    macx:OPENSSL_LIB_PATH = $${LIBOSXPATH}/lib
+    macx:OPENSSL_LIB_PATH = $${LIBOSXPATH}/Cellar/openssl@1.1/1.1.1k/lib
     windows:OPENSSL_LIB_PATH=C:/dev/coindeps32/openssl-1.0.1p/lib
 }
 
@@ -668,7 +668,7 @@ macx:QMAKE_INFO_PLIST = share/qt/Info.plist
 # Set libraries and includes at end, to use platform-defined defaults if not overridden
 INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH $$BDB_INCLUDE_PATH
 LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
-LIBS += /Users/m1chl/Dev/lib/libssl.a /Users/m1chl/Dev/lib/libcrypto.a -lz /Users/m1chl/Dev/lib/libdb_cxx-6.2.a
+LIBS += -lssl -lcrypto -lz -ldb_cxx$$BDB_LIB_SUFFIX
 # -lgdi32 has to happen after -lcrypto (see  #681)
 windows:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32 -pthread
 !windows: {
