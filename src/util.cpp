@@ -1203,8 +1203,6 @@ boost::filesystem::path GetMasternodeConfigFile()
 void ReadConfigFile(map<string, string>& mapSettingsRet,
                     map<string, vector<string> >& mapMultiSettingsRet)
 {
-    int confLoop = 0;
-    injectConfig:
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good())
     {
@@ -1213,6 +1211,8 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
                fprintf(ConfFile, "listen=1\n");
                fprintf(ConfFile, "server=1\n");
+               fprintf(ConfFile, "deminodes=1\n");
+               fprintf(ConfFile, "demimaxdepth=200\n");
                fprintf(ConfFile, "maxconnections=150\n");
                fprintf(ConfFile, "rpcuser=yourusername\n");
 
@@ -1237,13 +1237,6 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                fprintf(ConfFile, "addnode=51.195.42.49\n");
                fprintf(ConfFile, "addnode=51.195.42.49:19417\n");
                fclose(ConfFile);
-    }
-
-    // Wallet will reload config file so it is properly read...
-    if (confLoop < 1)
-    {
-        ++confLoop;
-        goto injectConfig;
     }
 
     set<string> setOptions;

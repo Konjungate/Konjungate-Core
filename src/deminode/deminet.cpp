@@ -5,12 +5,6 @@
 
 #include "deminet.h"
 
-// TODO: Open deminode.conf and scan for registered Demi-nodes
-// For now we hardset Team nodes as Demi-nodes
-std::string scanDeminodes[7] {
-    "185.52.172.164:19417", "155.138.148.198:19417", "139.99.239.62:19417", "51.195.42.49:19417", "51.68.175.13:19417", "159.89.114.40", // ips
-    "127.0.0.1"
-};
 // Setup Demi network voting log
 int voteDeminodes[4] {
     0, 0, 0, 0
@@ -23,20 +17,14 @@ uint256 hashDeminodes[4] {
     0, 0, 0, 0
 };
 
-bool fDemiFound = false;
-
 bool fDemiPeerRelay(std::string peerAddr)
 {
-    int l = 0;
     // Loop through Demi-node list
-    while(l < 5) {
-        if(peerAddr == scanDeminodes[l]) {
-            // Success if found
-            LogPrintf("Demi-node System: fDemiPeerRelay - Peer: %s matches listed Demi-node!\n", peerAddr);
-            return true;
-        }
-        // Move up in loop count
-        l++;
+    ReadDemiConfigFile(peerAddr);
+    if(fDemiFound) {
+        // Return success
+        LogPrintf("Demi-node System: fDemiPeerRelay - Peer: %s matches listed Demi-node!\n", peerAddr);
+        return true;
     }
     // Failure if not found
     LogPrintf("Demi-node System: fDemiPeerRelay - Peer: %s does NOT match any listed Demi-node!\n", peerAddr);
@@ -60,7 +48,7 @@ static void DemiNodeFetch(uint256 blockHash)
             }
 
             // See if we found a Demi-node
-            if(scanDeminodes[0] == pnode->addrName) {
+            /*if(scanDeminodes[0] == pnode->addrName) {
                 voteDeminodes[0] ++;
                 pnode->PushMessage("getdata", vGetDemiData);
                 fDemiFound = true;
@@ -76,7 +64,7 @@ static void DemiNodeFetch(uint256 blockHash)
                 voteDeminodes[3] ++;
                 pnode->PushMessage("getdata", vGetDemiData);
                 fDemiFound = true;
-            }
+            } */
         }
 
         vGetDemiData.clear();
