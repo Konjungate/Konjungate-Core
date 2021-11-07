@@ -4,7 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "demimodule.h"
-#include "util/util.h"
+#include "util.h"
 
 bool fDemiFound = false;
 
