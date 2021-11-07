@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "deminet.h"
+#include "demimodule.h"
 
 // Setup Demi network voting log
 int voteDeminodes[4] {
