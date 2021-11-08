@@ -3027,11 +3027,11 @@ bool CBlock::AcceptBlock()
     }
 
     // Ensure input/output sanity of transactions in the block
-    if((tx_inputs_values + tx_threshold) < tx_outputs_values)
+    if((tx_inputs_values + tx_threshold) < tx_outputs_values && nHeight < 800000)
     {
             return DoS(100, error("AcceptBlock() : block contains a tx input that is less that output"));
     }
-
+    
     // Check that the block chain matches the known block chain up to a checkpoint
     if (!Checkpoints::CheckHardened(nHeight, hash))
         return DoS(100, error("AcceptBlock() : rejected by hardened checkpoint lock-in at %d", nHeight));
