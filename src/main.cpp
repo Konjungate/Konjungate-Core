@@ -2968,13 +2968,13 @@ bool CBlock::AcceptBlock()
     // Check block against Velocity parameters
     if(Velocity_check(nHeight))
     {
-        //if(nHeight != block){
-        // Announce Velocity constraint failure
-        if(!Velocity(pindexPrev, this, false))
-        {
-            return DoS(100, error("AcceptBlock() : Velocity rejected block %d, required parameters not met", nHeight));
+        if(nHeight != 520717){
+            // Announce Velocity constraint failure
+            if(!Velocity(pindexPrev, this, false))
+            {
+                return DoS(100, error("AcceptBlock() : Velocity rejected block %d, required parameters not met", nHeight));
+            }
         }
-    //}
     }
 
     uint256 hashProof;
@@ -3358,15 +3358,15 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
     // Check block against Velocity parameters
     if(Velocity_check(mapBlockIndex[hash]->nHeight))
     {
-        //if(pblock->nHeight != block){
+        if(mapBlockIndex[hash]->nHeight != 520717){
 
-        // Announce Velocity constraint failure
-        if(!Velocity(mapBlockIndex[hash]->pprev, pblock, true))
-        {
-            Misbehaving(pfrom->GetId(), 25);
-            return error("ProcessBlock() : Velocity rejected block %d, required parameters not met", mapBlockIndex[hash]->nHeight);
+            // Announce Velocity constraint failure
+            if(!Velocity(mapBlockIndex[hash]->pprev, pblock, true))
+            {
+                Misbehaving(pfrom->GetId(), 25);
+                return error("ProcessBlock() : Velocity rejected block %d, required parameters not met", mapBlockIndex[hash]->nHeight);
+            }
         }
-        //}
     }
 
     // Try to get first masternode in our list
