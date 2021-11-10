@@ -2968,11 +2968,13 @@ bool CBlock::AcceptBlock()
     // Check block against Velocity parameters
     if(Velocity_check(nHeight))
     {
+        //if(nHeight != block){
         // Announce Velocity constraint failure
         if(!Velocity(pindexPrev, this, false))
         {
             return DoS(100, error("AcceptBlock() : Velocity rejected block %d, required parameters not met", nHeight));
         }
+    //}
     }
 
     uint256 hashProof;
@@ -3271,6 +3273,15 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
     if (!pblock->CheckBlock())
         return error("ProcessBlock() : CheckBlock FAILED");
 
+    // Set peer address for AcceptBlock() checks
+    //
+    // Only set peer IP if we receive a block from
+    // a peer. For self-mined blocks we self-set
+    // our IP during block generation.
+    if(pfrom != NULL) {
+        GetRelayPeerAddr = pfrom->addrName;
+    }
+
     // If we don't already have its previous block, shunt it off to holding area until we get it
     if (!mapBlockIndex.count(pblock->hashPrevBlock))
     {
@@ -3315,15 +3326,6 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
         return true;
     }
 
-    // Set peer address for AcceptBlock() checks
-    //
-    // Only set peer IP if we receive a block from
-    // a peer. For self-mined blocks we self-set
-    // our IP during block generation.
-    if(pfrom != NULL) {
-        GetRelayPeerAddr = pfrom->addrName;
-    }
-
     // Store to disk
     if (!pblock->AcceptBlock())
         return error("ProcessBlock() : AcceptBlock FAILED");
@@ -3356,12 +3358,15 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
     // Check block against Velocity parameters
     if(Velocity_check(mapBlockIndex[hash]->nHeight))
     {
+        //if(pblock->nHeight != block){
+
         // Announce Velocity constraint failure
         if(!Velocity(mapBlockIndex[hash]->pprev, pblock, true))
         {
             Misbehaving(pfrom->GetId(), 25);
             return error("ProcessBlock() : Velocity rejected block %d, required parameters not met", mapBlockIndex[hash]->nHeight);
         }
+        //}
     }
 
     // Try to get first masternode in our list
