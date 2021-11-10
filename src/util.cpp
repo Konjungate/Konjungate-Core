@@ -282,6 +282,8 @@ static void DebugPrintInit()
     assert(fileout == NULL);
     assert(mutexDebugLog == NULL);
 
+    fPrintToDebugLog = GetBoolArg("-debug", false);
+
     boost::filesystem::path pathDebug = GetDataDir() / "debug.log";
     fileout = fopen(pathDebug.string().c_str(), "a");
     if (fileout) setbuf(fileout, NULL); // unbuffered
