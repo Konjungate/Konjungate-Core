@@ -34,7 +34,7 @@ SendMessagesDialog::SendMessagesDialog(Mode mode, Type type, QWidget *parent) :
 #if QT_VERSION >= 0x040700
      /* Do not move this to the XML file, Qt before 4.7 will choke on it */
     if(mode == SendMessagesDialog::Encrypted)
-        ui->addressFrom->setPlaceholderText(tr("Enter your Konjungate address (e.g. dPAGvSSCttmkfTgjwKvCm6Unmh9YBBFrM9)"));
+        ui->addressFrom->setPlaceholderText(tr("Enter your Konjungate address (e.g. KMaxutnfokdH2mp9SXawPpX3sPQ7P8sLmM)"));
  #endif
     addEntry();
 
