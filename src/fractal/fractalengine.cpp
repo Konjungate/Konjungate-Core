@@ -78,9 +78,9 @@ void write_contractDATA(std::string obfuscated_write_string, std::string contrac
     // Init Main data directory.
     boost::filesystem::path pathDefStorDir = GetDataDir() / "fractal";
     // Init NFT data directory.
-    boost::filesystem::path pathNFTStorDir = GetDataDir() / "fractal/nft";
+    boost::filesystem::path pathNFTStorDir = GetDataDir() / "fractal\\nft";
     // Init NFT data directory.
-    boost::filesystem::path pathTokStorDir = GetDataDir() / "fractal/token";
+    boost::filesystem::path pathTokStorDir = GetDataDir() / "fractal\\token";
     boost::filesystem::path pathConfigFile;
 
     // Ensure directories exist
