@@ -516,6 +516,7 @@ void KonjungateGUI::createToolBars()
     toolbar->addAction(addressBookAction);
     toolbar->addAction(masternodeManagerAction);
     toolbar->addAction(fractalUIAction);
+    toolbar->addAction(messageAction);
     //toolbar->addAction(blockAction);
     toolbar->addAction(settingsAction);
 

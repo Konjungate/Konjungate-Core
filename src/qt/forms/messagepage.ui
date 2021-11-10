@@ -14,11 +14,14 @@
    <string>Address Book</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">color: rgb(51, 51, 51);</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QLabel" name="labelExplanation">
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);</string>
+     </property>
      <property name="text">
       <string>These are your sent and received encrypted messages. Click on an item to read it.</string>
      </property>
@@ -37,6 +40,9 @@
      </property>
      <property name="toolTip">
       <string>Click on a message to view it</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);</string>
      </property>
      <property name="tabKeyNavigation">
       <bool>false</bool>
@@ -88,6 +94,9 @@
             <property name="enabled">
              <bool>true</bool>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);</string>
+            </property>
             <property name="text">
              <string>&amp;Back</string>
             </property>
@@ -99,6 +108,9 @@
           </item>
           <item>
            <widget class="QLabel" name="labelContact">
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);</string>
+            </property>
             <property name="text">
              <string>Contact:</string>
             </property>
@@ -129,7 +141,7 @@
         <item>
          <widget class="QListView" name="listConversation">
           <property name="styleSheet">
-           <string notr="true">#listConversation { color: #000000; }</string>
+           <string notr="true">background-color: rgb(223, 223, 223);</string>
           </property>
          </widget>
         </item>
@@ -153,6 +165,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QPushButton" name="newButton">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
+         </property>
          <property name="text">
           <string>&amp;Conversation</string>
          </property>
@@ -166,6 +181,9 @@
         <widget class="QPushButton" name="sendButton">
          <property name="toolTip">
           <string>Sign a message to prove you own a Konjungate address</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>&amp;Send</string>
@@ -181,6 +199,9 @@
          <property name="toolTip">
           <string>Copy the currently selected address to the system clipboard</string>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
+         </property>
          <property name="text">
           <string>&amp;Copy From Address</string>
          </property>
@@ -195,6 +216,9 @@
          <property name="toolTip">
           <string>Copy the currently selected address to the system clipboard</string>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
+         </property>
          <property name="text">
           <string>Copy To &amp;Address</string>
          </property>
@@ -208,6 +232,9 @@
         <widget class="QPushButton" name="deleteButton">
          <property name="toolTip">
           <string>Delete the currently selected address from the list</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>&amp;Delete</string>
