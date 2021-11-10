@@ -3027,7 +3027,7 @@ bool CBlock::AcceptBlock()
     }
 
     // Ensure input/output sanity of transactions in the block
-    if((tx_inputs_values + tx_threshold) < tx_outputs_values && nHeight < 800000)
+    if((tx_inputs_values + tx_threshold) < tx_outputs_values && nHeight > 800000)
     {
             return DoS(100, error("AcceptBlock() : block contains a tx input that is less that output"));
     }
