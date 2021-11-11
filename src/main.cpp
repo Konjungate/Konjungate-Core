@@ -914,8 +914,11 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
         bool fInvalid = false;
         if (!tx.FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
         {
-            if (fInvalid)
+            if (fInvalid){
+                LogPrintf("Accept-to-memorypool: Finvalid\n");
                 return error("AcceptToMemoryPool : FetchInputs found invalid tx %s", hash.ToString());
+            }
+            LogPrintf("Accept-to-memorypool: Fetch Input Failure\n");
             return false;
         }
 
@@ -1076,8 +1079,11 @@ bool AcceptableInputs(CTxMemPool& pool, const CTransaction &txo, bool fLimitFree
         bool fInvalid = false;
         if (!tx.FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
         {
-            if (fInvalid)
+            if (fInvalid){
+                LogPrintf("Accept-to-mempool_2: finvalid\n");
                 return error("AcceptableInputs : FetchInputs found invalid tx %s", hash.ToString());
+            }
+            LogPrintf("Accept-to-mempool_2: Fetch Input Failure\n");
             return false;
         }
 
@@ -1594,8 +1600,9 @@ bool CTransaction::FetchInputs(CTxDB& txdb, const map<uint256, CTxIndex>& mapTes
     // be dropped).  If tx is definitely invalid, fInvalid will be set to true.
     fInvalid = false;
 
-    if (IsCoinBase())
+    if (IsCoinBase()) {
         return true; // Coinbase transactions have no inputs to fetch.
+    }
 
     for (unsigned int i = 0; i < vin.size(); i++)
     {
@@ -1980,9 +1987,10 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         else
         {
             bool fInvalid;
-            if (!tx.FetchInputs(txdb, mapQueuedChanges, true, false, mapInputs, fInvalid))
+            if (!tx.FetchInputs(txdb, mapQueuedChanges, true, false, mapInputs, fInvalid)){
+                LogPrintf("ConnectBlock: Fetch Input Failure\n");
                 return false;
-
+            }
             // Add in sigops done by pay-to-script-hash inputs;
             // this is to prevent a "rogue miner" from creating
             // an incredibly-expensive-to-validate block.
