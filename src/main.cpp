@@ -1604,10 +1604,6 @@ bool CTransaction::FetchInputs(CTxDB& txdb, const map<uint256, CTxIndex>& mapTes
         return true; // Coinbase transactions have no inputs to fetch.
     }
 
-    if (pindexBest->nHeight+1 > 520716 || pindexBest->nHeight+1 < 700000) {
-        return true; // Coinbase transactions have no inputs to fetch.
-    }
-
     for (unsigned int i = 0; i < vin.size(); i++)
     {
         COutPoint prevout = vin[i].prevout;
@@ -1684,10 +1680,6 @@ int64_t CTransaction::GetValueMapIn(const MapPrevTx& inputs) const
 {
     if (IsCoinBase())
         return 0;
-
-    if(pindexBest->nHeight+1 > 520716 || pindexBest->nHeight+1 < 700000){
-        return 0;
-    }
 
     int64_t nResult = 0;
     for (unsigned int i = 0; i < vin.size(); i++)
@@ -2258,13 +2250,11 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
         }
         if(Velocity_check(pindex->nHeight))
         {
-            if (pindexBest->nHeight+1 < 520716 || pindexBest->nHeight+1 > 700000) {
-                // Announce Velocity constraint failure
-                if(!Velocity(pindex->pprev, &block, true))
-                {
-                    // Invalid data within block
-                    return error("Reorganize() : Velocity failed at height: %u", pindex->nHeight);
-                }
+            // Announce Velocity constraint failure
+            if(!Velocity(pindex->pprev, &block, true))
+            {
+                // Invalid data within block
+                return error("Reorganize() : Velocity failed at height: %u", pindex->nHeight);
             }
         }
 
@@ -3062,12 +3052,7 @@ bool CBlock::AcceptBlock()
         uint256 targetProofOfStake;
         if (!CheckProofOfStake(pindexPrev, vtx[1], nBits, hashProof, targetProofOfStake))
         {
-            if(nHeight < 520716){
-                return error("AcceptBlock() : check proof-of-stake failed for block %s", hash.ToString());
-            }
-            if(nHeight > 700000){
-                return error("AcceptBlock() : check proof-of-stake failed for block %s", hash.ToString());
-            }
+            return error("AcceptBlock() : check proof-of-stake failed for block %s", hash.ToString());
         }
     }
 
