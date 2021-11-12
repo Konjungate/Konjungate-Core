@@ -42,10 +42,6 @@ KONJUNGATE is based on the cyber novel MACHFELD written 1999 by Michael Mastroto
 Official Website:<br/>
 https://www.konjungate.net/
 
-Official Mining Pool:<br/>
-https://pool.konjungate.net/<br/>
-https://ahamay.net/
-
 Block Explorer:
 http://explore.konjungate.net/<br/>
 https://openchains.info/coin/konjungate<br/>
