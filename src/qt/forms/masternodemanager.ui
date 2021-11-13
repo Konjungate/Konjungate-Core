@@ -45,7 +45,7 @@
       </property>
       <property name="styleSheet">
        <string notr="true">background: transparent;
-background-color: rgb(20, 20, 20, 0.35);
+background-color: rgba(20, 20, 20, 0.35);
 </string>
       </property>
       <property name="editTriggers">
@@ -231,7 +231,7 @@ background-color: rgb(20, 20, 20, 0.35);
    </property>
    <property name="styleSheet">
     <string notr="true">background: transparent;
-background-color: rgb(20, 20, 20, 0.35);</string>
+background-color: rgba(20, 20, 20, 0.35);</string>
    </property>
    <property name="editTriggers">
     <set>QAbstractItemView::NoEditTriggers</set>
