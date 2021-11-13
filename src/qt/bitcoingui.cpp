@@ -516,7 +516,6 @@ void KonjungateGUI::createToolBars()
     toolbar->addAction(addressBookAction);
     toolbar->addAction(masternodeManagerAction);
     toolbar->addAction(fractalUIAction);
-    toolbar->addAction(messageAction);
     //toolbar->addAction(blockAction);
     toolbar->addAction(settingsAction);
 
@@ -555,7 +554,7 @@ void KonjungateGUI::createToolBars()
 
 void KonjungateGUI::setClientModel(ClientModel *clientModel)
 {
-    netLabel->setText("v1.1.7.8");// Version in GUI
+    netLabel->setText("v1.1.7.9");// Version in GUI
 
     this->clientModel = clientModel;
     if(clientModel)

@@ -16,7 +16,6 @@ bool VELOCITY_FACTOR = false;
 uint256 RollingBlock;
 int64_t RollingHeight;
 
-
 /* VelocityI(int nHeight) ? i : -1
    Returns i or -1 if not found */
 int VelocityI(int nHeight)
@@ -46,7 +45,6 @@ bool Velocity_check(int nHeight)
    Returns true if proposed Block matches constrains */
 bool Velocity(CBlockIndex* prevBlock, CBlock* block, bool fFactor_tx)
 {
-
     // Define values
     int64_t TXrate = 0;
     int64_t CURvalstamp  = 0;
@@ -55,6 +53,7 @@ bool Velocity(CBlockIndex* prevBlock, CBlock* block, bool fFactor_tx)
     int64_t OLDstamp = 0;
     int64_t TXstampC = 0;
     int64_t TXstampO = 0;
+    int64_t devopsPayment = 0;
     int64_t SYScrntstamp = 0;
     int64_t SYSbaseStamp = 0;
     int nHeight = prevBlock->nHeight+1;
@@ -73,6 +72,7 @@ bool Velocity(CBlockIndex* prevBlock, CBlock* block, bool fFactor_tx)
     // Factor in TXs for Velocity constraints
     if(VELOCITY_FACTOR == true && fFactor_tx)
     {
+        // Run TX factoring
         if(!tx_Factor(prevBlock, block))
         {
             LogPrintf("DENIED: Velocity denied block: %u\n", nHeight);
@@ -156,9 +156,9 @@ bool tx_Factor(CBlockIndex* prevBlock, CBlock* block)
     CAmount tx_threshold = 0;
 
     if(block->IsProofOfStake()) {
-        tx_threshold = GetProofOfStakeReward(pindexBest, 0, 0);
+        tx_threshold = GetProofOfStakeReward(prevBlock, 0, 0);
     } else {
-        tx_threshold = GetProofOfWorkReward(pindexBest->nHeight, 0);
+        tx_threshold = GetProofOfWorkReward(prevBlock->nHeight+1, 0);
     }
 
     // Set factor values
@@ -205,7 +205,7 @@ bool tx_Factor(CBlockIndex* prevBlock, CBlock* block)
 
 bool bIndex_Factor(CBlockIndex* InSplitPoint, CBlockIndex* InSplitEnd, int InFactor)
 {
-    CAmount tx_threshold = 500 * COIN;
+    CAmount tx_threshold = 1 * COIN;
     tx_threshold *= InFactor;
 
     // Ensure expected coin supply matches actualy coin supply of branch

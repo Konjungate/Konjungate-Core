@@ -72,21 +72,21 @@ static const int MAX_BLOCKS_IN_TRANSIT_PER_PEER = 128;
 /** Timeout in seconds before considering a block download peer unresponsive. */
 static const unsigned int BLOCK_DOWNLOAD_TIMEOUT = 60;
 /** Maximum block reorganize depth (consider else an invalid fork) */
-static const int BLOCK_REORG_MAX_DEPTH = 5;
+static const int BLOCK_REORG_MAX_DEPTH = 1;
 /** Maximum block reorganize depth override (enabled using demi-nodes) */
 static int BLOCK_REORG_OVERRIDE_DEPTH = 0;
 /** Combined Maximum block reorganize depth (consider else an invalid fork) */
 static int BLOCK_REORG_THRESHOLD = BLOCK_REORG_MAX_DEPTH + BLOCK_REORG_OVERRIDE_DEPTH;
 /** Depth for rolling checkpoing block */
 static const int BLOCK_TEMP_CHECKPOINT_DEPTH = 120;
+/** Velocity Factor handling toggle */
+inline bool FACTOR_TOGGLE(int nHeight) { return TestNet() || nHeight > 700000; }
 /** Defaults to yes, adaptively increase/decrease max/min/priority along with the re-calculated block size **/
 static const unsigned int DEFAULT_SCALE_BLOCK_SIZE_OPTIONS = 1;
 /** Future drift value */
 static const int64_t nDrift = 5 * 60;
 /** Future drift params */
 inline int64_t FutureDrift(int64_t nTime) { return nTime + nDrift; }
-/** Velocity Factor handling toggle */
-inline bool FACTOR_TOGGLE(int nHeight) { return TestNet() || nHeight > 900000; } // Checks take place after block 750000   - 1mil for beta -
 /** "reject" message codes **/
 static const unsigned char REJECT_INVALID = 0x10;
 
@@ -339,10 +339,7 @@ public:
         }
         return nValueOut;
     }
-    
-    // Map TX inputs for scanning
-    void GetMapTxInputs(MapPrevTx &mapInputs) const;
-    
+
     /** Amount of bitcoins coming in to this transaction
         Note that lightweight clients may not know anything besides the hash of previous transactions,
         so may not be able to calculate this.
@@ -898,7 +895,7 @@ public:
     bool SignBlock(CWallet& keystore, int64_t nFees);
     bool CheckBlockSignature() const;
     void RebuildAddressIndex(CTxDB& txdb);
-    bool IsRewardStructureValid(CBlockIndex* pindexLast);
+    bool IsRewardStructureValid(const CBlockIndex* pindexLast);
 
 private:
     bool SetBestChainInner(CTxDB& txdb, CBlockIndex *pindexNew);

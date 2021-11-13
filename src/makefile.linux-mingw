@@ -40,7 +40,7 @@ LIBS= \
 
 DEFS=-D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE
 DEBUGFLAGS=-g
-CFLAGS=-O2 -msse2 -w -Wall -Wextra -Wno-ignored-qualifiers -Wformat -Wformat-security -Wno-unused-parameter -std=c++11 $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS)
+CFLAGS=-O2 -msse2 -w -Wall -Wextra -Wno-ignored-qualifiers -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS)
 LDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat -static-libgcc -static-libstdc++
 
 ifndef USE_UPNP
@@ -110,6 +110,9 @@ OBJS= \
     obj/masternode-payments.o \
     obj/rpcmnengine.o \
     obj/spork.o \
+    obj/deminode/demimodule.o \
+    obj/deminode/deminet.o \
+    obj/deminode/demisync.o \
     obj/crypto/common/hmac_sha256.o \
     obj/crypto/common/hmac_sha512.o \
     obj/crypto/common/ripemd160.o \
@@ -118,16 +121,7 @@ OBJS= \
     obj/crypto/common/sha512.o \
     obj/crypto/common/aes_helper.o \
     obj/crypto/common/bmw.o \
-    obj/crypto/common/echo.o \
-    obj/deminode/demimodule.o \
-    obj/deminode/deminet.o \
-    obj/deminode/demisync.o \
-    obj/fractal/fractalcontract.o \
-    obj/fractal/fractaldataob.o \
-    obj/fractal/fractalengine.o \
-    obj/fractal/fractalnftbase.o \
-    obj/fractal/fractalnft.o \
-    obj/fractal/fractalparams.o
+    obj/crypto/common/echo.o
 
 ifeq (${USE_WALLET}, 1)
     DEFS += -DENABLE_WALLET
@@ -157,7 +151,7 @@ version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
 
 obj/%.o: %.cpp $(HEADERS)
-	$(CXX) -c $(CFLAGS) -o $@ $<
+	$(CXX) -c -std=c++11 $(CFLAGS) -o $@ $<
 
 Konjungated.exe: $(OBJS:obj/%=obj/%)
 	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS) -lshlwapi

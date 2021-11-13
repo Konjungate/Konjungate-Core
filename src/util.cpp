@@ -90,7 +90,7 @@ int64_t enforceMasternodePaymentsTime = 4085657524;
 int nMasternodeMinProtocol = 0;
 bool fSucessfullyLoaded = false;
 bool fEnableMNengine = false;
-// Standard Arguments/toggles
+//Standard features
 map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
 bool fDebug = false;
@@ -112,14 +112,12 @@ int64_t nLiveForkToggle = 0;
 int64_t nMasterNodeChecksDelayBaseTime = 0;
 //MasterNode peer IP advanced relay system toggle
 bool fMnAdvRelay = false;
-//Logic for lock/unlock GUI icon
-//does not affect daemon operation
-// <------ See if Masternode key has to be called here in debug, if not. Well. There's your sign. Literally.
+//Logic for lock/unlock GUI icon, does not affect daemon operation
 bool settingsStatus = false;
-//Max Blockheight Value
-int maxBlockHeight = -1;
 //Demi-node handling
 bool fDemiNodes = false;
+//Max Blockheight Value
+int maxBlockHeight = -1;
 
 // Init OpenSSL library multithreading support
 static CCriticalSection** ppmutexOpenSSL;
@@ -1203,6 +1201,8 @@ boost::filesystem::path GetMasternodeConfigFile()
 void ReadConfigFile(map<string, string>& mapSettingsRet,
                     map<string, vector<string> >& mapMultiSettingsRet)
 {
+    int confLoop = 0;
+    injectConfig:
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good())
     {
@@ -1237,6 +1237,13 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                fprintf(ConfFile, "addnode=51.195.42.49\n");
                fprintf(ConfFile, "addnode=51.195.42.49:19417\n");
                fclose(ConfFile);
+    }
+
+    // Wallet will reload config file so it is properly read...
+    if (confLoop < 1)
+    {
+        ++confLoop;
+        goto injectConfig;
     }
 
     set<string> setOptions;

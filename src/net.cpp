@@ -735,7 +735,7 @@ bool FirstCycle = true;
 
 void RefreshRecentConnections(int RefreshMinutes)
 {
-    if (vNodes.size() >= GetArg("-maxconnections", 125)) // Second Value for determining max connections
+    if (vNodes.size() >= GetArg("-maxconnections", 125))
     {
         return;
     }

@@ -25,18 +25,18 @@ extern const std::string CLIENT_DATE;
 //
 // database format versioning
 //
-static const int DATABASE_VERSION = 70510;
+static const int DATABASE_VERSION = 70509;
 
 //
 // network protocol versioning
 //
-static const int PROTOCOL_VERSION = 62108;
+static const int PROTOCOL_VERSION = 62103;
 
 // intial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
 
 // disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = 62108; // When editing Block_reorg in main.h, always make it a mandatory fork! ~ SaltineChips
+static const int MIN_PEER_PROTO_VERSION = 62101;
 
 // minimum peer version accepted by MNenginePool
 static const int MIN_POOL_PEER_PROTO_VERSION = 62017;
@@ -54,7 +54,7 @@ static const int CADDR_TIME_VERSION = 31402;
 
 // only request blocks from nodes outside this range of versions
 static const int NOBLKS_VERSION_START = 0;
-static const int NOBLKS_VERSION_END = 62107;
+static const int NOBLKS_VERSION_END = 62016;
 
 // hard cutoff time for legacy network connections
 static const int64_t HRD_LEGACY_CUTOFF = 9993058800; // OFF (NOT TOGGLED)
@@ -68,13 +68,13 @@ static const int BIP0031_VERSION = 60000;
 // "mempool" command, enhanced "getdata" behavior starts with this version:
 static const int MEMPOOL_GD_VERSION = 60002;
 
-// "demi-nodes" command, enhanced "getdata" behavior starts with this version:
-static const int DEMINODE_VERSION = 62105;
-
 // MasterNode peer IP advanced relay system start (Unfinished, not used)
 static const int64_t MIN_MASTERNODE_ADV_RELAY = 9993058800; // OFF (NOT TOGGLED)
 
 // MasterNode peer IP basic relay system start (on and functional)
 static const int64_t MIN_MASTERNODE_BSC_RELAY = 62026; // ON
+
+// "demi-nodes" command, enhanced "getdata" behavior starts with this version:
+static const int DEMINODE_VERSION = 62102;
 
 #endif

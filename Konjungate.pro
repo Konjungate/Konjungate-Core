@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = Konjungate-qt
-VERSION = 1.1.7.8
+VERSION = 1.1.7.9
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
@@ -56,6 +56,7 @@ macx:QMAKE_CXXFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Plat
 macx:QMAKE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 macx:QMAKE_LFLAGS +=  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 macx:QMAKE_OBJECTIVE_CFLAGS += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+
 
     !windows:!macx {
         # Linux: static link
@@ -291,8 +292,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/limitedmap.h \
     src/qt/fractalui.h \
     src/qt/tokenui.h \
-    src/qt/nftui.h \
-    src/qt/contractui.h \
     src/qt/overviewpage.h \
     src/qt/csvmodelwriter.h \
     src/crypter.h \
@@ -336,12 +335,8 @@ HEADERS += src/qt/bitcoingui.h \
     src/fractal/fractalcontract.h \
     src/fractal/fractalparams.h \
     src/fractal/fractaldataob.h \
-    src/fractal/fractalnftbase.h \
     src/fractal/fractalnft.h \
     src/fractal/fractalbvac.h \
-    src/deminode/demimodule.h \
-    src/deminode/deminet.h \
-    src/deminode/demisync.h \
     src/qt/masternodemanager.h \
     src/qt/addeditadrenalinenode.h \
     src/qt/adrenalinenodeconfigdialog.h \
@@ -360,7 +355,10 @@ HEADERS += src/qt/bitcoingui.h \
     src/crypto/common/sph_types.h \
     src/crypto/bmw/bmw512.h \
     src/crypto/echo/echo512.h \
-    src/limitedmap.h
+    src/limitedmap.h \
+    src/deminode/demimodule.h \
+    src/deminode/deminet.h \
+    src/deminode/demisync.h
 
 SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/transactiontablemodel.cpp \
@@ -450,18 +448,12 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/pbkdf2.cpp \
     src/qt/fractalui.cpp \
     src/qt/tokenui.cpp \
-    src/qt/nftui.cpp \
-    src/qt/contractui.cpp \
     src/fractal/fractalengine.cpp \
     src/fractal/fractalcontract.cpp \
     src/fractal/fractalparams.cpp \
     src/fractal/fractaldataob.cpp \
-    src/fractal/fractalnftbase.cpp \
     src/fractal/fractalnft.cpp \
     src/fractal/fractalbvac.cpp \
-    src/deminode/demimodule.cpp \
-    src/deminode/deminet.cpp \
-    src/deminode/demisync.cpp \
     src/support/cleanse.cpp \
     src/stealth.cpp \
     src/qt/flowlayout.cpp \
@@ -496,7 +488,10 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/rpcsmessage.cpp \
     src/crypto/common/aes_helper.c \
     src/crypto/common/bmw.c \
-    src/crypto/common/echo.c
+    src/crypto/common/echo.c \
+    src/deminode/demimodule.cpp \
+    src/deminode/deminet.cpp \
+    src/deminode/demisync.cpp
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -527,8 +522,6 @@ FORMS += \
     src/qt/forms/settingspage.ui \
     src/qt/forms/fractalui.ui \
     src/qt/forms/tokenui.ui \
-    src/qt/forms/nftui.ui \
-    src/qt/forms/contractui.ui \
     src/qt/plugins/mrichtexteditor/mrichtextedit.ui
 
 contains(USE_QRCODE, 1) {
@@ -608,12 +601,12 @@ isEmpty(BOOST_INCLUDE_PATH) {
 
 isEmpty(QRENCODE_LIB_PATH) {
     macx:QRENCODE_LIB_PATH = $${LIBOSXPATH}/Cellar/qrencode/4.1.1/lib
-	windows:QRENCODE_LIB_PATH=C:/deps/qrencode-3.4.4/.libs	
+        windows:QRENCODE_LIB_PATH=C:/deps/qrencode-4.1.1/.libs
 }
 
 isEmpty(QRENCODE_INCLUDE_PATH) {
     macx:QRENCODE_INCLUDE_PATH = $${LIBOSXPATH}/Cellar/qrencode/4.1.1/include
-	windows:QRENCODE_INCLUDE_PATH=C:/deps/qrencode-3.4.4/
+        windows:QRENCODE_INCLUDE_PATH=C:/deps/qrencode-4.1.1/
 }
 
 isEmpty(MINIUPNPC_LIB_SUFFIX) {

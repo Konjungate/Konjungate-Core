@@ -1,5 +1,4 @@
 // Copyright (c) 2021 The Espers Project/CryptoCoderz Team
-// Copyright (c) 2021 The Konjungate Project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,7 +19,6 @@ uint256 hashDeminodes[4] {
 
 bool fDemiPeerRelay(std::string peerAddr)
 {
-    // Loop through Demi-node list
     ReadDemiConfigFile(peerAddr);
     if(fDemiFound) {
         // Return success
@@ -49,7 +47,8 @@ static void DemiNodeFetch(uint256 blockHash)
             }
 
             // See if we found a Demi-node
-            /*if(scanDeminodes[0] == pnode->addrName) {
+            /*
+            if(scanDeminodes[0] == pnode->addrName) {
                 voteDeminodes[0] ++;
                 pnode->PushMessage("getdata", vGetDemiData);
                 fDemiFound = true;
@@ -65,7 +64,8 @@ static void DemiNodeFetch(uint256 blockHash)
                 voteDeminodes[3] ++;
                 pnode->PushMessage("getdata", vGetDemiData);
                 fDemiFound = true;
-            } */
+            }
+            */
         }
 
         vGetDemiData.clear();

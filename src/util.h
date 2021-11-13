@@ -113,6 +113,7 @@ inline void MilliSleep(int64_t n)
     boost::this_thread::sleep(boost::posix_time::milliseconds(n));
 #endif
 }
+//Standard args
 
 //Dark features
 extern bool fMasterNode;
@@ -128,7 +129,6 @@ extern std::string strMasterNodeAddr;
 extern int nMasternodeMinProtocol;
 extern int keysLoaded;
 extern bool fSucessfullyLoaded;
-// Standard args
 extern std::map<std::string, std::string> mapArgs;
 extern std::map<std::string, std::vector<std::string> > mapMultiArgs;
 extern bool fDebug;
@@ -143,20 +143,17 @@ extern std::string strMiscWarning;
 extern bool fNoListen;
 extern bool fLogTimestamps;
 extern volatile bool fReopenDebugLog;
-// Live fork toggle
+//Live fork toggle
 extern std::string strLiveForkToggle;
-extern int64_t nLiveForkToggle;// TODO: just have dependent functions create a non-extern within
-                               // their respective functions (start cleaning up externs)
-// <-- Here's your sign again.
-// Demi-node toggle
-extern bool fDemiNodes;
+extern int64_t nLiveForkToggle;
 //MasterNode recipient verification delay base time
 extern int64_t nMasterNodeChecksDelayBaseTime;
 //MasterNode peer IP advanced relay system toggle
 extern bool fMnAdvRelay;
-//Logic for lock/unlock GUI icon
-//does not affect daemon operation
+// Logic for lock/unlock GUI icon, does not affect daemon operation
 extern bool settingsStatus;
+// Demi-node toggle
+extern bool fDemiNodes;
 //will sync until this block height. default -1 which represents disabled
 extern int maxBlockHeight;
 

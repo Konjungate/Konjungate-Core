@@ -1,10 +1,9 @@
 // Copyright (c) 2021 The Espers Project/CryptoCoderz Team
-// Copyright (c) 2021 The Konjungate Project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "demimodule.h"
-#include "util.h"
+#include "../util.h"
 
 bool fDemiFound = false;
 
@@ -25,11 +24,14 @@ void ReadDemiConfigFile(std::string peerReadAddr)
         boost::filesystem::path ConfPath;
                ConfPath = GetDataDir() / "Demi.conf";
                FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
-               fprintf(ConfFile, "185.52.172.164:19417\n");
-               fprintf(ConfFile, "155.138.148.198:19417\n");
-               fprintf(ConfFile, "139.99.239.62:19417\n");
-               fprintf(ConfFile, "51.195.42.49:19417\n");
+               fprintf(ConfFile, "159.89.18.103\n");
+               fprintf(ConfFile, "159.89.18.103:19417\n");
+               fprintf(ConfFile, "51.68.175.13\n");
                fprintf(ConfFile, "51.68.175.13:19417\n");
+               fprintf(ConfFile, "139.99.239.62\n");
+               fprintf(ConfFile, "139.99.239.62:19417\n");
+               fprintf(ConfFile, "51.195.42.49\n");
+               fprintf(ConfFile, "51.195.42.49:19417\n");
 
                fclose(ConfFile);
     }

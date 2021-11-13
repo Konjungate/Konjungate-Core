@@ -146,6 +146,9 @@ OBJS= \
     obj/masternode-payments.o \
     obj/rpcmnengine.o \
     obj/spork.o \
+    obj/deminode/demimodule.o \
+    obj/deminode/deminet.o \
+    obj/deminode/demisync.o \
     obj/crypto/common/hmac_sha256.o \
     obj/crypto/common/hmac_sha512.o \
     obj/crypto/common/ripemd160.o \
@@ -154,16 +157,7 @@ OBJS= \
     obj/crypto/common/sha512.o \
     obj/crypto/common/aes_helper.o \
     obj/crypto/common/bmw.o \
-    obj/crypto/common/echo.o \
-    obj/deminode/demimodule.o \
-    obj/deminode/deminet.o \
-    obj/deminode/demisync.o \
-    obj/fractal/fractalcontract.o \
-    obj/fractal/fractaldataob.o \
-    obj/fractal/fractalengine.o \
-    obj/fractal/fractalnftbase.o \
-    obj/fractal/fractalnft.o \
-    obj/fractal/fractalparams.o
+    obj/crypto/common/echo.o
 
 ifeq (${USE_WALLET}, 1)
     DEFS += -DENABLE_WALLET

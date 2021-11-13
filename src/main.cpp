@@ -17,8 +17,8 @@
 #include "net.h"
 #include "txdb.h"
 #include "txmempool.h"
-#include "deminode/deminet.h"
 #include "ui_interface.h"
+#include "deminode/deminet.h"
 #include "velocity.h"
 #include "instantx.h"
 #include "mnengine.h"
@@ -64,7 +64,7 @@ bool fReindex = false;
 bool fAddrIndex = false;
 bool fHaveGUI = false;
 bool fRollingCheckpoint = false;
-std::string GetRelayPeerAddr = "127.0.0.1";
+std::string GetRelayPeerAddr= "127.0.0.1";
 
 struct COrphanBlock {
     uint256 hashBlock;
@@ -736,23 +736,6 @@ double CTransaction::ComputePriority(double dPriorityInputs, unsigned int nTxSiz
     return dPriorityInputs / nTxSize;
 }
 
-void CTransaction::GetMapTxInputs(MapPrevTx& mapInputs) const
-{
-    // Load TX inputs
-    CTxDB txdb("r");
-    map<uint256, CTxIndex> mapUnused;
-    bool fInvalid = false;
-    // Ensure we can fetch inputs
-    if (!this->FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
-    {
-        if (fInvalid)
-        {
-            LogPrintf("Invalid TX attempted to set in GetMapTXInputs\n");
-            return;
-        }
-    }
-}
-
 bool CTransaction::CheckTransaction() const
 {
     // Basic checks that don't depend on any context
@@ -914,11 +897,8 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
         bool fInvalid = false;
         if (!tx.FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
         {
-            if (fInvalid){
-                LogPrintf("Accept-to-memorypool: Finvalid\n");
+            if (fInvalid)
                 return error("AcceptToMemoryPool : FetchInputs found invalid tx %s", hash.ToString());
-            }
-            LogPrintf("Accept-to-memorypool: Fetch Input Failure\n");
             return false;
         }
 
@@ -1079,11 +1059,8 @@ bool AcceptableInputs(CTxMemPool& pool, const CTransaction &txo, bool fLimitFree
         bool fInvalid = false;
         if (!tx.FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
         {
-            if (fInvalid){
-                LogPrintf("Accept-to-mempool_2: finvalid\n");
+            if (fInvalid)
                 return error("AcceptableInputs : FetchInputs found invalid tx %s", hash.ToString());
-            }
-            LogPrintf("Accept-to-mempool_2: Fetch Input Failure\n");
             return false;
         }
 
@@ -1600,9 +1577,8 @@ bool CTransaction::FetchInputs(CTxDB& txdb, const map<uint256, CTxIndex>& mapTes
     // be dropped).  If tx is definitely invalid, fInvalid will be set to true.
     fInvalid = false;
 
-    if (IsCoinBase()) {
+    if (IsCoinBase())
         return true; // Coinbase transactions have no inputs to fetch.
-    }
 
     for (unsigned int i = 0; i < vin.size(); i++)
     {
@@ -1987,10 +1963,9 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         else
         {
             bool fInvalid;
-            if (!tx.FetchInputs(txdb, mapQueuedChanges, true, false, mapInputs, fInvalid)){
-                LogPrintf("ConnectBlock: Fetch Input Failure\n");
+            if (!tx.FetchInputs(txdb, mapQueuedChanges, true, false, mapInputs, fInvalid))
                 return false;
-            }
+
             // Add in sigops done by pay-to-script-hash inputs;
             // this is to prevent a "rogue miner" from creating
             // an incredibly-expensive-to-validate block.
@@ -2002,13 +1977,8 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
             int64_t nTxValueOut = tx.GetValueOut();
             nValueIn += nTxValueIn;
             nValueOut += nTxValueOut;
-            if (!tx.IsCoinStake()) {
+            if (!tx.IsCoinStake())
                 nFees += nTxValueIn - nTxValueOut;
-                if (nTxValueIn < nTxValueOut) {
-                    LogPrintf("ConnectBlock : block contains a tx input that is less that output\n");
-                    return false;
-                }
-            }
             if (tx.IsCoinStake())
                 nStakeReward = nTxValueOut - nTxValueIn;
 
@@ -2140,14 +2110,14 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
     // Set values
     CBlockIndex* pfork = pindexBest;
     CBlockIndex* plonger = pindexNew;
-        CBlockIndex* plongerindex = plonger;
+    CBlockIndex* plongerindex = plonger;
     int64_t pfinglonger = (plonger->nHeight - pfork->nHeight);
     int64_t pheightlonger = plonger->nHeight;
-    int64_t preorgmax = (pfork->nHeight - BLOCK_REORG_THRESHOLD);
+    int64_t preorgmax = (pfork->nHeight - BLOCK_REORG_MAX_DEPTH);
     int diffFactor = 0;
 
     // Ensure reorganize depth sanity
-    if (pfinglonger > BLOCK_REORG_THRESHOLD) {
+    if (pfinglonger > BLOCK_REORG_MAX_DEPTH) {
         // Only allow deep reorgs from Demi-nodes
         // TODO: allow override as set in config file
         if(fDemiPeerRelay(GetRelayPeerAddr) && fDemiNodes) {
@@ -2159,6 +2129,7 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
             return error("Reorganize() : Maximum depth exceeded");
         }
     }
+
     // Set rolling checkpoint status, just in case we haven't accepted any blocks yet
     // TODO: Clean up to prevent redundant calls beween reorganize and AcceptBlock
     fRollingCheckpoint = RollingCheckpoints(pfork->nHeight);
@@ -2211,7 +2182,7 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
     vector<CBlockIndex*> vConnect;
     for (CBlockIndex* pindex = pindexNew; pindex != pfork; pindex = pindex->pprev)
         vConnect.push_back(pindex);
-    
+
     reverse(vConnect.begin(), vConnect.end());
 
     LogPrintf("REORGANIZE: Disconnect %u blocks; %s..%s\n", vDisconnect.size(), pfork->GetBlockHash().ToString(), pindexBest->GetBlockHash().ToString());
@@ -2225,7 +2196,7 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
         if (!block.ReadFromDisk(pindex))
             return error("Reorganize() : ReadFromDisk for disconnect failed");
         if (!block.DisconnectBlock(txdb, pindex))
-            return error("Reorganize() : DisconnectBlock failed for block: %s ", pindex->GetBlockHash().ToString());
+            return error("Reorganize() : DisconnectBlock failed for block: %s", pindex->GetBlockHash().ToString());
 
         // Queue memory transactions to resurrect.
         // We only do this for blocks after the last checkpoint (reorganisation before that
@@ -2976,12 +2947,10 @@ bool CBlock::AcceptBlock()
     // Check block against Velocity parameters
     if(Velocity_check(nHeight))
     {
-        if(nHeight != 520717){
-            // Announce Velocity constraint failure
-            if(!Velocity(pindexPrev, this, false))
-            {
-                return DoS(100, error("AcceptBlock() : Velocity rejected block %d, required parameters not met", nHeight));
-            }
+        // Announce Velocity constraint failure
+        if(!Velocity(pindexPrev, this, false))
+        {
+            return DoS(100, error("AcceptBlock() : Velocity rejected block %d, required parameters not met", nHeight));
         }
     }
 
@@ -3019,29 +2988,11 @@ bool CBlock::AcceptBlock()
     if (GetBlockTime() <= pindexPrev->GetPastTimeLimit() || FutureDrift(GetBlockTime()) < pindexPrev->GetBlockTime())
         return error("AcceptBlock() : block's timestamp is too early");
 
-    // Set logged values
-    CAmount tx_inputs_values = 0;
-    CAmount tx_outputs_values = 0;
-    CAmount tx_threshold = (500 * COIN);
-
     // Check that all transactions are finalized
-    BOOST_FOREACH(const CTransaction& tx, vtx) {
-        if (!IsFinalTx(tx, nHeight, GetBlockTime())) {
+    BOOST_FOREACH(const CTransaction& tx, vtx)
+        if (!IsFinalTx(tx, nHeight, GetBlockTime()))
             return DoS(10, error("AcceptBlock() : contains a non-final transaction"));
-        }
-        // Log inputs/output values
-        MapPrevTx mapInputs;
-        tx.GetMapTxInputs(mapInputs);
-        tx_inputs_values += tx.GetValueMapIn(mapInputs);
-        tx_outputs_values += tx.GetValueOut();
-    }
 
-    // Ensure input/output sanity of transactions in the block
-    if((tx_inputs_values + tx_threshold) < tx_outputs_values && nHeight > 800000)
-    {
-            return DoS(100, error("AcceptBlock() : block contains a tx input that is less that output"));
-    }
-    
     // Check that the block chain matches the known block chain up to a checkpoint
     if (!Checkpoints::CheckHardened(nHeight, hash))
         return DoS(100, error("AcceptBlock() : rejected by hardened checkpoint lock-in at %d", nHeight));
@@ -3089,14 +3040,15 @@ bool CBlock::AcceptBlock()
             if (nBestHeight > (pnode->nStartingHeight != -1 ? pnode->nStartingHeight - 2000 : nBlockEstimate))
                 pnode->PushInventory(CInv(MSG_BLOCK, hash));
     }
-    
+
     // Set rolling checkpoint status
+    // TODO: Clean up to prevent redundant calls beween reorganize and AcceptBlock
     fRollingCheckpoint = RollingCheckpoints(nHeight);
 
     return true;
 }
 
-bool CBlock::IsRewardStructureValid(CBlockIndex* pindexLast)
+bool CBlock::IsRewardStructureValid(const CBlockIndex* pindexLast)
 {
     // Validation starts after nPaymentUpdate_4
     if(pindexLast->nHeight < nPaymentUpdate_4)
@@ -3293,9 +3245,9 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
     // If we don't already have its previous block, shunt it off to holding area until we get it
     if (!mapBlockIndex.count(pblock->hashPrevBlock))
     {
-        /*if(!fDemiPeerRelay(GetRelayPeerAddr)) {
-            return error("ProcessBlock() : Demi-node orphan blocks are not accepted from peer: %s", pfrom->addrName);
-        }*/
+        //if(!fDemiPeerRelay(pfrom->addrName)) {
+        //    return error("ProcessBlock() : Demi-node orphan blocks are not accepted from peer: %s", pfrom->addrName);
+        //}
 
         LogPrintf("ProcessBlock: ORPHAN BLOCK %lu, prev=%s\n", (unsigned long)mapOrphanBlocks.size(), pblock->hashPrevBlock.ToString());
 
@@ -3366,14 +3318,11 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
     // Check block against Velocity parameters
     if(Velocity_check(mapBlockIndex[hash]->nHeight))
     {
-        if(mapBlockIndex[hash]->nHeight != 520717){
-
-            // Announce Velocity constraint failure
-            if(!Velocity(mapBlockIndex[hash]->pprev, pblock, true))
-            {
-                Misbehaving(pfrom->GetId(), 25);
-                return error("ProcessBlock() : Velocity rejected block %d, required parameters not met", mapBlockIndex[hash]->nHeight);
-            }
+        // Announce Velocity constraint failure
+        if(!Velocity(mapBlockIndex[hash]->pprev, pblock, true))
+        {
+            Misbehaving(pfrom->GetId(), 25);
+            return error("ProcessBlock() : Velocity rejected block %d, required parameters not met", mapBlockIndex[hash]->nHeight);
         }
     }
 
@@ -3878,17 +3827,22 @@ bool static AlreadyHave(CTxDB& txdb, const CInv& inv)
 void static ProcessGetData(CNode* pfrom)
 {
     std::deque<CInv>::iterator it = pfrom->vRecvGetData.begin();
+
     vector<CInv> vNotFound;
+
     LOCK(cs_main);
+
     while (it != pfrom->vRecvGetData.end()) {
         // Don't bother if send buffer is too full to respond anyway
         if (pfrom->nSendSize >= SendBufferSize())
             break;
+
         const CInv &inv = *it;
         {
             boost::this_thread::interruption_point();
             it++;
-            if (inv.type == MSG_BLOCK)
+
+            if (inv.type == MSG_BLOCK || inv.type == MSG_FILTERED_BLOCK)
             {
                 // Send block from disk
                 map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.find(inv.hash);
@@ -3896,13 +3850,8 @@ void static ProcessGetData(CNode* pfrom)
                 {
                     CBlock block;
                     block.ReadFromDisk((*mi).second);
-                    // previous versions could accept sigs with high s
-                    /*if (!IsCanonicalBlockSignature(&block, true)) {
-                        bool ret = EnsureLowS(block.vchBlockSig);
-                        assert(ret);
-                    }Z*/
 
-                    // Send the requested block data to peer
+                    // Send the requested block to peer
                     pfrom->PushMessage("block", block);
 
                     // Trigger them to send a getblocks request for the next batch of inventory
@@ -3933,22 +3882,24 @@ void static ProcessGetData(CNode* pfrom)
                     // Send best available block to peer
                     map<uint256, CBlockIndex*>::iterator mi2 = mapBlockIndex.find(pindexBest->GetBlockHash());
                     CBlock block;
-                    block.ReadFromDisk((*mi2).second) ;
+                    block.ReadFromDisk((*mi2).second);
                     pfrom->PushMessage("demiblock", block);
                 }
             }
             else if (inv.IsKnownType())
             {
+                if(fDebug) LogPrintf("ProcessGetData -- Starting \n");
                 // Send stream from relay memory
                 bool pushed = false;
-                {
+                /*{
                     LOCK(cs_mapRelay);
                     map<CInv, CDataStream>::iterator mi = mapRelay.find(inv);
                     if (mi != mapRelay.end()) {
                         pfrom->PushMessage(inv.GetCommand(), (*mi).second);
+                        if(fDebug) LogPrintf("ProcessGetData -- pushed = true Rest will fail\n");
                         pushed = true;
                     }
-                }
+                }*/
                 if (!pushed && inv.type == MSG_TX) {
 
                     CTransaction tx;
@@ -4293,7 +4244,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
     }
 
     // NOTE: "getdata" can be used for either batch or single data calls
-    //        for most types of required/requested data
+    //       for most types of required/requested data
     else if (strCommand == "getdata")
     {
         vector<CInv> vInv;
@@ -4314,10 +4265,12 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         ProcessGetData(pfrom);
     }
 
+
     else if (strCommand == "getblocks")
     {
         // TODO: Skip if Demi-node reorganize is still ongoing
         //
+
         CBlockLocator locator;
         uint256 hashStop;
         vRecv >> locator >> hashStop;
@@ -4521,10 +4474,11 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
     }
 
 
-    else if (strCommand == "block")
+    else if (strCommand == "block" && !fImporting && !fReindex) // Ignore blocks received while importing
     {
         // TODO: Skip if Demi-node reorganize is still ongoing
         //
+
         CBlock block;
         vRecv >> block;
         uint256 hashBlock = block.GetHash();
@@ -4540,9 +4494,13 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         MarkBlockAsReceived(inv.hash, pfrom->GetId());
 
         // NOTE: Demi-node verified reorganize triggers in ProcessBlock()
-        if (ProcessBlock(pfrom, &block)) mapAlreadyAskedFor.erase(inv);
+        if (ProcessBlock(pfrom, &block)) mapAlreadyAskedFor.erase(inv);//ProcessBlock(pfrom, &block);
 
         if (block.nDoS) Misbehaving(pfrom->GetId(), block.nDoS);
+
+        if (fSecMsgEnabled) {
+            SecureMsgScanBlock(block);
+        }
     }
 
     // Demi-node calls
@@ -4931,18 +4889,17 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
             return true;
 
         // Start block sync
-        //
-        // Demi-nodes v0.5 alpha
-        //
         if (pto->fStartSync && !fImporting && !fReindex) {
-            // We wait to accumulate connections
+            // Espers Demi-node rewrite...
+            // Don't send blind get blocks message anymore.
+            // Instead we wait to accumulate connections
             // then we gather a network concensus of what should
             // be deemed the main chain. We sync to this chain.
             // There are overrides and exceptions, please consult
             // the Demi-node documentation for more information.
             //
-            pto->fStartSync = false;
 
+            pto->fStartSync = false;
 
             if(!fDemiNodes) {
                 PushGetBlocks(pto, pindexBest, uint256(0));
@@ -5127,7 +5084,8 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
                 if (fDebug)
                     LogPrint("net", "sending getdata: %s\n", inv.ToString());
                 vGetData.push_back(inv);
-                if (vGetData.size() >= 1000) {
+                if (vGetData.size() >= 1000)
+                {
                     pto->PushMessage("getdata", vGetData);
                     vGetData.clear();
                 }
@@ -5145,9 +5103,9 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
             pto->PushMessage("getdata", vGetData);
         }
 
-        /*if (fSecMsgEnabled) {
+        if (fSecMsgEnabled) {
             SecureMsgSendData(pto, fSendTrickle); // should be in cs_main?
-        }*/
+        }
 
     }
     return true;
