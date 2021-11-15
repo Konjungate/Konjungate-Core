@@ -1,4 +1,7 @@
 *
 !support
 !crypto
+!deminode
+!database
+!fractal
 !.gitignore

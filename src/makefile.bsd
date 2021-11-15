@@ -86,7 +86,7 @@ DEBUGFLAGS=-g
 
 # CXXFLAGS can be specified on the make command line, so we use xCXXFLAGS that only
 # adds some defaults in front. Unfortunately, CXXFLAGS=... $(CXXFLAGS) does not work.
-xCXXFLAGS=-O0 -msse2 -pthread -Wall -Wextra -Wno-ignored-qualifiers -Wformat -Wformat-security -Wno-unused-parameter \
+xCXXFLAGS=-O0 -msse2 -pthread -Wall -Wextra -Wno-ignored-qualifiers -Wformat -Wformat-security -Wno-unused-parameter -std=c++11 \
     $(DEBUGFLAGS) $(DEFS) $(HARDENING) $(CXXFLAGS)
 
 # LDFLAGS can be specified on the make command line, so we use xLDFLAGS that only
@@ -146,6 +146,9 @@ OBJS= \
     obj/masternode-payments.o \
     obj/rpcmnengine.o \
     obj/spork.o \
+    obj/deminode/demimodule.o \
+    obj/deminode/deminet.o \
+    obj/deminode/demisync.o \
     obj/crypto/common/hmac_sha256.o \
     obj/crypto/common/hmac_sha512.o \
     obj/crypto/common/ripemd160.o \
@@ -154,6 +157,12 @@ OBJS= \
     obj/crypto/common/sha512.o \
     obj/crypto/common/aes_helper.o \
     obj/crypto/common/bmw.o \
+    obj/fractal/fractalcontract.o \
+    obj/fractal/fractaldataob.o \
+    obj/fractal/fractalengine.o \
+    obj/fractal/fractalnftbase.o \
+    obj/fractal/fractalnft.o \
+    obj/fractal/fractalparams.o \
     obj/crypto/common/echo.o
 
 ifeq (${USE_WALLET}, 1)

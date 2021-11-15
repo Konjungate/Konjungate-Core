@@ -64,7 +64,7 @@ background-color: #080808;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background: transparent;
-background-color: rgb(20, 20, 20, 0.35);
+background-color: rgba(20, 20, 20, 0.35);
 </string>
      </property>
      <layout class="QGridLayout" name="gridLayout01">
@@ -588,7 +588,7 @@ background-color: transparent;</string>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(10, 120, 205, 0.4);</string>
+           <string notr="true">background-color: rgba(10, 120, 205, 0.4);</string>
           </property>
           <property name="text">
            <string>Jump to Block</string>
@@ -647,7 +647,7 @@ background-color: transparent;</string>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(10, 120, 205, 0.4);</string>
+           <string notr="true">background-color: rgba(10, 120, 205, 0.4);</string>
           </property>
           <property name="text">
            <string>Decode Transaction</string>

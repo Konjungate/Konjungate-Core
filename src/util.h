@@ -113,6 +113,7 @@ inline void MilliSleep(int64_t n)
     boost::this_thread::sleep(boost::posix_time::milliseconds(n));
 #endif
 }
+//Standard args
 
 //Dark features
 extern bool fMasterNode;
@@ -149,9 +150,10 @@ extern int64_t nLiveForkToggle;
 extern int64_t nMasterNodeChecksDelayBaseTime;
 //MasterNode peer IP advanced relay system toggle
 extern bool fMnAdvRelay;
-//Logic for lock/unlock GUI icon
-//does not affect daemon operation
+// Logic for lock/unlock GUI icon, does not affect daemon operation
 extern bool settingsStatus;
+// Demi-node toggle
+extern bool fDemiNodes;
 //will sync until this block height. default -1 which represents disabled
 extern int maxBlockHeight;
 
