@@ -1,4 +1,4 @@
-# Konjungate Core v1.1.6.3
+# Konjungate Core v1.1.7.11
 
 Name: Konjungate<br/>
 Ticker: KONJ<br/>
@@ -124,7 +124,7 @@ Along with NFTs we have adapted the technology in the Fractal platform to launch
 
 ### NFT (Non-fungible Token)
 Introducing altcoins to NFTs, as of v1.1.6.3 prototype now features NFT capabilities. This offers the ability to artists, musicians and animators alike a unified place to store, encrypt, protect, sell and share their artwork! Current compatible formats are JPG/JPEG, PNG, GIF (Animation), OGG VORBIS (Audio) in a square format for initial testing for pictures/animation and up to 5 minute sound files for OGG VORBIS audio. This is a soft limit done only for initial testing. These limits will soon be lifted for full release in future versions. This will also be how we store a student's degrees, transcripts, etc.
-We will enable NFT's on our international art project https://wendy.network once we go ppublic with it!
+We will enable NFT's on our international art project https://wendy.network once we go public with it!
 
 ## Blockchain Technology
 The Konjungate [KONJ] Blockchain is an experimental smart contract platform protocol that enables instant payments to anyone, anywhere in the world in a private, secure manner. Konjungate [KONJ] uses peer-to-peer blockchain technology developed by Konjungate to operate with no central authority: managing transactions, execution of contracts, and issuing money are carried out collectively by the network. Konjungate [KONJ] is the name of open source software which enables the use of this protocol.
