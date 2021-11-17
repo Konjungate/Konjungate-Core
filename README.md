@@ -217,6 +217,7 @@ port=19417
 rpcport=18495
 rpcconnect=127.0.0.1
 rpcallowip=127.0.0.1
+daemon=1
 deminodes=1
 demimaxdepth=200
 addnode=188.166.109.87
