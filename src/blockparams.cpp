@@ -281,9 +281,10 @@ void VRX_ThreadCurve(const CBlockIndex* pindexLast, bool fProofOfStake)
 
     // Version 1.0
     //
-    if(prevPoW < prevPoS && !fProofOfStake){if((prevPoS-prevPoW) > 3) TerminalAverage /= 3;}
+    int64_t nNow = nBestHeight; int64_t nThen = 10; // Toggle skew system fork - Mon, 01 May 2017 00:00:00 GMT
+    if(nNow > nThen){if(prevPoW < prevPoS && !fProofOfStake){if((prevPoS-prevPoW) > 3) TerminalAverage /= 3;}
     else if(prevPoW > prevPoS && fProofOfStake){if((prevPoW-prevPoS) > 3) TerminalAverage /= 3;}
-    if(TerminalAverage < 0.5) TerminalAverage = 0.5; // limit skew to halving
+    if(TerminalAverage < 0.5) TerminalAverage = 0.5;} // limit skew to halving
 
     // Version 1.1 curve-patch
     //
@@ -294,9 +295,8 @@ void VRX_ThreadCurve(const CBlockIndex* pindexLast, bool fProofOfStake)
         cntTime = BlockVelocityType->GetBlockTime();
         prvTime = BlockVelocityType->pprev->GetBlockTime();
         difTime = cntTime - prvTime;
-        minuteRounds = 15;
+        hourRounds = 1;
         difCurve = 2;
-        uint64_t loopbrk = (5 + 15);// TODO: Clean this up
         fCRVreset = false;
 
         // Debug print toggle
@@ -307,26 +307,14 @@ void VRX_ThreadCurve(const CBlockIndex* pindexLast, bool fProofOfStake)
         }
         if(fDebug) VRXswngdebug();
 
-        // Skew Patch for Konjungate
-        // TODO: Remove after rolling genesis feature launches
-        if(pindexLast->nHeight > 63000) {
-            minuteRounds = 45;
-            loopbrk = (5 + 60);
-        }
         // Version 1.2 Extended Curve Run Upgrade
-        if(pindexLast->nHeight > 7500) {
+        if(pindexLast->GetBlockTime() > nPaymentUpdate_2) {// ON Tuesday, Jul 02, 2019 12:00:00 PM PDT
             // Set unbiased comparison
             difTime = blkTime - cntTime;
             // Run Curve
-            while(difTime > (minuteRounds * 60)) {
-                // Skip Extended Curve Run if diff is too low
-                if(VRX_GetPrevDiff(fProofOfStake) < 1) {
-                    // Skip
-                    break;
-                }
-
-                // Break loop after 65 minutes, otherwise time threshold will auto-break loop
-                if(minuteRounds > loopbrk){
+            while(difTime > (hourRounds * 60 * 60)) {
+                // Break loop after 5 hours, otherwise time threshold will auto-break loop
+                if (hourRounds > 5){
                     fCRVreset = true;
                     break;
                 }
@@ -337,15 +325,8 @@ void VRX_ThreadCurve(const CBlockIndex* pindexLast, bool fProofOfStake)
                 // Increase Curve per round
                 difCurve ++;
                 // Move up an hour per round
-                //
-                // Skew Patch for PupaCoin
-                // TODO: Remove after rolling genesis feature launches
-                if(pindexLast->nHeight > 63000) {
-                    minuteRounds += 5;
-                } else {
-                    minuteRounds ++;
-                }
-                           }
+                hourRounds ++;
+            }
         } else {// Version 1.1 Standard Curve Run
             if(difTime > (hourRounds+0) * 60 * 60) { TerminalAverage /= difCurve; }
             if(difTime > (hourRounds+1) * 60 * 60) { TerminalAverage /= difCurve; }
