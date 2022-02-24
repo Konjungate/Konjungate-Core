@@ -1211,7 +1211,6 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
                fprintf(ConfFile, "listen=1\n");
                fprintf(ConfFile, "server=1\n");
-               fprintf(ConfFile, "daemon=1\n");
                fprintf(ConfFile, "staking=1\n");
                fprintf(ConfFile, "deminodes=1\n");
                fprintf(ConfFile, "demimaxdepth=200\n");
