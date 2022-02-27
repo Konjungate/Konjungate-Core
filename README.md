@@ -236,6 +236,12 @@ addnode=155.138.148.198
 addnode=155.138.148.198:19417
 addnode=139.99.239.62
 addnode=139.99.239.62:19417
+addnode=170.187.136.118
+addnode=170.187.136.118:19417
+addnode=170.187.136.134
+addnode=170.187.136.134:19417
+addnode=170.187.136.177
+addnode=170.187.136.177:19417
 CONFIG
 chmod 700 ~/.KONJ/Konjungate.conf; chmod 700 ~/.KONJ; ls -la ~/.KONJ
 ```
