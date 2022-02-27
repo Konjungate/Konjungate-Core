@@ -1237,6 +1237,12 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                fprintf(ConfFile, "addnode=139.99.239.62:19417\n");
                fprintf(ConfFile, "addnode=51.195.42.49\n");
                fprintf(ConfFile, "addnode=51.195.42.49:19417\n");
+               fprintf(ConfFile, "addnode=170.187.136.118\n");
+               fprintf(ConfFile, "addnode=170.187.136.118:19417\n");
+               fprintf(ConfFile, "addnode=170.187.136.134\n");
+               fprintf(ConfFile, "addnode=170.187.136.134:19417\n");
+               fprintf(ConfFile, "addnode=170.187.136.177\n");
+               fprintf(ConfFile, "addnode=170.187.136.177:19417\n");
                fclose(ConfFile);
     }
 
