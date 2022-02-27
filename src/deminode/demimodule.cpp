@@ -5,6 +5,8 @@
 #include "demimodule.h"
 #include "../util.h"
 
+#include <boost/filesystem/fstream.hpp>
+
 bool fDemiFound = false;
 
 boost::filesystem::path GetDemiConfigFile()
@@ -28,14 +30,14 @@ void ReadDemiConfigFile(std::string peerReadAddr)
                fprintf(ConfFile, "170.187.136.118:19417\n");
                fprintf(ConfFile, "170.187.136.134\n");
                fprintf(ConfFile, "170.187.136.134:19417\n");
-               /*fprintf(ConfFile, "170.187.136.177\n");
+               fprintf(ConfFile, "170.187.136.177\n");
                fprintf(ConfFile, "170.187.136.177:19417\n");
                fprintf(ConfFile, "155.138.148.198\n");
                fprintf(ConfFile, "139.99.239.62:19417\n");
                fprintf(ConfFile, "51.195.42.49\n");
                fprintf(ConfFile, "51.195.42.49:19417\n");
                fprintf(ConfFile, "51.68.175.13\n");
-               fprintf(ConfFile, "51.68.175.13:19417\n");*/
+               fprintf(ConfFile, "51.68.175.13:19417\n");
 
                fclose(ConfFile);
     }
