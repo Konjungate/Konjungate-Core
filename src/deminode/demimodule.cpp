@@ -36,6 +36,7 @@ void ReadDemiConfigFile(std::string peerReadAddr)
                fprintf(ConfFile, "51.195.42.49:19417\n");
                fprintf(ConfFile, "51.68.175.13\n");
                fprintf(ConfFile, "51.68.175.13:19417\n");
+
                fclose(ConfFile);
     }
 
