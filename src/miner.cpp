@@ -376,7 +376,7 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
 
             // Check for payment update fork
             if(pindexBest->GetBlockTime() > 0){
-                if(pindexBest->GetBlockTime() > nPaymentUpdate_1){ // Monday, May 20, 2019 12:00:00 AM
+                if(pindexBest->nHeight > 0){ // Monday, May 20, 2019 12:00:00 AM
                     // masternode/devops payment
                     bool hasPayment = true;
                     bool bMasterNodePayment = true;// TODO: Setup proper network toggle
@@ -431,19 +431,20 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                             if(masternodePayments.GetWinningMasternode(pindexPrev->nHeight+1, mn_payee, vin)){
                                 LogPrintf("CreateNewBlock(): Found relayed Masternode winner!\n");
                             } else {
-                            LogPrintf("CreateNewBlock(): WARNING: No MasterNodes online to pay!\n");
+                                LogPrintf("CreateNewBlock(): WARNING: Could not find relayed Masternode winner!\n");
                                 mn_payee = do_payee;
                             }
                         } else {
-                            LogPrintf("CreateNewBlock(): WARNING: Could not find relayed Masternode winner!\n");
+                            LogPrintf("CreateNewBlock(): WARNING: No MasterNodes online to pay!\n");
                             mn_payee = do_payee;
                         }
                     } else {
                         hasPayment = false;
                     }
+
                     int64_t blockReward = GetProofOfWorkReward(pindexPrev->nHeight + 1, nFees);
-                    CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockReward);
-                    CAmount devopsPayment = GetDevOpsPayment(pindexPrev->nHeight, blockReward);
+                    CAmount masternodePayment = GetMasternodePayment(nHeight, blockReward);
+                    CAmount devopsPayment = GetDevOpsPayment(nHeight, blockReward);
 
                     if (hasPayment) {
                         pblock->vtx[0].vout.resize(3);
@@ -464,7 +465,7 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                     masternodePayment, address2.ToString().c_str());
                     LogPrintf("CreateNewBlock(): Devops payment %lld to %s\n",
                     devopsPayment, address4.ToString().c_str());
-                
+
                     //Refund
                     if(pindexBest->nHeight >= nPaymentUpdate_4 && pindexBest->nHeight < nEndOfRefund)
                     {

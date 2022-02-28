@@ -81,7 +81,7 @@ void CMNenginePool::SetNull(){
     std::srand(seed);
 }
 
-bool CMNenginePool::SetCollateralAddress(const std::string strAddress){
+bool CMNenginePool::SetCollateralAddress(std::string strAddress){
     CKonjungateAddress address;
     if (!address.SetString(strAddress))
     {
@@ -1039,14 +1039,24 @@ bool CMNengineSigner::IsVinAssociatedWithPubkey(CTxIn& vin, CPubKey& pubkey){
     return false;
 }
 
-bool CMNengineSigner::SetKey(const std::string &strSecret, std::string& errorMessage, CKey& key, CPubKey& pubkey){
+bool CMNengineSigner::IsVinTier2(CTxIn& vin){
+    CTransaction txVin;
+    uint256 hash;
+    if(GetTransaction(vin.prevout.hash, txVin, hash)){
+        // Cleaned ambigious function
+    }
+
+    return false;
+}
+
+bool CMNengineSigner::SetKey(std::string strSecret, std::string& errorMessage, CKey& key, CPubKey& pubkey){
     CKonjungateSecret vchSecret;
     bool fGood = vchSecret.SetString(strSecret);
 
     if (!fGood) {
+        LogPrintf("CMNengineSetKey(): WARNING - Sign message failed");
         errorMessage = _("Invalid private key.");
         return false;
-        LogPrintf("CMNengineSetKey(): WARNING - Sign message failed");
     }
 
     key = vchSecret.GetKey();
@@ -1055,7 +1065,7 @@ bool CMNengineSigner::SetKey(const std::string &strSecret, std::string& errorMes
     return true;
 }
 
-bool CMNengineSigner::SignMessage(const std::string &strMessage, std::string& errorMessage, vector<unsigned char>& vchSig, CKey key)
+bool CMNengineSigner::SignMessage(std::string strMessage, std::string& errorMessage, vector<unsigned char>& vchSig, CKey key)
 {
     CHashWriter ss(SER_GETHASH, 0);
     ss << strMessageMagic;
@@ -1069,7 +1079,7 @@ bool CMNengineSigner::SignMessage(const std::string &strMessage, std::string& er
     return true;
 }
 
-bool CMNengineSigner::VerifyMessage(CPubKey pubkey, vector<unsigned char>& vchSig, const std::string &strMessage, std::string& errorMessage)
+bool CMNengineSigner::VerifyMessage(CPubKey pubkey, vector<unsigned char>& vchSig, std::string strMessage, std::string& errorMessage)
 {
     CHashWriter ss(SER_GETHASH, 0);
     ss << strMessageMagic;
@@ -1178,14 +1188,14 @@ void CMNenginePool::RelayIn(const std::vector<CTxDSIn>& vin, const int64_t& nAmo
     }
 }
 
-void CMNenginePool::RelayStatus(const int sessionID, const int newState, const int newEntriesCount, const int newAccepted, const std::string &error)
+void CMNenginePool::RelayStatus(const int sessionID, const int newState, const int newEntriesCount, const int newAccepted, const std::string error)
 {
     LOCK(cs_vNodes);
     BOOST_FOREACH(CNode* pnode, vNodes)
         pnode->PushMessage("dssu", sessionID, newState, newEntriesCount, newAccepted, error);
 }
 
-void CMNenginePool::RelayCompletedTransaction(const int sessionID, const bool error, const std::string &errorMessage)
+void CMNenginePool::RelayCompletedTransaction(const int sessionID, const bool error, const std::string errorMessage)
 {
     LOCK(cs_vNodes);
     BOOST_FOREACH(CNode* pnode, vNodes)

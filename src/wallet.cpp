@@ -1455,10 +1455,10 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
             for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
                 bool found = false;
                 if(coin_type == ONLY_NOT10000IFMN) {
-                    found = !(fMasterNode && pcoin->vout[i].nValue == MasternodeCollateral(pindexBest->nHeight)*COIN);
+                    found = !(fMasterNode || pcoin->vout[i].nValue == MasternodeCollateral(pindexBest->nHeight)*COIN);
                 } else if (coin_type == ONLY_NONDENOMINATED_NOT10000IFMN){
                     if (IsCollateralAmount(pcoin->vout[i].nValue)) continue; // do not use collateral amounts
-                    if(fMasterNode) found = pcoin->vout[i].nValue != MasternodeCollateral(pindexBest->nHeight)*COIN; // do not use Hot MN funds
+                    if(pcoin->vout[i].nValue != MasternodeCollateral(pindexBest->nHeight)*COIN) found = pcoin->vout[i].nValue; // do not use any MN funds
                 } else {
                     found = true;
                 }
@@ -1509,10 +1509,10 @@ void CWallet::AvailableCoinsMN(vector<COutput>& vCoins, bool fOnlyConfirmed, con
             for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
                 bool found = false;
                 if(coin_type == ONLY_NOT10000IFMN) {
-                    found = !(fMasterNode && pcoin->vout[i].nValue == MasternodeCollateral(pindexBest->nHeight)*COIN);
+                    found = !(fMasterNode || pcoin->vout[i].nValue == MasternodeCollateral(pindexBest->nHeight)*COIN);
                 } else if (coin_type == ONLY_NONDENOMINATED_NOT10000IFMN){
                     if (IsCollateralAmount(pcoin->vout[i].nValue)) continue; // do not use collateral amounts
-                    if(fMasterNode) found = pcoin->vout[i].nValue != MasternodeCollateral(pindexBest->nHeight)*COIN; // do not use Hot MN funds
+                    if(pcoin->vout[i].nValue != MasternodeCollateral(pindexBest->nHeight)*COIN) found = pcoin->vout[i].nValue; // do not use any MN funds
                 } else {
                     found = true;
                 }
@@ -3217,8 +3217,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     }
 
     int64_t blockValue = nCredit;
-    int64_t masternodePayment = GetMasternodePayment(pindexPrev->nHeight, nReward);
-    int64_t devopsPayment = GetDevOpsPayment(pindexPrev->nHeight, nReward); // TODO: Activate devops
+    int64_t masternodePayment = GetMasternodePayment(pindexPrev->nHeight+1, nReward);
+    int64_t devopsPayment = GetDevOpsPayment(pindexPrev->nHeight+1, nReward); // TODO: Activate devops
 
 
     // Set output amount
@@ -3318,7 +3318,6 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             txNew.vout[txNew.vout.size()-1].nValue = nBlockStandardRefund;
         }
     }
-
 
     // Sign
     int nIn = 0;

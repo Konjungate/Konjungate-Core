@@ -186,7 +186,7 @@ exploit even if a vulnerability is found, you can take the following measures:
     randomly located as well.
 
     On an Amd64 processor where a library was not compiled with -fPIC, this will cause an error
-    such as: "relocation R_X86_64_32 against `......' can not be used when making a shared object;"
+    such as: "relocation R_X86_64_32 against `......' can not be used when making a shared object;"`
 
     To build with PIE, use:
     make -f makefile.unix ... -e PIE=1

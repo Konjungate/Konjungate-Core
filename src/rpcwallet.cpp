@@ -251,7 +251,7 @@ Value getnewaddress(const Array& params, bool fHelp)
 }
 
 
-CKonjungateAddress GetAccountAddress(const std::string strAccount, bool bForceNew=false)
+CKonjungateAddress GetAccountAddress(string strAccount, bool bForceNew=false)
 {
     CWalletDB walletdb(pwalletMain->strWalletFile);
 
@@ -628,7 +628,7 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
 }
 
 
-void GetAccountAddresses(const std::string &strAccount, set<CTxDestination>& setAddress)
+void GetAccountAddresses(string strAccount, set<CTxDestination>& setAddress)
 {
     BOOST_FOREACH(const PAIRTYPE(CTxDestination, string)& item, pwalletMain->mapAddressBook)
     {

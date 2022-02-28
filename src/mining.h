@@ -1,14 +1,13 @@
 // Copyright (c) 2016-2020 The CryptoCoderz Team / Espers
 // Copyright (c) 2018-2020 The CryptoCoderz Team / INSaNe project
 // Copyright (c) 2018-2020 The Rubix project
-// Copyright (c) 2020 The Konjungate project
+// Copyright (c) 2018-2022 The Konjungate project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef BITCOIN_MINING_H
 #define BITCOIN_MINING_H
 
 #include "bignum.h"
-
 /** Minimum nCoinAge required to stake PoS */
 static const unsigned int nStakeMinAge = 2 / 60; // 30 minutes
 /** Time to elapse before new modifier is computed */
@@ -40,7 +39,9 @@ inline int64_t MasternodeCollateral(int nHeight) { return 2750000; } // 2,750,00
 /** Coinbase transaction outputs can only be staked after this number of new blocks (network rule) */
 static const int nStakeMinConfirmations = 5;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
-static const int nCoinbaseMaturity = 15; // 15-TXs | 90-Mined
+static const int nTransactionMaturity = 15; // 15-TXs
+/** Coinbase generated outputs can only be spent after this number of new blocks (network rule) */
+static const int nCoinbaseMaturity = 90; // 90-Mined
 
 
 #endif // BITCOIN_MINING_H

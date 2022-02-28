@@ -154,18 +154,22 @@ uint64_t CMasternodePayments::CalculateScore(uint256 blockHash, CTxIn& vin)
 
 bool CMasternodePayments::GetWinningMasternode(int nBlockHeight, CScript& payee, CTxIn& vin)
 {
-    if(IsInitialBlockDownload()) return false;
-    
+    // Try to get frist masternode in our list
     CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
-    
-    if(winningNode)
-    {
-        payee = GetScriptForDestination(winningNode->pubkey.GetID());
-        vin = winningNode->vin;
-        return true; 
+    // If initial sync or we can't find a masternode in our list
+    if(IsInitialBlockDownload() || !winningNode || !ProcessBlock(nBlockHeight)){
+        // Return false (for sanity, we have no masternode to pay)
+        return false;
     }
-
-    return false;
+    // Set masternode winner to pay
+    BOOST_FOREACH(CMasternodePaymentWinner& winner, vWinning){
+        payee = winner.payee;
+        vin = winner.vin;
+    }
+    // Check Tier level of MasterNode winner
+    fMnT2 = mnEngineSigner.IsVinTier2(vin);
+    // Return true if previous checks pass
+    return true;
 }
 
 bool CMasternodePayments::AddWinningMasternode(CMasternodePaymentWinner& winnerIn)
@@ -253,9 +257,7 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight)
     unsigned int nHash;
     memcpy(&nHash, &hash, 2);
 
-    bool fNodeisCapable;
-
-    LogPrintf(" ProcessBlock Start nHeight %d - vin %s. \n", nBlockHeight, activeMasternode.vin.ToString().c_str());
+    LogPrintf(" Masternode-Payments::ProcessBlock - Start nHeight %d - vin %s. \n", nBlockHeight, activeMasternode.vin.ToString().c_str());
 
     // TODO: Rewrite masternode winner sync/logging
     //std::vector<CTxIn> vecLastPayments;
@@ -272,9 +274,13 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight)
     // For now just get the current highest ranking MasterNode
     // and relay that (if capable)
     CMasternode *pmn = mnodeman.GetCurrentMasterNode(1);
+
     if(pmn->protocolVersion < MIN_MASTERNODE_BSC_RELAY) {
         LogPrintf("Masternode-Payments::ProcessBlock - WARNING - Capability issue, masternode: %d is unable to handle relay requests!\n", pmn->protocolVersion);
         //return false;
+    }
+
+    if(pmn != NULL)
     {
         LogPrintf("  Found MasterNode winner to pay\n");//Found by FindOldestNotInVec
 
@@ -282,32 +288,13 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight)
         newWinner.nBlockHeight = nBlockHeight;
         newWinner.vin = pmn->vin;
 
-        //if(pmn->donationPercentage > 0 && (nHash % 100) <= (unsigned int)pmn->donationPercentage) {
-            //newWinner.payee = pmn->donationAddress;
-       // } else {
-            newWinner.payee = GetScriptForDestination(pmn->pubkey.GetID());
-        //}
-
+        newWinner.payee = GetScriptForDestination(pmn->pubkey.GetID());
         payeeSource = GetScriptForDestination(pmn->pubkey.GetID());
     }
 
     //if we can't find new MN to get paid, pick first active MN counting back from the end of vecLastPayments list
     if(newWinner.nBlockHeight == 0 && nMinimumAge > 0)
     {
-        LOCK(cs_vNodes);
-        BOOST_FOREACH(CNode* pnode, vNodes){
-            if(pnode->nVersion >= MIN_MASTERNODE_BSC_RELAY) {
-                LogPrintf(" Capable peers found (Masternode relay) \n");
-                fNodeisCapable = true;
-            } else {
-                LogPrintf(" Cannot relay with peers (Masternode relay) \n");
-                fNodeisCapable = false;
-                break;
-            }
-        }
-
-        if(!fNodeisCapable) return false;
-
         LogPrintf(" Finding logged winners is not currently supported (SKIPPING) \n");//Find by reverse
 
         /*BOOST_REVERSE_FOREACH(CTxIn& vinLP, vecLastPayments)
@@ -315,10 +302,6 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight)
             CMasternode* pmn = mnodeman.Find(vinLP);
             if(pmn != NULL)
             {
-                if(pmn->protocolVersion < MIN_MASTERNODE_BSC_RELAY) {
-                    fNodeisCapable = false;
-                    break;
-                }
                 pmn->Check();
                 if(!pmn->IsEnabled()) continue;
 
@@ -335,11 +318,9 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight)
                 payeeSource = GetScriptForDestination(pmn->pubkey.GetID());
 
                 break; // we found active MN
-            } */
-        }
+            }
+        }*/
     }
-
-    if(!fNodeisCapable) return false;
 
     if(newWinner.nBlockHeight == 0) return false;
 
@@ -384,8 +365,8 @@ void CMasternodePayments::Relay(CMasternodePaymentWinner& winner)
     vInv.push_back(inv);
     LOCK(cs_vNodes);
     BOOST_FOREACH(CNode* pnode, vNodes){
-        if(pnode->nVersion >= MIN_MASTERNODE_BSC_RELAY) { //only send to capable nodes
-            pnode->PushMessage("inv", vInv);
+        if(NodeisCapable()) { // Only send to capable nodes
+            //pnode->PushMessage("inv", vInv);
         }
     }
 }
@@ -400,7 +381,7 @@ void CMasternodePayments::Sync(CNode* node)
 }
 
 
-bool CMasternodePayments::SetPrivKey(const std::string strPrivKey)
+bool CMasternodePayments::SetPrivKey(std::string strPrivKey)
 {
     CMasternodePaymentWinner winner;
 

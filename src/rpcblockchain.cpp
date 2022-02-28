@@ -47,11 +47,7 @@ double GetDifficulty(const CBlockIndex* blockindex)
 double GetPoWMHashPS()
 {
     if (pindexBest->nHeight >= Params().EndPoWBlock()){
-        if(pindexBest->GetBlockTime() > nPoWToggle){
-            if(pindexBest->nHeight >= Params().EndPoWBlock_v2()){
-                return 0;
-            }
-        }
+        return 0;
     }
 
     int nPoWInterval = 72;
