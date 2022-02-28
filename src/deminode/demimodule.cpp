@@ -7,6 +7,7 @@
 
 #include <boost/filesystem/fstream.hpp>
 
+
 bool fDemiFound = false;
 
 boost::filesystem::path GetDemiConfigFile()

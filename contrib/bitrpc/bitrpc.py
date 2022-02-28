@@ -206,16 +206,6 @@ elif cmd == "listtransactions":
 	except:
 		print "\n---An error occurred---\n"
 
-elif cmd == "liststakerewards":
-	try:
-		count = raw_input("Number of transactions (optional): ")
-		try:
-			print access.liststakerewards(count)
-		except:
-			print access.liststakerewards()
-	except:
-		print "\n---An error occurred---\n"
-
 elif cmd == "move":
 	try:
 		frm = raw_input("From: ")

@@ -80,7 +80,7 @@ static int BLOCK_REORG_THRESHOLD = BLOCK_REORG_MAX_DEPTH + BLOCK_REORG_OVERRIDE_
 /** Depth for rolling checkpoing block */
 static const int BLOCK_TEMP_CHECKPOINT_DEPTH = 120;
 /** Velocity Factor handling toggle */
-inline bool FACTOR_TOGGLE(int nHeight) { return TestNet() || nHeight > 700000; }
+inline bool FACTOR_TOGGLE(int nHeight) { return TestNet() || nHeight > 500; }
 /** Defaults to yes, adaptively increase/decrease max/min/priority along with the re-calculated block size **/
 static const unsigned int DEFAULT_SCALE_BLOCK_SIZE_OPTIONS = 1;
 /** Future drift value */
@@ -159,7 +159,7 @@ void ThreadImport(std::vector<boost::filesystem::path> vImportFiles);
 bool CheckProofOfWork(uint256 hash, unsigned int nBits);
 bool IsInitialBlockDownload();
 bool IsConfirmedInNPrevBlocks(const CTxIndex& txindex, const CBlockIndex* pindexFrom, int nMaxDepth, int& nActualDepth);
-std::string GetWarnings(const std::string strFor);
+std::string GetWarnings(std::string strFor);
 bool GetTransaction(const uint256 &hash, CTransaction &tx, uint256 &hashBlock);
 uint256 WantedByOrphan(const COrphanBlock* pblockOrphan);
 const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfStake);
@@ -895,7 +895,6 @@ public:
     bool SignBlock(CWallet& keystore, int64_t nFees);
     bool CheckBlockSignature() const;
     void RebuildAddressIndex(CTxDB& txdb);
-    bool IsRewardStructureValid(const CBlockIndex* pindexLast);
 
 private:
     bool SetBestChainInner(CTxDB& txdb, CBlockIndex *pindexNew);

@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Cryptocoin Revival Foundation
 // Copyright (c) 2015-2020 The CryptoCoderz Team / Espers
 // Copyright (c) 2018-2020 The Rubix Project
-// Copyright (c) 2018-2020 The Konjungate Project
+// Copyright (c) 2018-2022 The Konjungate project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -53,7 +53,6 @@ bool Velocity(CBlockIndex* prevBlock, CBlock* block, bool fFactor_tx)
     int64_t OLDstamp = 0;
     int64_t TXstampC = 0;
     int64_t TXstampO = 0;
-    int64_t devopsPayment = 0;
     int64_t SYScrntstamp = 0;
     int64_t SYSbaseStamp = 0;
     int nHeight = prevBlock->nHeight+1;
@@ -154,6 +153,9 @@ bool tx_Factor(CBlockIndex* prevBlock, CBlock* block)
     CAmount tx_MapIn_values = 0;
     CAmount tx_MapOut_values = 0;
     CAmount tx_threshold = 0;
+    // Negative Stake Refund Values
+    bool containsRefundPayment = false;
+    int nRefundIndex;
 
     if(block->IsProofOfStake()) {
         tx_threshold = GetProofOfStakeReward(prevBlock, 0, 0);
@@ -161,41 +163,124 @@ bool tx_Factor(CBlockIndex* prevBlock, CBlock* block)
         tx_threshold = GetProofOfWorkReward(prevBlock->nHeight+1, 0);
     }
 
-    // Set factor values
-    BOOST_FOREACH(const CTransaction& tx, block->vtx)
-    {
-        // Load TX inputs
-        CTxDB txdb("r");
-        MapPrevTx mapInputs;
-        map<uint256, CTxIndex> mapUnused;
-        bool fInvalid = false;
-        // Ensure we can fetch inputs
-        if (!tx.FetchInputs(txdb, mapUnused, true, false, mapInputs, fInvalid))
+    // Enforce security after negative stake refund
+    if(prevBlock->nHeight > 700000) {
+        // Set factor values
+        BOOST_FOREACH(const CTransaction& tx, block->vtx)
         {
-            LogPrintf("DENIED: Invalid TX found during FetchInputs\n");
-            return false;
+            // Load TX inputs
+            CTxDB txdb("r");
+            MapPrevTx mapInputs;
+            map<uint256, CTxIndex> mapUnused;
+            bool fInvalid = false;
+            // Ensure we can fetch inputs
+            if (!tx.FetchInputs(txdb, mapUnused, true, false, mapInputs, fInvalid))
+            {
+                LogPrintf("DENIED: Invalid TX found during FetchInputs\n");
+                return false;
+            }
+            // Authenticate submitted block's TXs
+            tx_MapIn_values = tx.GetValueMapIn(mapInputs);
+            tx_MapOut_values = tx.GetValueOut();
+            if(tx_inputs_values + tx_MapIn_values >= 0) {
+                tx_inputs_values += tx_MapIn_values;
+            } else {
+                LogPrintf("DENIED: overflow detected tx_inputs_values + tx.GetValueMapIn(mapInputs)\n");
+                return false;
+            }
+            if(tx_outputs_values + tx_MapOut_values >= 0) {
+                tx_outputs_values += tx_MapOut_values;
+            } else {
+                LogPrintf("DENIED: overflow detected tx_outputs_values + tx.GetValueOut()\n");
+                return false;
+            }
         }
-        // Authenticate submitted block's TXs
-        tx_MapIn_values = tx.GetValueMapIn(mapInputs);
-        tx_MapOut_values = tx.GetValueOut();
-        if(tx_inputs_values + tx_MapIn_values >= 0) {
-            tx_inputs_values += tx_MapIn_values;
-        } else {
-            LogPrintf("DENIED: overflow detected tx_inputs_values + tx.GetValueMapIn(mapInputs)\n");
-            return false;
-        }
-        if(tx_outputs_values + tx_MapOut_values >= 0) {
-            tx_outputs_values += tx_MapOut_values;
-        } else {
-            LogPrintf("DENIED: overflow detected tx_outputs_values + tx.GetValueOut()\n");
+        // Ensure input/output sanity of transactions in the block
+        if((tx_inputs_values + tx_threshold) < tx_outputs_values)
+        {
+            LogPrintf("DENIED: block contains a tx input that is less that output\n");
             return false;
         }
     }
-    // Ensure input/output sanity of transactions in the block
-    if((tx_inputs_values + tx_threshold) < tx_outputs_values)
-    {
-        LogPrintf("DENIED: block contains a tx input that is less that output\n");
-        return false;
+
+    // Negative stake Refund starts after nPaymentUpdate_4
+    if(prevBlock->nHeight < nPaymentUpdate_4) {
+        LogPrintf("INFO: skipping negative stake refund, block height too low.\n");
+    } else {
+        if(prevBlock->nHeight < nEndOfRefund)
+        {
+            //
+            CTransaction cRewardTx = block->IsProofOfStake() ? block->vtx[1] : block->vtx[0];
+            //
+            if(block->IsProofOfStake())
+            {
+                int nVoutSize = cRewardTx.vout.size();
+        
+                if(prevBlock->nHeight < nEndOfRefund)
+                {
+                    if(nVoutSize < 5) {
+                        LogPrintf("DENIED: [Negative Stake Refund] not enough outputs in coinstake tx (%d)", nVoutSize); 
+                        return false;
+                    }
+
+                    if(cRewardTx.vout[nVoutSize-1].nValue == nBlockStandardRefund){
+                        containsRefundPayment = true;
+                        nRefundIndex = nVoutSize-1;
+                        nVoutSize -= 1;
+                    }
+                }
+
+                if(nVoutSize < 4) {
+                    LogPrintf("DENIED: [Negative Stake Refund] not enough outputs in coinstake tx (%d)", nVoutSize);           
+                    return false;
+                }
+            } else {
+                CTxOut txOut;
+                for (unsigned int i = 0; i < cRewardTx.vout.size(); i++)
+                {
+                    txOut = cRewardTx.vout[i];
+                    if(txOut.nValue == nBlockStandardRefund){
+                        containsRefundPayment = true;
+                        nRefundIndex = i;
+                    }
+                }
+            }
+            //
+            if(!containsRefundPayment) {
+                return error("DENIED: [Negative Stake Refund] refund payment missing or incorrect");
+            }
+        
+            if(!IsInitialBlockDownload())
+            {
+                int nHeightRefund = prevBlock->nHeight+1 - nNbrWrongBlocks;
+                CBlock blockRefund;
+                CBlockIndex* pBlockIndexRefund;
+                uint256 hash;
+                
+                pBlockIndexRefund = mapBlockIndex[hashBestChain];
+            
+                while (pBlockIndexRefund->nHeight > nHeightRefund) {
+                    pBlockIndexRefund = pBlockIndexRefund->pprev;
+                }
+
+                hash = *pBlockIndexRefund->phashBlock;
+            
+                pBlockIndexRefund = mapBlockIndex[hash];
+                blockRefund.ReadFromDisk(pBlockIndexRefund, true);
+
+                if(blockRefund.IsProofOfStake()) {
+                    CScript refundpayee = blockRefund.vtx[1].vout[1].scriptPubKey;
+                
+                    if (cRewardTx.vout[nRefundIndex].scriptPubKey != refundpayee) {
+                        LogPrintf("DENIED: [Negative Stake Refund] refund payee is incorrect");
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //
+            LogPrintf("INFO: skipping negative stake refund, refund phase now over.\n");
+        }
     }
 
     // Return success if we get here

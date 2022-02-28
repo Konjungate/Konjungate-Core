@@ -40,7 +40,7 @@ Secp256k1
 Versions used in this release:
 OpenSSL      1.0.1p
 Berkeley DB  4.8.30.NC
-Boost        1.57.0
+Boost        1.73.0
 miniupnpc    1.6
 Secp256k1    
 
@@ -98,3 +98,5 @@ DOS prompt:
     cd \Konjungate\src
     mingw32-make -f makefile.mingw
     strip Konjungated.exe
+
+^I'll clean this up later^

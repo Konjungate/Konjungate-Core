@@ -109,7 +109,8 @@ namespace Checkpoints
     const CBlockIndex* AutoSelectSyncCheckpoint()
     {
         const CBlockIndex *pindex = pindexBest;
-        // Ensure we have sufficient blocks to index
+        // Search backward for a block within max span and maturity window
+        // Taking into account our 120 block depth + reorganize depth
         if(pindexBest->nHeight < 500) {
             if(pindexBest->nHeight < 1) {
                 return pindex;
