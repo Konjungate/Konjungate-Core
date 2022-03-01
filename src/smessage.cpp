@@ -2590,6 +2590,11 @@ int SecureMsgScanMessage(uint8_t *pHeader, uint8_t *pPayload, uint32_t nPayload,
 
                     if (reportToGui)
                         NotifySecMsgInboxChanged(smsgInbox);
+                    std::string strCmd = GetArg("-messagenotify", "");
+                    if (!IsInitialBlockDownload() && !strCmd.empty())
+                    {
+                        boost::thread t(runCommand, strCmd); // thread runs free
+                    }
                     LogPrint("smessage", "SecureMsg saved to inbox, received with %s.\n", addressTo.c_str());
                 };
             };
