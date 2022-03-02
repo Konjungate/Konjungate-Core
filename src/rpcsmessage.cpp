@@ -630,6 +630,7 @@ Value smsginbox(const Array& params, bool fHelp)
             dbInbox.TxnBegin();
             
             leveldb::Iterator* it = dbInbox.pdb->NewIterator(leveldb::ReadOptions());
+            Array aMessages;
             while (dbInbox.NextSmesg(it, sPrefix, chKey, smsgStored))
             {
                 if (fCheckReadStatus
@@ -646,11 +647,15 @@ Value smsginbox(const Array& params, bool fHelp)
                     objM.push_back(Pair("to", smsgStored.sAddrTo));
                     objM.push_back(Pair("text", std::string((char*)&msg.vchMessage[0]))); // ugh
                     
-                    result.push_back(Pair("message", objM));
+                    // result.push_back(Pair("message", objM));
+                    aMessages.push_back(objM);
                 } else
                 {
-                    result.push_back(Pair("message", "Could not decrypt."));
-                };
+                    // result.push_back(Pair("message", "Could not decrypt."));
+                    Object objM;
+                    objM.push_back(Pair("error", "Could not decrypt."));
+                    aMessages.push_back(objM);
+                }
                 
                 if (fCheckReadStatus)
                 {
@@ -661,6 +666,8 @@ Value smsginbox(const Array& params, bool fHelp)
             };
             delete it;
             dbInbox.TxnCommit();
+
+            if(!aMessages.empty()) result.push_back(Pair("messages", aMessages));
             
             snprintf(cbuf, sizeof(cbuf), "%u messages shown.", nMessages);
             result.push_back(Pair("result", std::string(cbuf)));
@@ -735,6 +742,7 @@ Value smsgoutbox(const Array& params, bool fHelp)
             SecMsgStored smsgStored;
             MessageData msg;
             leveldb::Iterator* it = dbOutbox.pdb->NewIterator(leveldb::ReadOptions());
+            Array aMessages;
             while (dbOutbox.NextSmesg(it, sPrefix, chKey, smsgStored))
             {
                 uint32_t nPayload = smsgStored.vchMessage.size() - SMSG_HDR_LEN;
@@ -747,14 +755,19 @@ Value smsgoutbox(const Array& params, bool fHelp)
                     objM.push_back(Pair("to", smsgStored.sAddrTo));
                     objM.push_back(Pair("text", std::string((char*)&msg.vchMessage[0]))); // ugh
                     
-                    result.push_back(Pair("message", objM));
+                    // result.push_back(Pair("message", objM));
+                    aMessages.push_back(objM);
                 } else
                 {
-                    result.push_back(Pair("message", "Could not decrypt."));
-                };
+                    Object objM;
+                    objM.push_back(Pair("error", "Could not decrypt."));
+                    aMessages.push_back(objM);
+                }
                 nMessages++;
             };
             delete it;
+            
+            if(!aMessages.empty()) result.push_back(Pair("messages", aMessages));
             
             snprintf(cbuf, sizeof(cbuf), "%u sent messages shown.", nMessages);
             result.push_back(Pair("result", std::string(cbuf)));
