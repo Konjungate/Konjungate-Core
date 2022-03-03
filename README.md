@@ -1,4 +1,4 @@
-# Konjungate Core v1.1.6.3
+# Konjungate Core v1.1.7.11
 
 Name: Konjungate<br/>
 Ticker: KONJ<br/>
@@ -124,7 +124,7 @@ Along with NFTs we have adapted the technology in the Fractal platform to launch
 
 ### NFT (Non-fungible Token)
 Introducing altcoins to NFTs, as of v1.1.6.3 prototype now features NFT capabilities. This offers the ability to artists, musicians and animators alike a unified place to store, encrypt, protect, sell and share their artwork! Current compatible formats are JPG/JPEG, PNG, GIF (Animation), OGG VORBIS (Audio) in a square format for initial testing for pictures/animation and up to 5 minute sound files for OGG VORBIS audio. This is a soft limit done only for initial testing. These limits will soon be lifted for full release in future versions. This will also be how we store a student's degrees, transcripts, etc.
-We will enable NFT's on our international art project https://wendy.network once we go ppublic with it!
+We will enable NFT's on our international art project https://wendy.network once we go public with it!
 
 ## Blockchain Technology
 The Konjungate [KONJ] Blockchain is an experimental smart contract platform protocol that enables instant payments to anyone, anywhere in the world in a private, secure manner. Konjungate [KONJ] uses peer-to-peer blockchain technology developed by Konjungate to operate with no central authority: managing transactions, execution of contracts, and issuing money are carried out collectively by the network. Konjungate [KONJ] is the name of open source software which enables the use of this protocol.
@@ -145,10 +145,10 @@ Konjungate uses
 
 ```libsecp256k1,
 libgmp,
-Boost1.68, OR Boost1.58,  
-Openssl1.02r,
-Berkeley DB 6.2.32,
-QT5.12.1,
+Boost1.74  
+Openssl1.02u,
+Berkeley DB 6.2.38,
+QT5.15.2,
 to compile
 ```
 
@@ -172,7 +172,7 @@ Note: guide should be compatible with other Ubuntu versions from 14.04+
 
 ## Dependencies build and link
 
-```cd ~; wget http://download.oracle.com/berkeley-db/db-6.2.32.NC.tar.gz; tar zxf db-6.2.32.NC.tar.gz; cd db-6.2.32.NC/build_unix; ../dist/configure --enable-cxx --disable-shared; make; sudo make install; sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb-6.2.so /usr/lib/libdb-6.2.so; sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb_cxx-6.2.so /usr/lib/libdb_cxx-6.2.so; export BDB_INCLUDE_PATH="/usr/local/BerkeleyDB.6.2/include"; export BDB_LIB_PATH="/usr/local/BerkeleyDB.6.2/lib"```
+```cd ~; wget http://download.oracle.com/berkeley-db/db-6.2.32.NC.tar.gz; tar zxf db-6.2.32.NC.tar.gz; cd db-6.2.32.NC/build_unix; ../dist/configure --enable-cxx --disable-shared; make; sudo make install; sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb-6.2.so /usr/lib/libdb-6.2.so; sudo ln -s /usr/local/BerkeleyDB.6.2/lib/libdb_cxx-6.2.so /usr/lib/libdb_cxx-6.2.so; export BDB_INCLUDE_PATH="/usr/local/BerkeleyDB.6.2/include"; export BDB_LIB_PATH="/usr/local/BerkeleyDB.6.2/lib"; cd ~;```
 
 
 ## GitHub pull (Source Download)
@@ -210,23 +210,38 @@ If you recompiling some other time you don't have to repeat previous steps, but 
 cd ~; sudo ufw allow 19417/tcp; sudo ufw allow 18495/tcp; sudo ufw allow 22/tcp; sudo mkdir ~/.KONJ; cat << "CONFIG" >> ~/.KONJ/Konjungate.conf
 listen=1
 server=1
-daemon=1
-testnet=0
-rpcuser=KONJrpcuser
-rpcpassword=SomeCrazyVeryVerySecurePasswordHere
-rpcport=18495
+maxconnections=150
+rpcuser=yourusername
+rpcpassword=xx
 port=19417
+rpcport=18495
 rpcconnect=127.0.0.1
 rpcallowip=127.0.0.1
-addnode=37.187.180.53
-addnode=139.99.239.62
-addnode=192.99.212.20
-addnode=139.99.239.62
+daemon=1
+deminodes=1
+demimaxdepth=200
 addnode=188.166.109.87
-addnode=51.195.42.49
-addnode=193.70.84.182
-addnode=51.38.113.17
-addnode=110.232.115.241
+addnode=188.166.109.87:19417
+addnode=37.187.180.53
+addnode=37.187.180.53:19417
+addnode=139.99.239.62
+addnode=139.99.239.62:19417
+addnode=185.52.172.164
+addnode=185.52.172.164:19417
+addnode=51.195.102.171
+addnode=51.195.102.171:19417
+addnode=51.68.175.13
+addnode=51.68.175.13:19417
+addnode=155.138.148.198
+addnode=155.138.148.198:19417
+addnode=139.99.239.62
+addnode=139.99.239.62:19417
+addnode=170.187.136.118
+addnode=170.187.136.118:19417
+addnode=170.187.136.134
+addnode=170.187.136.134:19417
+addnode=170.187.136.177
+addnode=170.187.136.177:19417
 CONFIG
 chmod 700 ~/.KONJ/Konjungate.conf; chmod 700 ~/.KONJ; ls -la ~/.KONJ
 ```

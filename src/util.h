@@ -145,17 +145,21 @@ extern bool fLogTimestamps;
 extern volatile bool fReopenDebugLog;
 //Live fork toggle
 extern std::string strLiveForkToggle;
+//Roll back to block
+extern std::string strRollbackToBlock;
 extern int64_t nLiveForkToggle;
 //MasterNode recipient verification delay base time
 extern int64_t nMasterNodeChecksDelayBaseTime;
 //MasterNode peer IP advanced relay system toggle
 extern bool fMnAdvRelay;
+//MasterNode is tier 2
+extern bool fMnT2;
 // Logic for lock/unlock GUI icon, does not affect daemon operation
 extern bool settingsStatus;
 // Demi-node toggle
 extern bool fDemiNodes;
-//will sync until this block height. default -1 which represents disabled
-extern int maxBlockHeight;
+// Properly handle enforcement for MN checks
+extern int64_t nMasterNodeDelay;
 
 void RandAddSeed();
 void RandAddSeedPerfmon();
@@ -293,7 +297,7 @@ bool ParseInt32(const std::string& str, int32_t *out);
  * Format a paragraph of text to a fixed width, adding spaces for
  * indentation to any added line.
  */
-std::string FormatParagraph(const std::string &in, size_t width=79, size_t indent=0);
+std::string FormatParagraph(const std::string in, size_t width=79, size_t indent=0);
 
 
 

@@ -45,14 +45,18 @@ namespace Checkpoints
         (350000, uint256("0x28968f7124079e435c00df7468db85f366956a8b28500a6bdff108f2bfd7040b"))
         (400000, uint256("0xc98e9128138c5ac38f4529cea666a3fdcfa22ea14b691f49bb711d66bf19b687"))
         (450000, uint256("0x00000000008fe0fe49683a2909a247dd4d96be9db2c9347f3dd6ceaeed55ad9f"))
-        (500000, uint256("0x83f3249bb781f3be2f3bdb4782295130eabe02b4aa8a184870843d32e3ba9796"))
+        (499999, uint256("0x000000000070df237392b9eb0aed173cbdafaed71ccb7532f92d00dd07fa5802")) // Refund
+        (500000, uint256("0x83f3249bb781f3be2f3bdb4782295130eabe02b4aa8a184870843d32e3ba9796")) // Refund
+        (500001, uint256("0x3f75a45b7bc87e7047c7d46818fe1c5d5e3a0c6b9dcb31e0c5540d5759f172c8")) // Refund
         (550000, uint256("0x5680dcb37fd20160c3b6f9b737657ccada8d5ed7bcfe861fa0c4e6face67dec6"))
         (600000, uint256("0x276a8d53f8e19a341299034829d98bb996f060ebdaa959a41aa31828fbff2aaf"))
         (602073, uint256("0x0000000003e461bb4107459397a3561cee787eefb3dae398024dca0502c0816b"))
         (625000, uint256("0x0000000002cf42960483dcf438e74a6c11410eb2687e3fa63ae975c4235d1477"))
         (650000, uint256("0x301a0ce40a777d14ca2a40c885036e4fb21e281d8576bfa567be690d26c75afd"))
         (675000, uint256("0x0000000013be01ded5961bb66d90f07aece18be4de200b9a40a9d8a3b6586b20"))
-        (700000, uint256("0x000000000135d5196d23f0dd055c55060ec4da98b233e8faf0dddcb264b166a7"))
+        (699999, uint256("0x00000000015505648d86af617578a1ea5bd0e09cc95b3d08b439f322b894a947")) // Refund
+        (700000, uint256("0x000000000135d5196d23f0dd055c55060ec4da98b233e8faf0dddcb264b166a7")) // Refund
+        (700001, uint256("0x0cff5fcb2f7d5e7ae4ac72870275e8b1ffa61fcf50bf2988071a6417354e3e5c")) // Refund
         (725000, uint256("0x92e4fc040c008b91f8278a2f930e5d9f3b59f88628198540cdde7589a28776b9"))
         (750000, uint256("0x6c85d6bcb7ace94c67746941dccd239cd00aa12ff373c7608767c8b1817ebeac"))
         (775000, uint256("0x2d1ed218811a007b1ddb6db0bfc1375c62b90568406440e31824ab2100533c32"))
@@ -109,7 +113,8 @@ namespace Checkpoints
     const CBlockIndex* AutoSelectSyncCheckpoint()
     {
         const CBlockIndex *pindex = pindexBest;
-        // Ensure we have sufficient blocks to index
+        // Search backward for a block within max span and maturity window
+        // Taking into account our 120 block depth + reorganize depth
         if(pindexBest->nHeight < 500) {
             if(pindexBest->nHeight < 1) {
                 return pindex;

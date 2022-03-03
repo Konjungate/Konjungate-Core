@@ -44,7 +44,7 @@ extern map<int64_t, uint256> mapCacheBlockHashes;
 bool GetBlockHash(uint256& hash, int nBlockHeight);
 
 //
-// The Masternode Class. For managing the mnengine process. It contains the input of the 2,750,000 KONJ, signature to prove
+// The Masternode Class. For managing the mnengine process. It contains the input of the 2,000,000 KONJ, signature to prove
 // it's the one who own that ip address and code for calculating the payment election.
 //
 class CMasternode

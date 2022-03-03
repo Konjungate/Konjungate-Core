@@ -108,16 +108,20 @@ volatile bool fReopenDebugLog = false;
 //Live fork toggle
 string strLiveForkToggle = "";
 int64_t nLiveForkToggle = 0;
+//Rollback to block
+string strRollbackToBlock = "";
 //MasterNode recipient verification delay base time
-int64_t nMasterNodeChecksDelayBaseTime = 0;
+int64_t nMasterNodeChecksDelayBaseTime = GetTime();
 //MasterNode peer IP advanced relay system toggle
 bool fMnAdvRelay = false;
+//MasterNode tier 2
+bool fMnT2 = false;
 //Logic for lock/unlock GUI icon, does not affect daemon operation
 bool settingsStatus = false;
 //Demi-node handling
 bool fDemiNodes = false;
-//Max Blockheight Value
-int maxBlockHeight = -1;
+// Properly handle enforcement for MN checks
+int64_t nMasterNodeDelay = (15 * 60);
 
 // Init OpenSSL library multithreading support
 static CCriticalSection** ppmutexOpenSSL;
@@ -512,7 +516,7 @@ vector<unsigned char> ParseHex(const string& str)
     return ParseHex(str.c_str());
 }
 
-static void InterpretNegativeSetting(const std::string &name, map<string, string>& mapSettingsRet)
+static void InterpretNegativeSetting(string name, map<string, string>& mapSettingsRet)
 {
     // interpret -nofoo as -foo=0 (and -nofoo=0 as -foo=1) as long as -foo not set
     if (name.find("-no") == 0)
@@ -1043,7 +1047,7 @@ bool ParseInt32(const std::string& str, int32_t *out)
         n <= std::numeric_limits<int32_t>::max();
 }
 
-std::string FormatParagraph(const std::string &in, size_t width, size_t indent)
+std::string FormatParagraph(const std::string in, size_t width, size_t indent)
 {
     std::stringstream out;
     size_t col = 0;
@@ -1211,10 +1215,9 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
                fprintf(ConfFile, "listen=1\n");
                fprintf(ConfFile, "server=1\n");
-               fprintf(ConfFile, "staking=1\n");
+               fprintf(ConfFile, "maxconnections=150\n");
                fprintf(ConfFile, "deminodes=1\n");
                fprintf(ConfFile, "demimaxdepth=200\n");
-               fprintf(ConfFile, "maxconnections=150\n");
                fprintf(ConfFile, "rpcuser=yourusername\n");
 
                char s[32];
@@ -1237,6 +1240,12 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                fprintf(ConfFile, "addnode=139.99.239.62:19417\n");
                fprintf(ConfFile, "addnode=51.195.42.49\n");
                fprintf(ConfFile, "addnode=51.195.42.49:19417\n");
+               fprintf(ConfFile, "addnode=170.187.136.118\n");
+               fprintf(ConfFile, "addnode=170.187.136.118:19417\n");
+               fprintf(ConfFile, "addnode=170.187.136.134\n");
+               fprintf(ConfFile, "addnode=170.187.136.134:19417\n");
+               fprintf(ConfFile, "addnode=170.187.136.177\n");
+               fprintf(ConfFile, "addnode=170.187.136.177:19417\n");
                fclose(ConfFile);
     }
 

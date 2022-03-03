@@ -215,7 +215,7 @@ elif cmd == "liststakerewards":
 			print access.liststakerewards()
 	except:
 		print "\n---An error occurred---\n"
-
+		
 elif cmd == "move":
 	try:
 		frm = raw_input("From: ")

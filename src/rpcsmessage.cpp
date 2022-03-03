@@ -21,8 +21,8 @@ Value smsgenable(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
         throw runtime_error(
-                            "smsgenable \n"
-                            "Enable secure messaging.");
+            "smsgenable \n"
+            "Enable secure messaging.");
     
     if (fSecMsgEnabled)
         throw runtime_error("Secure messaging is already enabled.");
@@ -42,8 +42,8 @@ Value smsgdisable(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
         throw runtime_error(
-                            "smsgdisable \n"
-                            "Disable secure messaging.");
+            "smsgdisable \n"
+            "Disable secure messaging.");
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is already disabled.");
     
@@ -62,8 +62,8 @@ Value smsgoptions(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 3)
         throw runtime_error(
-                            "smsgoptions [list|set <optname> <value>]\n"
-                            "List and manage options.");
+            "smsgoptions [list|set <optname> <value>]\n"
+            "List and manage options.");
     
     std::string mode = "list";
     if (params.size() > 0)
@@ -80,59 +80,59 @@ Value smsgoptions(const Array& params, bool fHelp)
         
         result.push_back(Pair("result", "Success."));
     } else
-        if (mode == "set")
+    if (mode == "set")
+    {
+        if (params.size() < 3)
         {
-            if (params.size() < 3)
+            result.push_back(Pair("result", "Too few parameters."));
+            result.push_back(Pair("expected", "set <optname> <value>"));
+            return result;
+        };
+        
+        std::string optname = params[1].get_str();
+        std::string value   = params[2].get_str();
+        
+        if (optname == "newAddressRecv")
+        {
+            if (value == "+" || value == "on"  || value == "true"  || value == "1")
             {
-                result.push_back(Pair("result", "Too few parameters."));
-                result.push_back(Pair("expected", "set <optname> <value>"));
+                smsgOptions.fNewAddressRecv = true;
+            } else
+            if (value == "-" || value == "off" || value == "false" || value == "0")
+            {
+                smsgOptions.fNewAddressRecv = false;
+            } else
+            {
+                result.push_back(Pair("result", "Unknown value."));
                 return result;
             };
-            
-            std::string optname = params[1].get_str();
-            std::string value   = params[2].get_str();
-            
-            if (optname == "newAddressRecv")
+            result.push_back(Pair("set option", std::string("newAddressRecv = ") + (smsgOptions.fNewAddressRecv ? "true" : "false")));
+        } else
+        if (optname == "newAddressAnon")
+        {
+            if (value == "+" || value == "on"  || value == "true"  || value == "1")
             {
-                if (value == "+" || value == "on"  || value == "true"  || value == "1")
-                {
-                    smsgOptions.fNewAddressRecv = true;
-                } else
-                    if (value == "-" || value == "off" || value == "false" || value == "0")
-                    {
-                        smsgOptions.fNewAddressRecv = false;
-                    } else
-                    {
-                        result.push_back(Pair("result", "Unknown value."));
-                        return result;
-                    };
-                result.push_back(Pair("set option", std::string("newAddressRecv = ") + (smsgOptions.fNewAddressRecv ? "true" : "false")));
+                smsgOptions.fNewAddressAnon = true;
             } else
-                if (optname == "newAddressAnon")
-                {
-                    if (value == "+" || value == "on"  || value == "true"  || value == "1")
-                    {
-                        smsgOptions.fNewAddressAnon = true;
-                    } else
-                        if (value == "-" || value == "off" || value == "false" || value == "0")
-                        {
-                            smsgOptions.fNewAddressAnon = false;
-                        } else
-                        {
-                            result.push_back(Pair("result", "Unknown value."));
-                            return result;
-                        };
-                    result.push_back(Pair("set option", std::string("newAddressAnon = ") + (smsgOptions.fNewAddressAnon ? "true" : "false")));
-                } else
-                {
-                    result.push_back(Pair("result", "Option not found."));
-                    return result;
-                };
+            if (value == "-" || value == "off" || value == "false" || value == "0")
+            {
+                smsgOptions.fNewAddressAnon = false;
+            } else
+            {
+                result.push_back(Pair("result", "Unknown value."));
+                return result;
+            };
+            result.push_back(Pair("set option", std::string("newAddressAnon = ") + (smsgOptions.fNewAddressAnon ? "true" : "false")));
         } else
         {
-            result.push_back(Pair("result", "Unknown Mode."));
-            result.push_back(Pair("expected", "smsgoption [list|set <optname> <value>]"));
+            result.push_back(Pair("result", "Option not found."));
+            return result;
         };
+    } else
+    {
+        result.push_back(Pair("result", "Unknown Mode."));
+        result.push_back(Pair("expected", "smsgoption [list|set <optname> <value>]"));
+    };
     return result;
 }
 
@@ -140,8 +140,8 @@ Value smsglocalkeys(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 3)
         throw runtime_error(
-                            "smsglocalkeys [whitelist|all|wallet|recv <+/-> <address>|anon <+/-> <address>]\n"
-                            "List and manage keys.");
+            "smsglocalkeys [whitelist|all|wallet|recv <+/-> <address>|anon <+/-> <address>]\n"
+            "List and manage keys.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -163,7 +163,7 @@ Value smsglocalkeys(const Array& params, bool fHelp)
         int all = mode == "all" ? 1 : 0;
         for (std::vector<SecMsgAddress>::iterator it = smsgAddresses.begin(); it != smsgAddresses.end(); ++it)
         {
-            if (!all
+            if (!all 
                 && !it->fReceiveEnabled)
                 continue;
             
@@ -204,142 +204,142 @@ Value smsglocalkeys(const Array& params, bool fHelp)
         result.push_back(Pair("result", std::string(cbuf)));
         
     } else
-        if (mode == "recv")
+    if (mode == "recv")
+    {
+        if (params.size() < 3)
         {
-            if (params.size() < 3)
-            {
-                result.push_back(Pair("result", "Too few parameters."));
-                result.push_back(Pair("expected", "recv <+/-> <address>"));
-                return result;
-            };
-            
-            std::string op      = params[1].get_str();
-            std::string addr    = params[2].get_str();
-            
-            std::vector<SecMsgAddress>::iterator it;
-            for (it = smsgAddresses.begin(); it != smsgAddresses.end(); ++it)
-            {
-                if (addr != it->sAddress)
-                    continue;
-                break;
-            };
-            
-            if (it == smsgAddresses.end())
-            {
-                result.push_back(Pair("result", "Address not found."));
-                return result;
-            };
-            
-            if (op == "+" || op == "on"  || op == "add" || op == "a")
-            {
-                it->fReceiveEnabled = true;
-            } else
-                if (op == "-" || op == "off" || op == "rem" || op == "r")
-                {
-                    it->fReceiveEnabled = false;
-                } else
-                {
-                    result.push_back(Pair("result", "Unknown operation."));
-                    return result;
-                };
-            
-            std::string sInfo;
-            sInfo = std::string("Receive ") + (it->fReceiveEnabled ? "on, " : "off,");
-            sInfo += std::string("Anon ") + (it->fReceiveAnon ? "on" : "off");
-            result.push_back(Pair("result", "Success."));
-            result.push_back(Pair("key", it->sAddress + " " + sInfo));
+            result.push_back(Pair("result", "Too few parameters."));
+            result.push_back(Pair("expected", "recv <+/-> <address>"));
             return result;
-            
+        };
+        
+        std::string op      = params[1].get_str();
+        std::string addr    = params[2].get_str();
+        
+        std::vector<SecMsgAddress>::iterator it;
+        for (it = smsgAddresses.begin(); it != smsgAddresses.end(); ++it)
+        {
+            if (addr != it->sAddress)
+                continue;
+            break;
+        };
+        
+        if (it == smsgAddresses.end())
+        {
+            result.push_back(Pair("result", "Address not found."));
+            return result;
+        };
+        
+        if (op == "+" || op == "on"  || op == "add" || op == "a")
+        {
+            it->fReceiveEnabled = true;
         } else
-            if (mode == "anon")
+        if (op == "-" || op == "off" || op == "rem" || op == "r")
+        {
+            it->fReceiveEnabled = false;
+        } else
+        {
+            result.push_back(Pair("result", "Unknown operation."));
+            return result;
+        };
+        
+        std::string sInfo;
+        sInfo = std::string("Receive ") + (it->fReceiveEnabled ? "on, " : "off,");
+        sInfo += std::string("Anon ") + (it->fReceiveAnon ? "on" : "off");
+        result.push_back(Pair("result", "Success."));
+        result.push_back(Pair("key", it->sAddress + " " + sInfo));
+        return result;
+        
+    } else
+    if (mode == "anon")
+    {
+        if (params.size() < 3)
+        {
+            result.push_back(Pair("result", "Too few parameters."));
+            result.push_back(Pair("expected", "anon <+/-> <address>"));
+            return result;
+        };
+        
+        std::string op      = params[1].get_str();
+        std::string addr    = params[2].get_str();
+        
+        std::vector<SecMsgAddress>::iterator it;
+        for (it = smsgAddresses.begin(); it != smsgAddresses.end(); ++it)
+        {
+            if (addr != it->sAddress)
+                continue;
+            break;
+        };
+        
+        if (it == smsgAddresses.end())
+        {
+            result.push_back(Pair("result", "Address not found."));
+            return result;
+        };
+        
+        if (op == "+" || op == "on"  || op == "add" || op == "a")
+        {
+            it->fReceiveAnon = true;
+        } else
+        if (op == "-" || op == "off" || op == "rem" || op == "r")
+        {
+            it->fReceiveAnon = false;
+        } else
+        {
+            result.push_back(Pair("result", "Unknown operation."));
+            return result;
+        };
+        
+        std::string sInfo;
+        sInfo = std::string("Receive ") + (it->fReceiveEnabled ? "on, " : "off,");
+        sInfo += std::string("Anon ") + (it->fReceiveAnon ? "on" : "off");
+        result.push_back(Pair("result", "Success."));
+        result.push_back(Pair("key", it->sAddress + " " + sInfo));
+        return result;
+        
+    } else
+    if (mode == "wallet")
+    {
+        uint32_t nKeys = 0;
+        BOOST_FOREACH(const PAIRTYPE(CTxDestination, std::string)& entry, pwalletMain->mapAddressBook)
+        {
+            if (!IsMine(*pwalletMain, entry.first))
+                continue;
+            
+            CKonjungateAddress coinAddress(entry.first);
+            if (!coinAddress.IsValid())
+                continue;
+            
+            std::string address;
+            std::string sPublicKey;
+            address = coinAddress.ToString();
+            
+            CKeyID keyID;
+            if (!coinAddress.GetKeyID(keyID))
+                continue;
+            
+            CPubKey pubKey;
+            if (!pwalletMain->GetPubKey(keyID, pubKey))
+                continue;
+            if (!pubKey.IsValid()
+                || !pubKey.IsCompressed())
             {
-                if (params.size() < 3)
-                {
-                    result.push_back(Pair("result", "Too few parameters."));
-                    result.push_back(Pair("expected", "anon <+/-> <address>"));
-                    return result;
-                };
-                
-                std::string op      = params[1].get_str();
-                std::string addr    = params[2].get_str();
-                
-                std::vector<SecMsgAddress>::iterator it;
-                for (it = smsgAddresses.begin(); it != smsgAddresses.end(); ++it)
-                {
-                    if (addr != it->sAddress)
-                        continue;
-                    break;
-                };
-                
-                if (it == smsgAddresses.end())
-                {
-                    result.push_back(Pair("result", "Address not found."));
-                    return result;
-                };
-                
-                if (op == "+" || op == "on"  || op == "add" || op == "a")
-                {
-                    it->fReceiveAnon = true;
-                } else
-                    if (op == "-" || op == "off" || op == "rem" || op == "r")
-                    {
-                        it->fReceiveAnon = false;
-                    } else
-                    {
-                        result.push_back(Pair("result", "Unknown operation."));
-                        return result;
-                    };
-                
-                std::string sInfo;
-                sInfo = std::string("Receive ") + (it->fReceiveEnabled ? "on, " : "off,");
-                sInfo += std::string("Anon ") + (it->fReceiveAnon ? "on" : "off");
-                result.push_back(Pair("result", "Success."));
-                result.push_back(Pair("key", it->sAddress + " " + sInfo));
-                return result;
-                
-            } else
-                if (mode == "wallet")
-                {
-                    uint32_t nKeys = 0;
-                    BOOST_FOREACH(const PAIRTYPE(CTxDestination, std::string)& entry, pwalletMain->mapAddressBook)
-                    {
-                        if (!IsMine(*pwalletMain, entry.first))
-                            continue;
-                        
-                        CKonjungateAddress coinAddress(entry.first);
-                        if (!coinAddress.IsValid())
-                            continue;
-                        
-                        std::string address;
-                        std::string sPublicKey;
-                        address = coinAddress.ToString();
-                        
-                        CKeyID keyID;
-                        if (!coinAddress.GetKeyID(keyID))
-                            continue;
-                        
-                        CPubKey pubKey;
-                        if (!pwalletMain->GetPubKey(keyID, pubKey))
-                            continue;
-                        if (!pubKey.IsValid()
-                            || !pubKey.IsCompressed())
-                        {
-                            continue;
-                        };
-                        
-                        sPublicKey = EncodeBase58(pubKey.Raw());
-                        
-                        result.push_back(Pair("key", address + " - " + sPublicKey + " - " + entry.second));
-                        nKeys++;
-                    };
-                    
-                    snprintf(cbuf, sizeof(cbuf), "%u keys listed from wallet.", nKeys);
-                    result.push_back(Pair("result", std::string(cbuf)));
-                } else
-                {
-                    result.push_back(Pair("result", "Unknown Mode."));
-                    result.push_back(Pair("expected", "smsglocalkeys [whitelist|all|wallet|recv <+/-> <address>|anon <+/-> <address>]"));
-                };
+                continue;
+            };
+            
+            sPublicKey = EncodeBase58(pubKey.Raw());
+            
+            result.push_back(Pair("key", address + " - " + sPublicKey + " - " + entry.second));
+            nKeys++;
+        };
+        
+        snprintf(cbuf, sizeof(cbuf), "%u keys listed from wallet.", nKeys);
+        result.push_back(Pair("result", std::string(cbuf)));
+    } else
+    {
+        result.push_back(Pair("result", "Unknown Mode."));
+        result.push_back(Pair("expected", "smsglocalkeys [whitelist|all|wallet|recv <+/-> <address>|anon <+/-> <address>]"));
+    };
     
     return result;
 };
@@ -348,8 +348,8 @@ Value smsgscanchain(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
         throw runtime_error(
-                            "smsgscanchain \n"
-                            "Look for public keys in the block chain.");
+            "smsgscanchain \n"
+            "Look for public keys in the block chain.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -369,8 +369,8 @@ Value smsgscanbuckets(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
         throw runtime_error(
-                            "smsgscanbuckets \n"
-                            "Force rescan of all messages in the bucket store.");
+            "smsgscanbuckets \n"
+            "Force rescan of all messages in the bucket store.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -393,8 +393,8 @@ Value smsgaddkey(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw runtime_error(
-                            "smsgaddkey <address> <pubkey>\n"
-                            "Add address, pubkey pair to database.");
+            "smsgaddkey <address> <pubkey>\n"
+            "Add address, pubkey pair to database.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -427,9 +427,9 @@ Value smsggetpubkey(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-                            "smsggetpubkey <address>\n"
-                            "Return the base58 encoded compressed public key for an address.\n"
-                            "Tests localkeys first, then looks in public key db.\n");
+            "smsggetpubkey <address>\n"
+            "Return the base58 encoded compressed public key for an address.\n"
+            "Tests localkeys first, then looks in public key db.\n");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -454,7 +454,7 @@ Value smsggetpubkey(const Array& params, bool fHelp)
             return result;
         case 4:
             break; // check db
-            //case 1:
+        //case 1:
         default:
             result.push_back(Pair("result", "Failed."));
             result.push_back(Pair("message", "Error."));
@@ -497,7 +497,7 @@ Value smsggetpubkey(const Array& params, bool fHelp)
             result.push_back(Pair("result", "Failed."));
             result.push_back(Pair("message", "Address not found in wallet or db."));
             return result;
-            //case 1:
+        //case 1:
         default:
             result.push_back(Pair("result", "Failed."));
             result.push_back(Pair("message", "Error, GetStoredKey()."));
@@ -511,8 +511,8 @@ Value smsgsend(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 3)
         throw runtime_error(
-                            "smsgsend <addrFrom> <addrTo> <message>\n"
-                            "Send an encrypted message from addrFrom to addrTo.");
+            "smsgsend <addrFrom> <addrTo> <message>\n"
+            "Send an encrypted message from addrFrom to addrTo.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -531,7 +531,7 @@ Value smsgsend(const Array& params, bool fHelp)
         result.push_back(Pair("error", sError));
     } else
         result.push_back(Pair("result", "Sent."));
-    
+
     return result;
 }
 
@@ -539,8 +539,8 @@ Value smsgsendanon(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw runtime_error(
-                            "smsgsendanon <addrTo> <message>\n"
-                            "Send an anonymous encrypted message to addrTo.");
+            "smsgsendanon <addrTo> <message>\n"
+            "Send an anonymous encrypted message to addrTo.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -558,19 +558,17 @@ Value smsgsendanon(const Array& params, bool fHelp)
         result.push_back(Pair("error", sError));
     } else
         result.push_back(Pair("result", "Sent."));
-    
+
     return result;
 }
 
 Value smsginbox(const Array& params, bool fHelp)
 {
-    if (fHelp || params.size() > 2) // defaults to read
+    if (fHelp || params.size() > 1) // defaults to read
         throw runtime_error(
-                            "smsginbox\n"
-                            "1. [all|clear] (required)\n"
-                            "2. count (numeric, optional) The number of messages qureied DESC\n"
-                            "Decrypt and display received messages.\n"
-                            "Warning: clear will delete all messages.");
+            "smsginbox [all|unread|clear]\n" 
+            "Decrypt and display all received messages.\n"
+            "Warning: clear will delete all messages.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -579,12 +577,9 @@ Value smsginbox(const Array& params, bool fHelp)
         throw runtime_error("Wallet is locked.");
     
     std::string mode = "unread";
-    int64_t count = 0;
-    
-    if (params.size() == 1){
+    if (params.size() > 0)
+    {
         mode = params[0].get_str();
-    }else if (params.size() == 2) {
-        count = params[1].get_uint64();
     }
     
     
@@ -624,80 +619,76 @@ Value smsginbox(const Array& params, bool fHelp)
             snprintf(cbuf, sizeof(cbuf), "Deleted %u messages.", nMessages);
             result.push_back(Pair("result", std::string(cbuf)));
         } else
-            if (mode == "all"
-                || mode == "unread")
+        if (mode == "all"
+            || mode == "unread")
+        {
+            int fCheckReadStatus = mode == "unread" ? 1 : 0;
+            
+            SecMsgStored smsgStored;
+            MessageData msg;
+            
+            dbInbox.TxnBegin();
+            
+            leveldb::Iterator* it = dbInbox.pdb->NewIterator(leveldb::ReadOptions());
+            Array aMessages;
+            while (dbInbox.NextSmesg(it, sPrefix, chKey, smsgStored))
             {
-                int fCheckReadStatus = mode == "unread" ? 1 : 0;
+                if (fCheckReadStatus
+                    && !(smsgStored.status & SMSG_MASK_UNREAD))
+                    continue;
                 
-                SecMsgStored smsgStored;
-                MessageData msg;
-                
-                dbInbox.TxnBegin();
-                
-                leveldb::Iterator* it = dbInbox.pdb->NewIterator(leveldb::ReadOptions());
-                Array aMessages;
-                while (dbInbox.NextSmesg(it, sPrefix, chKey, smsgStored))
+                uint32_t nPayload = smsgStored.vchMessage.size() - SMSG_HDR_LEN;
+                if (SecureMsgDecrypt(false, smsgStored.sAddrTo, &smsgStored.vchMessage[0], &smsgStored.vchMessage[SMSG_HDR_LEN], nPayload, msg) == 0)
                 {
-                    if (fCheckReadStatus
-                        && !(smsgStored.status & SMSG_MASK_UNREAD))
-                        continue;
+                    Object objM;
+                    objM.push_back(Pair("received", getTimeString(smsgStored.timeReceived, cbuf, sizeof(cbuf))));
+                    objM.push_back(Pair("sent", getTimeString(msg.timestamp, cbuf, sizeof(cbuf))));
+                    objM.push_back(Pair("from", msg.sFromAddress));
+                    objM.push_back(Pair("to", smsgStored.sAddrTo));
+                    objM.push_back(Pair("text", std::string((char*)&msg.vchMessage[0]))); // ugh
                     
-                    if(count > 0) {
-                        if(count == nMessages) break;
-                    }
-                    
-                    uint32_t nPayload = smsgStored.vchMessage.size() - SMSG_HDR_LEN;
-                    if (SecureMsgDecrypt(false, smsgStored.sAddrTo, &smsgStored.vchMessage[0], &smsgStored.vchMessage[SMSG_HDR_LEN], nPayload, msg) == 0)
-                    {
-                        Object objM;
-                        objM.push_back(Pair("received", getTimeString(smsgStored.timeReceived, cbuf, sizeof(cbuf))));
-                        objM.push_back(Pair("sent", getTimeString(msg.timestamp, cbuf, sizeof(cbuf))));
-                        objM.push_back(Pair("from", msg.sFromAddress));
-                        objM.push_back(Pair("to", smsgStored.sAddrTo));
-                        objM.push_back(Pair("text", std::string((char*)&msg.vchMessage[0]))); // ugh
-                        aMessages.push_back(objM);
-                        
-                    } else
-                    {
-                        Object objM;
-                        objM.push_back(Pair("error", "Could not decrypt."));
-                        aMessages.push_back(objM);
-                    }
-                    
-                    if (fCheckReadStatus)
-                    {
-                        smsgStored.status &= ~SMSG_MASK_UNREAD;
-                        dbInbox.WriteSmesg(chKey, smsgStored);
-                    };
-                    nMessages++;
+                    // result.push_back(Pair("message", objM));
+                    aMessages.push_back(objM);
+                } else
+                {
+                    // result.push_back(Pair("message", "Could not decrypt."));
+                    Object objM;
+                    objM.push_back(Pair("error", "Could not decrypt."));
+                    aMessages.push_back(objM);
+                }
+                
+                if (fCheckReadStatus)
+                {
+                    smsgStored.status &= ~SMSG_MASK_UNREAD;
+                    dbInbox.WriteSmesg(chKey, smsgStored);
                 };
-                delete it;
-                dbInbox.TxnCommit();
-                
-                if(!aMessages.empty()) result.push_back(Pair("messages", aMessages));
-                
-                snprintf(cbuf, sizeof(cbuf), "%u messages shown.", nMessages);
-                result.push_back(Pair("result", std::string(cbuf)));
-                
-            } else
-            {
-                result.push_back(Pair("result", "Unknown Mode."));
-                result.push_back(Pair("expected", "[all|unread|clear]."));
+                nMessages++;
             };
+            delete it;
+            dbInbox.TxnCommit();
+
+            if(!aMessages.empty()) result.push_back(Pair("messages", aMessages));
+            
+            snprintf(cbuf, sizeof(cbuf), "%u messages shown.", nMessages);
+            result.push_back(Pair("result", std::string(cbuf)));
+            
+        } else
+        {
+            result.push_back(Pair("result", "Unknown Mode."));
+            result.push_back(Pair("expected", "[all|unread|clear]."));
+        };
     }
     
     return result;
 };
 
-Value smsgoutbox(const Array& params, bool fHelp) {
-    
-    if (fHelp || params.size() > 2) // defaults to read
+Value smsgoutbox(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() > 1) // defaults to read
         throw runtime_error(
-                            "smsgoutbox \n"
-                            "1. [all|clear] (required)\n"
-                            "2. count (numeric, optional) The number of messages qureied DESC\n"
-                            "Decrypt and display sent messages.\n"
-                            "Warning: clear will delete all sent messages.");
+            "smsgoutbox [all|clear]\n" 
+            "Decrypt and display all sent messages.\n"
+            "Warning: clear will delete all sent messages.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -706,12 +697,9 @@ Value smsgoutbox(const Array& params, bool fHelp) {
         throw runtime_error("Wallet is locked.");
     
     std::string mode = "all";
-    int64_t count = 0;
-    
-    if (params.size() == 1){
+    if (params.size() > 0)
+    {
         mode = params[0].get_str();
-    }else if (params.size() == 2) {
-        count = params[1].get_uint64();
     }
     
     
@@ -749,49 +737,45 @@ Value smsgoutbox(const Array& params, bool fHelp) {
             snprintf(cbuf, sizeof(cbuf), "Deleted %u messages.", nMessages);
             result.push_back(Pair("result", std::string(cbuf)));
         } else
-            if (mode == "all")
+        if (mode == "all")
+        {
+            SecMsgStored smsgStored;
+            MessageData msg;
+            leveldb::Iterator* it = dbOutbox.pdb->NewIterator(leveldb::ReadOptions());
+            Array aMessages;
+            while (dbOutbox.NextSmesg(it, sPrefix, chKey, smsgStored))
             {
-                SecMsgStored smsgStored;
-                MessageData msg;
-                leveldb::Iterator* it = dbOutbox.pdb->NewIterator(leveldb::ReadOptions());
-                Array aMessages;
-                while (dbOutbox.NextSmesg(it, sPrefix, chKey, smsgStored))
+                uint32_t nPayload = smsgStored.vchMessage.size() - SMSG_HDR_LEN;
+                
+                if (SecureMsgDecrypt(false, smsgStored.sAddrOutbox, &smsgStored.vchMessage[0], &smsgStored.vchMessage[SMSG_HDR_LEN], nPayload, msg) == 0)
                 {
-                    if(count > 0) {
-                        if(count == nMessages) break;
-                    }
-                    uint32_t nPayload = smsgStored.vchMessage.size() - SMSG_HDR_LEN;
+                    Object objM;
+                    objM.push_back(Pair("sent", getTimeString(msg.timestamp, cbuf, sizeof(cbuf))));
+                    objM.push_back(Pair("from", msg.sFromAddress));
+                    objM.push_back(Pair("to", smsgStored.sAddrTo));
+                    objM.push_back(Pair("text", std::string((char*)&msg.vchMessage[0]))); // ugh
                     
-                    if (SecureMsgDecrypt(false, smsgStored.sAddrOutbox, &smsgStored.vchMessage[0], &smsgStored.vchMessage[SMSG_HDR_LEN], nPayload, msg) == 0)
-                    {
-                        Object objM;
-                        objM.push_back(Pair("sent", getTimeString(msg.timestamp, cbuf, sizeof(cbuf))));
-                        objM.push_back(Pair("from", msg.sFromAddress));
-                        objM.push_back(Pair("to", smsgStored.sAddrTo));
-                        objM.push_back(Pair("text", std::string((char*)&msg.vchMessage[0]))); // ugh
-                        aMessages.push_back(objM);
-                        
-                    } else
-                    {
-                        Object objM;
-                        objM.push_back(Pair("error", "Could not decrypt."));
-                        aMessages.push_back(objM);
-                    }
-                    nMessages++;
-                };
-                delete it;
-                
-                if(!aMessages.empty()) result.push_back(Pair("messages", aMessages));
-                
-                snprintf(cbuf, sizeof(cbuf), "%u sent messages shown.", nMessages);
-                result.push_back(Pair("result", std::string(cbuf)));
-                
-                
-            } else
-            {
-                result.push_back(Pair("result", "Unknown Mode."));
-                result.push_back(Pair("expected", "[all|clear]."));
+                    // result.push_back(Pair("message", objM));
+                    aMessages.push_back(objM);
+                } else
+                {
+                    Object objM;
+                    objM.push_back(Pair("error", "Could not decrypt."));
+                    aMessages.push_back(objM);
+                }
+                nMessages++;
             };
+            delete it;
+            
+            if(!aMessages.empty()) result.push_back(Pair("messages", aMessages));
+            
+            snprintf(cbuf, sizeof(cbuf), "%u sent messages shown.", nMessages);
+            result.push_back(Pair("result", std::string(cbuf)));
+        } else
+        {
+            result.push_back(Pair("result", "Unknown Mode."));
+            result.push_back(Pair("expected", "[all|clear]."));
+        };
     }
     
     return result;
@@ -802,8 +786,8 @@ Value smsgbuckets(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 1)
         throw runtime_error(
-                            "smsgbuckets [stats|dump]\n"
-                            "Display some statistics.");
+            "smsgbuckets [stats|dump]\n"
+            "Display some statistics.");
     
     if (!fSecMsgEnabled)
         throw runtime_error("Secure messaging is disabled.");
@@ -850,8 +834,8 @@ Value smsgbuckets(const Array& params, bool fHelp)
                 objM.push_back(Pair("last changed", getTimeString(it->second.timeChanged, cbuf, sizeof(cbuf))));
                 
                 boost::filesystem::path fullPath = GetDataDir() / "smsgStore" / sFile;
-                
-                
+
+
                 if (!boost::filesystem::exists(fullPath))
                 {
                     // -- If there is a file for an empty bucket something is wrong.
@@ -888,37 +872,37 @@ Value smsgbuckets(const Array& params, bool fHelp)
         result.push_back(Pair("total", objM));
         
     } else
-        if (mode == "dump")
+    if (mode == "dump")
+    {
         {
+            LOCK(cs_smsg);
+            std::map<int64_t, SecMsgBucket>::iterator it;
+            it = smsgBuckets.begin();
+            
+            for (it = smsgBuckets.begin(); it != smsgBuckets.end(); ++it)
             {
-                LOCK(cs_smsg);
-                std::map<int64_t, SecMsgBucket>::iterator it;
-                it = smsgBuckets.begin();
+                std::string sFile = boost::lexical_cast<std::string>(it->first) + "_01.dat";
                 
-                for (it = smsgBuckets.begin(); it != smsgBuckets.end(); ++it)
+                try {
+                    boost::filesystem::path fullPath = GetDataDir() / "smsgStore" / sFile;
+                    boost::filesystem::remove(fullPath);
+                } catch (const boost::filesystem::filesystem_error& ex)
                 {
-                    std::string sFile = boost::lexical_cast<std::string>(it->first) + "_01.dat";
-                    
-                    try {
-                        boost::filesystem::path fullPath = GetDataDir() / "smsgStore" / sFile;
-                        boost::filesystem::remove(fullPath);
-                    } catch (const boost::filesystem::filesystem_error& ex)
-                    {
-                        //objM.push_back(Pair("file size, error", ex.what()));
-                        printf("Error removing bucket file %s.\n", ex.what());
-                    };
+                    //objM.push_back(Pair("file size, error", ex.what()));
+                    printf("Error removing bucket file %s.\n", ex.what());
                 };
-                smsgBuckets.clear();
-            }; // LOCK(cs_smsg);
-            
-            result.push_back(Pair("result", "Removed all buckets."));
-            
-        } else
-        {
-            result.push_back(Pair("result", "Unknown Mode."));
-            result.push_back(Pair("expected", "[stats|dump]."));
-        };
+            };
+            smsgBuckets.clear();
+        }; // LOCK(cs_smsg);
+        
+        result.push_back(Pair("result", "Removed all buckets."));
+        
+    } else
+    {
+        result.push_back(Pair("result", "Unknown Mode."));
+        result.push_back(Pair("expected", "[stats|dump]."));
+    };
     
-    
+
     return result;
 };

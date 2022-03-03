@@ -5,6 +5,9 @@
 #include "demimodule.h"
 #include "../util.h"
 
+#include <boost/filesystem/fstream.hpp>
+
+
 bool fDemiFound = false;
 
 boost::filesystem::path GetDemiConfigFile()
@@ -24,20 +27,18 @@ void ReadDemiConfigFile(std::string peerReadAddr)
         boost::filesystem::path ConfPath;
                ConfPath = GetDataDir() / "Demi.conf";
                FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
-               fprintf(ConfFile, "159.89.18.103\n");
-               fprintf(ConfFile, "159.89.18.103:19417\n");
-               fprintf(ConfFile, "51.68.175.13\n");
-               fprintf(ConfFile, "51.68.175.13:19417\n");
-               fprintf(ConfFile, "139.99.239.62\n");
-               fprintf(ConfFile, "185.52.172.164:19417\n");
+               fprintf(ConfFile, "170.187.136.118\n");
+               fprintf(ConfFile, "170.187.136.118:19417\n");
+               fprintf(ConfFile, "170.187.136.134\n");
+               fprintf(ConfFile, "170.187.136.134:19417\n");
+               fprintf(ConfFile, "170.187.136.177\n");
+               fprintf(ConfFile, "170.187.136.177:19417\n");
                fprintf(ConfFile, "155.138.148.198\n");
                fprintf(ConfFile, "139.99.239.62:19417\n");
                fprintf(ConfFile, "51.195.42.49\n");
                fprintf(ConfFile, "51.195.42.49:19417\n");
                fprintf(ConfFile, "51.68.175.13\n");
                fprintf(ConfFile, "51.68.175.13:19417\n");
-               fprintf(ConfFile, "51.195.102.171\n");
-               fprintf(ConfFile, "51.195.102.171:19417\n");
 
                fclose(ConfFile);
     }
