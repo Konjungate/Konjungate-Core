@@ -109,9 +109,6 @@ https://dex.delion.online/market/DELION.KONJ_BTS<br/><br/>
 
 ---------------->>>-----<<<<<<---------------------
 
-## Developer
-Thanks to https://github.com/SaltineChips/  and https://github.com/Pepsinside for there brains and work!! :)
-
 ### BVAC (Bits Visualized As Color)
 BVAC is a unique system that we developed and created in house just for KONJ, Espers and other associated projects. This offers us the ability to store ANY data as a PNG or JPG, similarly to a QR code, with only three files being required as apposed to three entire libraries that QR codes require and the data storage is denser. If you would like to learn more about this feature feel free to reach out to CryptoCoderz or SaltineChips. The current proof of concept implementation is the ability to store and read a public receiving address as a 16x16 BVAC image. Users can share their public keys this way by simply sending each other the BVAC image of the pubkey created from the wallet and then the receiving part is able to load the image using the wallet and decode it into the pubkey once again.
 
