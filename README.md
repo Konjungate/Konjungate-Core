@@ -105,10 +105,6 @@ https://dex.delion.online/market/DELION.KONJ_DELION.DLN<br/>
 https://dex.delion.online/market/DELION.KONJ_DELION.DOGE<br/>
 https://dex.delion.online/market/DELION.KONJ_BTS<br/><br/>
 
-Autradex:<br/>
-https://wallet.autradex.systems/markets/epbtc?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/BTC)<br/>
-https://wallet.autradex.systems/markets/epdoge?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/DOGE)<br/>
-https://wallet.autradex.systems/markets/epltc?markets=all&column=name&order=asc&unit=volume&pinned=true (KONJ/LTC)<br/><br/>
 ﻿
 
 ---------------->>>-----<<<<<<---------------------
