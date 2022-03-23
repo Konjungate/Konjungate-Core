@@ -204,6 +204,7 @@ cd ~; sudo ufw allow 19417/tcp; sudo ufw allow 18495/tcp; sudo ufw allow 22/tcp;
 listen=1
 server=1
 maxconnections=150
+daemon=1
 deminodes=1
 demimaxdepth=200
 rpcuser=yourusername
