@@ -15,7 +15,7 @@
 #include <vector>
 
 #include <boost/filesystem/path.hpp>
-#include <db_cxx.h>
+#include <sqlite-autoconf-3380200/sqlite/sqlite3.h>
 
 class CAddrMan;
 class CBlockLocator;

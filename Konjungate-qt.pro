@@ -10,6 +10,7 @@ CONFIG += thread
 CONFIG += widgets
 CONFIG += static
 CONFIG += openssl
+LIBS += -lsqlite3
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
@@ -20,8 +21,8 @@ win32{
 BOOST_LIB_SUFFIX=-mgw8-mt-s-x32-1_74
 BOOST_INCLUDE_PATH=C:/deps/boost_1_74_0
 BOOST_LIB_PATH=C:/deps/boost_1_74_0/stage/lib
-BDB_INCLUDE_PATH=C:/deps/db-6.2.38.NC/build_unix
-BDB_LIB_PATH=C:/deps/db-6.2.38.NC/build_unix
+SQLITE3_INCLUDE_PATH=C:/deps/sqlite-autoconf-3380200/bld
+SQLITE3_LIB_PATH=C:/deps/sqlite-autoconf-3380200/bld/.libs
 OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2u/include
 OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2u
 MINIUPNPC_INCLUDE_PATH=C:/deps/
