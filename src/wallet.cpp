@@ -3217,8 +3217,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     }
 
     int64_t blockValue = nCredit;
-    int64_t masternodePayment = GetMasternodePayment(pindexPrev->nHeight+1, nReward);
-    int64_t devopsPayment = GetDevOpsPayment(pindexPrev->nHeight+1, nReward); // TODO: Activate devops
+    int64_t masternodePayment = GetMasternodePayment(pindexPrev->nHeight, nReward);
+    int64_t devopsPayment = GetDevOpsPayment(pindexPrev->nHeight, nReward); // TODO: Activate devops
 
 
     // Set output amount

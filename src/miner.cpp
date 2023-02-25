@@ -443,8 +443,8 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
                     }
 
                     int64_t blockReward = GetProofOfWorkReward(pindexPrev->nHeight + 1, nFees);
-                    CAmount masternodePayment = GetMasternodePayment(nHeight, blockReward);
-                    CAmount devopsPayment = GetDevOpsPayment(nHeight, blockReward);
+                    CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockReward);
+                    CAmount devopsPayment = GetDevOpsPayment(pindexPrev->nHeight, blockReward);
 
                     if (hasPayment) {
                         pblock->vtx[0].vout.resize(3);
