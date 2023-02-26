@@ -33,7 +33,6 @@ We are also developping our side chain solution. In addition to NFTs and Smart C
 
 See our projects at:<br/>
 https://wendy.network<br/>
-https://www.machfeld-foundation.net<br/>
 
 KONJUNGATE is based on the cyber novel MACHFELD written 1999 by Michael Mastrototaro. Strangely, the main character of the book is called Nakomoto and thus resembles the pseudonym of the BITCOIN inventor Satoshi Nakomoto. What a coincidence, right? Anyway. In his cyber novel, Michael Mastrototaro describes 9 years before Bitcoin appears on the cryptocurrency horizon the mining of KONJUNGATE. Now 20 years after publishing the novel online, KONJUNGATE appears as a Media Art project to decentralize the funding of international contemporary Artists and Institutions and to give a strong artistic statement in times of budget cuts.
 
@@ -41,10 +40,6 @@ KONJUNGATE is based on the cyber novel MACHFELD written 1999 by Michael Mastroto
 
 Official Website:<br/>
 https://www.konjungate.net/
-
-Official Mining Pool:<br/>
-https://pool.konjungate.net/<br/>
-https://ahamay.net/
 
 Block Explorer:
 http://explore.konjungate.net/<br/>
@@ -55,8 +50,6 @@ https://chainz.cryptoid.info/konj/<br><br>
 Discord: https://discord.gg/K7hAfXg 
 
 Telegram: https://t.me/joinchat/CZxxC03HTpvdGDWlXg0tgQ 
-
-Facebook: https://www.facebook.com/konjungate/ 
 
 Twitter: https://twitter.com/konjungate
 
@@ -71,39 +64,15 @@ Reddit: https://www.reddit.com/user/KONJUNGATE/
 
 ## EXCHANGES
 
-Crex 24:<br/>
-https://crex24.com/exchange/KONJ-BTC<br/>
-https://crex24.com/exchange/KONJ-ETH<br/><br/>
-
-DEX-TRADE:<br/>
-KONJ/BTC: https://dex-trade.com/spot/trading/KONJBTC<br/>
-KONJ/ETH:  https://dex-trade.com/spot/trading/KONJETH<br/><br/>
-
 Southxchange:<br/>
 BTC: https://main.southxchange.com/Market/Book/KONJ/BTC<br/>
 DOGE: https://main.southxchange.com/Market/Book/KONJ/DOGE<br/>
 ETH: https://main.southxchange.com/Market/Book/KONJ/ETH<br/>
 LTC: https://main.southxchange.com/Market/Book/KONJ/LTC<br/><br/>
 
-Altmarkets:<br/>
-https://altmarkets.io/trading/konjbtc<br/><br/>
-
 unnamed.exchange:<br/>
 https://www.unnamed.exchange/Exchange/Basic?market=KONJ_BTC<br/>
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_ETH<br/>
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_LTC<br/>
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_DOGE<br/>
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_XMR<br/>
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_WAVES<br/>
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_USDT<br/>
 https://www.unnamed.exchange/Exchange/Basic?market=KONJ_UTIP<br/><br/>
-
-
-DelionDex:<br/>
-https://dex.delion.online/market/DELION.KONJ_DELION.BTC<br/>
-https://dex.delion.online/market/DELION.KONJ_DELION.DLN<br/>
-https://dex.delion.online/market/DELION.KONJ_DELION.DOGE<br/>
-https://dex.delion.online/market/DELION.KONJ_BTS<br/><br/>
 
 ﻿
 
