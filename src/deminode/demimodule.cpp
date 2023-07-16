@@ -27,12 +27,12 @@ void ReadDemiConfigFile(std::string peerReadAddr)
         boost::filesystem::path ConfPath;
                ConfPath = GetDataDir() / "Demi.conf";
                FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
-               fprintf(ConfFile, "170.187.136.118\n");
-               fprintf(ConfFile, "170.187.136.118:19417\n");
-               fprintf(ConfFile, "170.187.136.134\n");
-               fprintf(ConfFile, "170.187.136.134:19417\n");
-               fprintf(ConfFile, "170.187.136.177\n");
-               fprintf(ConfFile, "170.187.136.177:19417\n");
+               fprintf(ConfFile, "167.114.115.58\n");
+               fprintf(ConfFile, "167.114.115.58:19417\n");
+               fprintf(ConfFile, "51.38.113.123\n");
+               fprintf(ConfFile, "51.38.113.123:19417\n");
+               fprintf(ConfFile, "51.75.162.122\n");
+               fprintf(ConfFile, "51.75.162.122:19417\n");
                fprintf(ConfFile, "155.138.148.198\n");
                fprintf(ConfFile, "139.99.239.62:19417\n");
                fprintf(ConfFile, "51.195.42.49\n");
