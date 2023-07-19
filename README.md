@@ -204,8 +204,6 @@ addnode=167.114.115.58
 addnode=51.75.162.122
 CONFIG
 chmod 700 ~/.KONJ/Konjungate.conf; chmod 700 ~/.KONJ; ls -la ~/.KONJ
-CONFIG
-chmod 700 ~/.KONJ/Konjungate.conf; chmod 700 ~/.KONJ; ls -la ~/.KONJ
 ```
 
 ## Run Konjungate daemon
