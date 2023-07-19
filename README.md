@@ -171,6 +171,7 @@ If you recompiling some other time you don't have to repeat previous steps, but 
 
 ```
 cd ~; sudo ufw allow 19417/tcp; sudo ufw allow 18495/tcp; sudo ufw allow 22/tcp; sudo mkdir ~/.KONJ; cat << "CONFIG" >> ~/.KONJ/Konjungate.conf
+cd ~; sudo ufw allow 19417/tcp; sudo ufw allow 18495/tcp; sudo ufw allow 22/tcp; sudo mkdir ~/.KONJ; cat << "CONFIG" >> ~/.KONJ/Konjungate.conf
 listen=1
 server=1
 maxconnections=150
@@ -201,6 +202,8 @@ addnode=167.114.115.58:19417
 addnode=51.75.162.122:19417
 addnode=167.114.115.58
 addnode=51.75.162.122
+CONFIG
+chmod 700 ~/.KONJ/Konjungate.conf; chmod 700 ~/.KONJ; ls -la ~/.KONJ
 CONFIG
 chmod 700 ~/.KONJ/Konjungate.conf; chmod 700 ~/.KONJ; ls -la ~/.KONJ
 ```
