@@ -26,7 +26,6 @@ Official Website:<br/>
 https://www.konjungate.net
 
 ## What is Konjungate?
-KONJUNGATE - The Artbased Blockchain is based on the cyber novel MACHFELD by Michael Mastrototaro © 1999
 
 Shaping Legacy
 –
