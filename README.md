@@ -43,16 +43,12 @@ Official Website:<br/>
 https://www.konjungate.net/
 
 Block Explorer:
-http://explore.konjungate.net/<br/>
-https://openchains.info/coin/konjungate<br/>
 https://chainz.cryptoid.info/konj/<br><br>
 
 ## Social Media:<br/>
 Discord: https://discord.gg/K7hAfXg 
 
-Telegram: https://t.me/joinchat/CZxxC03HTpvdGDWlXg0tgQ 
-
-Twitter: https://twitter.com/konjungate
+X: https://x.com/konjungate
 
 YouTube: https://www.youtube.com/channel/UCnm-eA9EGNwSHu3KKzkm8Zg
 
@@ -65,15 +61,7 @@ Reddit: https://www.reddit.com/user/KONJUNGATE/
 
 ## EXCHANGES
 
-Southxchange:<br/>
-BTC: https://main.southxchange.com/Market/Book/KONJ/BTC<br/>
-DOGE: https://main.southxchange.com/Market/Book/KONJ/DOGE<br/>
-ETH: https://main.southxchange.com/Market/Book/KONJ/ETH<br/>
-LTC: https://main.southxchange.com/Market/Book/KONJ/LTC<br/><br/>
-
-unnamed.exchange:<br/>
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_BTC<br/>
-https://www.unnamed.exchange/Exchange/Basic?market=KONJ_UTIP<br/><br/>
+Comming Soon! 
 
 ﻿
 
@@ -81,13 +69,6 @@ https://www.unnamed.exchange/Exchange/Basic?market=KONJ_UTIP<br/><br/>
 
 ### BVAC (Bits Visualized As Color)
 BVAC is a unique system that we developed and created in house just for KONJ, Espers and other associated projects. This offers us the ability to store ANY data as a PNG or JPG, similarly to a QR code, with only three files being required as apposed to three entire libraries that QR codes require and the data storage is denser. If you would like to learn more about this feature feel free to reach out to CryptoCoderz or SaltineChips. The current proof of concept implementation is the ability to store and read a public receiving address as a 16x16 BVAC image. Users can share their public keys this way by simply sending each other the BVAC image of the pubkey created from the wallet and then the receiving part is able to load the image using the wallet and decode it into the pubkey once again.
-
-### Tokens (Like ETH)
-Along with NFTs we have adapted the technology in the Fractal platform to launch and manage Tokens! No longer are there only the few giants that can do this, launch your own Token using Konjungate [KONJ] as "GAS" and for no where near the fees!
-
-### NFT (Non-fungible Token)
-Introducing altcoins to NFTs, as of v1.1.6.3 prototype now features NFT capabilities. This offers the ability to artists, musicians and animators alike a unified place to store, encrypt, protect, sell and share their artwork! Current compatible formats are JPG/JPEG, PNG, GIF (Animation), OGG VORBIS (Audio) in a square format for initial testing for pictures/animation and up to 5 minute sound files for OGG VORBIS audio. This is a soft limit done only for initial testing. These limits will soon be lifted for full release in future versions. This will also be how we store a student's degrees, transcripts, etc.
-We will enable NFT's on our international art project https://wendy.network once we go public with it!
 
 ## Blockchain Technology
 The Konjungate [KONJ] Blockchain is an experimental smart contract platform protocol that enables instant payments to anyone, anywhere in the world in a private, secure manner. Konjungate [KONJ] uses peer-to-peer blockchain technology developed by Konjungate to operate with no central authority: managing transactions, execution of contracts, and issuing money are carried out collectively by the network. Konjungate [KONJ] is the name of open source software which enables the use of this protocol.
