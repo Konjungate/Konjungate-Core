@@ -20,7 +20,7 @@ Masternode Collateral: 2750000 KONJ
 
 
 Charity fee: 25 KONJ to support contemporary ART.<br/>
-Please visit https://www.machfeld-foundation.net and https://wendy.network to see our supported Projects.
+Please visit https://wendy.network to see our supported Projects.
 
 Official Website:<br/>
 https://www.konjungate.net
