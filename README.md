@@ -100,7 +100,7 @@ to compile
 ```
 
 ## BUILD LINUX
-Compiling Konjungate "SatoshiCore" daemon on Ubunutu 18.04 LTS Bionic
+Compiling Konjungate "SatoshiCore" daemon on Ubunutu 20.02 
 Note: guide should be compatible with other Ubuntu versions from 14.04+
 
 ## Become poweruser
