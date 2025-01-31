@@ -124,7 +124,8 @@ Note: guide should be compatible with other Ubuntu versions from 14.04+
 
 ## GitHub pull (Source Download)
 
-```git clone https://github.com/Konjungate/Konjungate-Core Konjungate```
+```cd ~; git clone https://github.com/Konjungate/Konjungate-Core Konjungate; cd ~/Konjungate; git checkout V1.1.6.3
+```
 
 
 ## Build Konjungate daemon
