@@ -64,9 +64,21 @@ Reddit: https://www.reddit.com/user/KONJUNGATE/
 
 ## EXCHANGES
 
-Comming Soon! 
+https://exchange.spectra.cash/
 
-﻿
+BTC pair: https://exchange.spectra.cash/#/market/DEX.KONJ_DEX.BTC
+
+LTC pair: https://exchange.spectra.cash/#/market/DEX.KONJ_DEX.LTC
+
+USDT pair: https://exchange.spectra.cash/#/market/DEX.KONJ_DEX.LTC
+
+
+
+Exchange: https://rabid-rabbit.org/
+
+USDT pair: https://rabid-rabbit.org/account/trade/KONJ-USDT
+
+
 
 ---------------->>>-----<<<<<<---------------------
 
@@ -124,8 +136,7 @@ Note: guide should be compatible with other Ubuntu versions from 14.04+
 
 ## GitHub pull (Source Download)
 
-```cd ~; git clone https://github.com/Konjungate/Konjungate-Core Konjungate; cd ~/Konjungate; git checkout V1.1.6.3
-```
+```cd ~; git clone https://github.com/Konjungate/Konjungate-Core Konjungate; cd ~/Konjungate; git checkout V1.1.6.3```
 
 
 ## Build Konjungate daemon
